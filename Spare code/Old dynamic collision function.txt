@@ -1,0 +1,36 @@
+double a = pow(t_mass, 2) + a_mass * t_mass;
+	double b = -2 * momentum * t_mass;
+	double c = pow(momentum, 2) - t_elasticity * pow(a_mass, 2) * pow(a_velocity, 2) - a_elasticity * a_mass * t_mass * pow(a_velocity, 2);
+
+	double new_t_velocity;
+
+	double determenant = pow(b, 2) - 4 * a * c;
+
+	// check for negative determenant
+	if (determenant < 0)
+	{
+		// Temp solution
+		new_t_velocity = a_velocity;
+	}
+
+	else if(a_velocity < 0)
+	{
+		
+
+
+		new_t_velocity = (-b - sqrt(determenant)) / (2 * a);
+	}
+	else
+	{
+		new_t_velocity = (-b + sqrt(determenant)) / (2 * a);
+	}
+	
+	
+	double new_a_velocity = (momentum - new_t_velocity * t_mass) / a_mass;
+
+	std::pair<double, double> out;
+
+	out.first = -(a_mass * ( - new_a_velocity)) / TIME_STEP;
+	out.second = -(t_mass * ( - new_t_velocity)) / TIME_STEP;
+
+	return out;

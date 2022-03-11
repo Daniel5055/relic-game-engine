@@ -1,0 +1,259 @@
+Jinny Change Log
+
+
+29/08/20
+- Created a Physics Framework which contains:
+	| PhysicsData class to contain physics related info of an object
+
+	| Vector struct to contain two doubles labelled "x_value" and "y_value"
+
+	| Physics class which contains function to apply a force to an object's physicsData and returns vector of object's displacement
+
+- Created a PhysicsSystem class to handle physics related requests from objects and handle them through the physics framework, also includes:
+	| Registry of all physics data of objects
+
+	| Registry of all rigid bodies of objects (objects which have collision boxes) which can be either:
+		| Static -> will not move when other rigid body collides with it
+
+		| Non-Static -> Can move if other rigid body collides with it
+	
+
+- Implemented object movement through user input by:
+	| Creating a new input component named PlayerInputComponent, which registers movement input and informs the rest of the object
+
+	| Creating a new physics component named PlayerPhysicsComponent which:
+		| Creates physics data for the object and sends to PhysicsSystem to register
+
+		| Registers object shape as an unstatic rigid body to physics component
+
+		| Applys a force on the object dependent on the input detected by PlayerInputComponent
+
+	| Having the physics system detect messages from objects to apply force, and use the physics framework to perfrom task
+
+- Implemented Boundary member to PhysicsSystem which is a pointer to a shape, which can be assign through the creation of an object using
+  a new component, BoundaryPhysicsComponent.
+
+- Implemented collision detection with rigid bodies and an assigned boundary, which appears to be glitchless
+
+
+30/08/20
+- Implemented collision detection in PhysicsSystem between a non-static rigid body and a static rigid body
+	| Initially had problems with corner collisions, allowing for a non-static rigid body to phase through static rigid body
+
+	| Eventually fixed through a sort of double-checking system
+
+	| Collision is completley glitchless as far as tested
+
+31/08/20
+- Created a struct in physics framework: the RigidBody, which consists of tactile related data for an object
+	| This new struct allows for me to place friction related data here, such as the dynamic and static friction coefficients;
+
+	| Also keeps all this tactile data in one place
+
+- Moved the collision detection algorithm from PhysicsSystem to Framework::Physics, as it is more intuitive for such algorithms to be accessible
+  from the framework than to be called from the actual system
+	| The collision detection algorithm also slightly modified to be more efficient
+
+	| I believe my modification should improve efficiency by a bit
+
+	| Transition of collision detection algorithm seems to be successful as now glitches found from testing
+
+- Boundry collision detection in PhysicsSystem temporarily disabled as it must be moved to Framework::Physics
+	| Tomorrow I can hopeful do this successfully
+
+01/08/20
+- Reenabled boundary collision detection into Framework::Physics, returns the direction object collided with.
+
+02/08/20
+- Preparing to design dynamic v dynamic collision system
+	| Involves making collisions and then recalculating them if another closer collision occurs
+	
+	| I have researched all the physics of collisions and rebounds etc, 
+
+	| Main issue is handling multiple collisions ONE AT A TIME :(
+
+	| Will begin dynamic v dynamic collison system on weekend, after some more designing
+
+	| I am contemplating having physics engine handle entire rebound concept, even with static objects
+
+- Added x_Direction and y_Direction to PhysicsData to make knowing direction easier
+
+03/08/20
+- Today I sat down, collected my thoughts, and fully planned a dynamic v dynamic collision system
+	| I drew a flow chart of the general physics system plan and I do not see any logical flaws for now
+
+	| In essence, it is much simpler than I initially anticipated
+
+- Developed vector arithmatic functions to make vector arithmatic easier
+
+- Moved some fundemental physics data into PhysicsData class to make data handling easier
+	| Added applied force to class and split it into MT Force and ST Force
+		| MT stands for multi tick and refers to how the force remains applied on the object
+	
+		| ST stands for single tick and refers to how the force is only applied in a single tick
+
+		| NOTE: these are just terms I developed myself
+
+	| Added movement in a tick into class to make it more accessible
+
+	| Adding movement and force to PhysicsData also removes the need for messaging this information, which could be issue for slowness otherwise
+
+- Removed Direction, at least for now, as probably not neccessary
+
+- Added some internal functions to Physics Framework for calculations, so that I don't have to repeat typing those calculations
+
+- As maybe expected, game engine at its current state is not runnable due to working on Physics Framework and PhysicsSystem
+
+- Tomorrow I plan to finish the dynamic v dynamic collision system
+
+// TODO: WRITE UP BETTER
+04/08/20
+- Programmed system, changed slightly, movement and collision errors
+
+05/08/20
+- Fixed major errors, have proper collisions between dynam v dynam
+- Change core part of it such that it was quicker and simpler, wow
+- Errors including objects dissapearing on collision and clipping each other
+
+06/08/20
+- All these bugs ironed out
+- Potentially 2 more bugs involving objects teleporting slightly after collision, and dynamic objects (at least for the player object) very occasionally 
+  clipping static objects
+
+10/08/20
+- Fixed bug after bug in collision system.(Maybe 20 in total) (I have never had so many bugs before {then again, I have never had such a complicated system})
+	- Fixed bug where a constant force down on objects allows for other to clip object (This one was a pain, and was like a 5 part problem)
+
+	- Fixed bug where object hitting object with opposite acceleration will clip object
+	
+	- Fixed more minor bugs that I cannot recall excatly
+
+	- Most of these bugs were due to Collision time function, which is fixed but looks bad. Should optimize later
+
+- Rewrote physics for collisions, now using coefficeint of restitution for objects instead of elasticity
+	- Coefficeint of restitution determines how bouncy a collision is
+
+	- It is not a property of an individual object but rather between objects
+
+	- Therefore, I will likley create a minor system that handles object "Materials" and
+	  and can return coeff of restitutions for differnt combinations of materials
+
+	- Consequently, objects will recieve a new property called "Material"
+		- Maybe this property could contain coefficients of friction? Could be an idea?
+
+- Rewrote and organized much of the code for collision time for clarity and bug fixing
+	- Probably should organize it better again, using flags instead of soley nested if statements (lots of repition)
+
+- System is mostly bug-free, only 2 very rare bugs identified, both caused by corner collisig of the collision syons
+	- One bug causes object to clip other object through corner after bouncing from corner once before
+
+	- Other causes very abrupt and teleportation-like movement between two objects colliding at corner
+		- This has not been recreated yet as the circumstances for this bug are not fully understood
+
+		- However, this was caught on camera so I can analyse this better later
+
+
+11/08/20
+- Fixed what I think is the final bug of the collision system
+	- Involved a misuse of or statement instead of and statement for corner collisions
+	
+	- Now collision system is fully functional!
+
+- Renamed "static objects" to HUD Objects to avoid confusion between static physics objects
+
+- Created an Asset Loading Graphic Component to create an object to load all assets of scene
+	- Basically lets me initialize assets on bulk
+
+- Created some useful functions for scenes such as
+	- Create Button skeleton
+
+	- Create Camera
+
+	- Load Assets
+	
+- Added capability to delete objects in ObjectManager
+
+- Added capability to clear entire object list in ObjectManager, for when there is a new scene
+
+- Added functions to add Graphics, Input, Physics and Core components seperately to GameObject
+
+- Created Material Concept to handle coeffiecients of restitutions in collisions
+	- Added Material concept to Framework, may be better adjusted later
+
+	- Created MaterialManager for PhysicsSystem to handle Coefficient of Restitutions
+
+	- After further planning, I may change this concept to include friction in materials
+
+12/08/20
+- Recreated Material such that is just represents a list of predefined enumerations as apart of Framework
+
+- MaterialManager was moved to Framework due to its fundementalility in physics
+	- Now the Physics class contains and instance of MaterialManager
+	
+	- MaterialManager contains all the data between material pairs for
+		- Coefficients of Restitution
+		
+		- Static friction coefficients
+
+		- Dynamic friction coefficients
+		
+	- Data is all defined in initialization of MaterialManager yet this may move to txt files in future for easier handling
+
+- Implemented friction to collision system
+	- To do so, added new variable to collision struct "Applied Force", to know the size of the force of a collision
+
+	- All friction calculations in checkFriction function, called before apply forces to objects
+
+	- Utilizes collision data gotten from last iteration of collision checking
+
+	- So far it seems to work great, notably need to tune the data for the materials
+
+	- One potential bug appears to be that static friction is not properly implemented
+
+- Made small optimization to Collision Time function in Physics class, more optimizations to come in the future
+
+13/08/20
+- Bug in friction system was that, during constant collisions, it was actually registered as every other collision
+	- I could not think of how to fix that part, so instead I had it so physics system stored past collisions as well to check friction
+	
+	- This does not feel like an elegant fix really, but it worked
+
+- Customized so that dynamic and static rigidBodies can be created with whatever material
+
+- Still want to change material concept, by creating systems of materials
+	- As in say for a game, I want a different collection of materials
+
+	- Still haven't figured out details, so still designing
+
+- Might also create pong prototype using game engine
+	- After that, plans to properly start Jinny Game
+
+- Also, I may call the game engine either the J-Engine or EnJinny
+
+17/09/20
+- Distinguished between Global and Scene objects, where scene objects are erased after a scene changed and global are not
+	- Neccessary for keeping data between scenes
+
+- Discovered a small bug in collision system
+	- Applying constant upward force to semi-elastic object eventually led to object clipping
+	
+	- Will explore later
+
+- TODO:
+	- Create "MaterialCollection" class which contains the data betweeen different materials
+		- For example, there could be the standard material collection which has "Wood", "Metal", "Ice" etc.
+
+		- While there could be another more specific collection such as "pong ball", "pong walls", etc. allowing for more customization
+
+		- For now, this data would have to passed into the physics framework in the main file so it may be sent to MaterialManager
+
+	- Create option to enable air resistance for certain rigidBodies, that is, the object slows down naturally when in motion
+		- Neccessary for pong platforms, which would have to slow down when player does not apply force
+
+		- Probably use air resistance formula of v^2 * coefficient
+
+	- Then I can create pong by simply creating some custom scenes and object components!
+		- It should be that easy thanks to this engine!!!
+
+	
+	
