@@ -4,11 +4,13 @@
 
 #include <cmath>
 
-Framework::RigidBody::RigidBody(double mass, double dampening)
+Framework::RigidBody::RigidBody(double mass, double dampening, Framework::Shape* shape_ptr, Framework::Material material)
 {
     m_mass = mass;
-
     m_dampening = dampening;
+    m_rigid_body_shape_ptr = shape_ptr;
+    m_material = material;
+    m_is_static = false;
 
     m_current_velocity = { 0, 0 };
 
@@ -70,34 +72,34 @@ void Framework::RigidBody::applySFForce(Vector force)
     m_sf_force += force;
 }
 
-Framework::eDec Framework::RigidBody::getXMovement() const
+double Framework::RigidBody::getXMovement() const
 {
     return m_x_moved;
 }
 
-Framework::eDec Framework::RigidBody::getYMovement() const
+double Framework::RigidBody::getYMovement() const
 {
     return m_y_moved;
 }
 
-void Framework::RigidBody::setMovement(eDec x_moved, eDec y_moved)
+void Framework::RigidBody::setMovement(double x_moved, double y_moved)
 {
     m_x_moved = x_moved;
     m_y_moved = y_moved;
 }
 
-void Framework::RigidBody::addTickMovement(eDec x_moved, eDec y_moved)
+void Framework::RigidBody::addTickMovement(double x_moved, double y_moved)
 {
     m_x_moved += x_moved;
     m_y_moved += y_moved;
 }
 
-void Framework::RigidBody::setXMovement(eDec x_moved)
+void Framework::RigidBody::setXMovement(double x_moved)
 {
     m_x_moved += x_moved;
 }
 
-void Framework::RigidBody::setYMovement(eDec y_moved)
+void Framework::RigidBody::setYMovement(double y_moved)
 {
     m_y_moved += y_moved;
 }
@@ -116,7 +118,8 @@ bool Framework::RigidBody::isStationary() const
 {
     if (m_current_velocity.x_value == 0 && m_current_velocity.y_value == 0)
     {
-        if (m_x_moved.getWholeNumber() == 0 && m_y_moved.getWholeNumber() == 0)
+        // TODO: could be janky this
+        if (m_x_moved == 0 && m_y_moved == 0)
         {
             return true;
         }
@@ -130,12 +133,12 @@ double Framework::RigidBody::getDampening() const
     return m_dampening;
 }
 
-Framework::eDec Framework::RigidBody::getX() const
+double Framework::RigidBody::getX() const
 {
     return m_exact_x;
 }
 
-Framework::eDec Framework::RigidBody::getY() const
+double Framework::RigidBody::getY() const
 {
     return m_exact_y;
 }
@@ -157,18 +160,17 @@ void Framework::RigidBody::move()
     m_exact_x += m_x_moved;
     m_exact_y += m_y_moved;
 
-    int whole_x = m_x_moved.getWholeNumber();
+    int whole_x = round(m_x_moved);
     if (whole_x != m_rigid_body_shape_ptr->x)
     {
         m_rigid_body_shape_ptr->x = whole_x;
     }
 
-    int whole_y = m_y_moved.getWholeNumber();
+    int whole_y = round(m_y_moved);
     if (whole_y != m_rigid_body_shape_ptr->y)
     {
         m_rigid_body_shape_ptr->y = whole_y;
     }
-
 }
 
 int Framework::RigidBody::getRoundedX() const
@@ -179,6 +181,11 @@ int Framework::RigidBody::getRoundedX() const
 int Framework::RigidBody::getRoundedY() const
 {
     return m_rigid_body_shape_ptr->y;
+}
+
+void Framework::RigidBody::setShape(Framework::Shape* shape_ptr)
+{
+    m_rigid_body_shape_ptr = shape_ptr;
 }
 
 int Framework::RigidBody::getWidth() const

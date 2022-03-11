@@ -5,7 +5,6 @@
 #include <utility>
 
 #include "RigidBody.h"
-#include "ExactDecimal.h"
 
 namespace Framework
 {
@@ -69,14 +68,14 @@ namespace Jinny
 		double getCornerCollisionTime(Framework::RigidBody* arrow, Framework::RigidBody* target);
 
 		// Determines the time of collision between two objects on a single axis
-		double getCollisionTime(Framework::eDec distance, double velocity_1, double velocity_2, double acceleration_1, double acceleration_2, double max_time);
+		double getCollisionTime(double distance, double velocity_1, double velocity_2, double acceleration_1, double acceleration_2, double max_time);
 
 		// Calculate resultant force on objects in dynamic collision
 		std::pair<double, double> calculateDynamicCollisionForces(double a_velocity, double a_mass, double t_velocity, double t_mass, double coeff_restitution);
 		double calculateStaticCollisionForce(double axis_velocity, double mass, double coeff_restitution);
 
 		// Deterime movement at time
-		Framework::eDec getMovementAtTime(double time, double velocity, double acceleration);
+		double getMovementAtTime(double time, double velocity, double acceleration);
 
 	};
 }

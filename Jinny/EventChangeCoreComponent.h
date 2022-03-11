@@ -1,12 +1,10 @@
 #pragma once
 
 #include "CoreComponent.h"
-
 #include "ObjectInput.h"
 
 namespace Jinny
 {
-
 	class Scene;
 
 	class EventChangeCoreComponent : public CoreComponent

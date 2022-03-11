@@ -9,6 +9,8 @@
 #include "MessageBoard.h"
 #include "PhysicsMessage.h"
 
+#include "GridCollisionManager.h"
+
 #include "Vector.h"
 
 namespace Framework
@@ -39,8 +41,6 @@ namespace Jinny
 
 		// --- Internal Functions ---
 
-		// Checking Collisions
-		void checkCollisions();
 
 		// Checking dampening
 		void checkDampening();
@@ -53,6 +53,8 @@ namespace Jinny
 
 		// Framework
 		Framework::Physics* f_physics;
+
+		GridCollisionManager* m_col_manager;
 
 
 		// --- Data ---

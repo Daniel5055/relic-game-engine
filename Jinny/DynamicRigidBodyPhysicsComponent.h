@@ -30,9 +30,5 @@ namespace Jinny
 	private:
 		// --- data
 		Framework::RigidBody* m_rigid_body;
-		Framework::RigidBody* m_data;
-
-		// For rigidBody initialization
-		Framework::Material m_material;
 	};
 }

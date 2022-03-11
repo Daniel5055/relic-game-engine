@@ -6,7 +6,6 @@
 
 namespace Jinny
 {
-
 	class CoreComponent : public Component
 	{
 	public:

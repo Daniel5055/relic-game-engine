@@ -1,6 +1,6 @@
 #include "CoreComponent.h"
 
-#include "CoreMessage.h"
+#include "GameMessage.h"
 
 Jinny::MessageBoard<Jinny::GameMessage>* Jinny::CoreComponent::m_message_board = nullptr;
 

@@ -2,7 +2,6 @@
 
 #include "Vector.h"
 #include "Shape.h"
-#include "ExactDecimal.h"
 
 namespace Framework
 {
@@ -12,7 +11,7 @@ namespace Framework
 	{
 	public:
 		// Constructor
-		RigidBody(double mass, double m_dampening);
+		RigidBody(double mass, double dampening, Framework::Shape* shape_ptr, Framework::Material material);
 
 		// Mass Accessors
 		double getMass() const;
@@ -32,13 +31,13 @@ namespace Framework
 		void clearSFForce();
 
 		// Movement Accessors
-		eDec getXMovement() const;
-		eDec getYMovement() const;
+		double getXMovement() const;
+		double getYMovement() const;
 
-		void setMovement(eDec x_moved, eDec y_moved);
-		void addTickMovement(eDec x_moved, eDec y_moved);
-		void setXMovement(eDec x_moved);
-		void setYMovement(eDec y_moved);
+		void setMovement(double x_moved, double y_moved);
+		void addTickMovement(double x_moved, double y_moved);
+		void setXMovement(double x_moved);
+		void setYMovement(double y_moved);
 
 		// Time Accessors
 		double getTimeAfterTick();
@@ -48,10 +47,12 @@ namespace Framework
 		double getDampening() const;
 
 		// Shape Accessors
+		void setShape(Framework::Shape* shape_ptr);
+
 		int getWidth() const;
 		int getHeight() const;
-		eDec getX() const;
-		eDec getY() const;
+		double getX() const;
+		double getY() const;
 		void setX(int x);
 		void setY(int y);
 		int getRoundedX() const;
@@ -74,8 +75,8 @@ namespace Framework
 		Vector m_current_velocity;
 
 		// Movement after a single tick
-		eDec m_x_moved;
-		eDec m_y_moved;
+		double m_x_moved;
+		double m_y_moved;
 
 		// Collision Time (neccessary for checking collision distances)
 		double m_time_after_tick;
@@ -89,8 +90,8 @@ namespace Framework
 
 		// Shape
 		Shape* m_rigid_body_shape_ptr;
-		eDec m_exact_x;
-		eDec m_exact_y;
+		double m_exact_x;
+		double m_exact_y;
 
 		// Staticness (if reacts when collided with)
 		bool m_is_static;

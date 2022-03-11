@@ -4,6 +4,7 @@
 #include "RigidBody.h"
 
 #include <cmath>
+#include "GridCollisionManager.h"
 
 
 Framework::Physics::Physics(double time_step, double ppm, double x_damping)
@@ -134,21 +135,6 @@ void Framework::Physics::applyDampening(RigidBody* data)
 			}
 		}
 	}
-}
-
-double Framework::Physics::getDynamicCollisionTime(RigidBody* arrow_body, RigidBody* arrow_physics, RigidBody* target_body, RigidBody* target_physics, double max_time)
-{
-	return getCollisionTime(eDec(arrow_body->getX() - target_body->getX() - target_body->getWidth()),
-		arrow_physics->getVelocity().x_value, target_physics->getVelocity().x_value,
-		arrow_physics->getAppliedForce().x_value / arrow_physics->getMass(),
-		target_physics->getAppliedForce().x_value / target_physics->getMass(), max_time);
-}
-
-double Framework::Physics::getStaticCollisionTime(RigidBody* arrow_body, RigidBody* arrow_physics, RigidBody* target_body)
-{
-	return getCollisionTime(eDec(arrow_body->getX() - target_body->getX() - target_body->getWidth()),
-		arrow_physics->getVelocity().x_value, 0,
-		arrow_physics->getAppliedForce().x_value / arrow_physics->getMass(), 0, TIME_STEP);
 }
 
 double Framework::Physics::getStaticFrictionCoefficient(RigidBody* rigid_body_1, RigidBody* rigid_body_2)

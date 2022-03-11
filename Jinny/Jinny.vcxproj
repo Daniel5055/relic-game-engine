@@ -156,7 +156,6 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="DynamicRigidBodyPhysicsComponent.cpp" />
     <ClCompile Include="EventChangeCoreComponent.cpp" />
-    <ClCompile Include="ExactDecimal.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="Graphics.cpp" />
@@ -210,7 +209,6 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="DynamicRigidBodyPhysicsComponent.h" />
     <ClInclude Include="EventChangeCoreComponent.h" />
-    <ClInclude Include="ExactDecimal.h" />
     <ClInclude Include="FileLoader.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="Graphics.h" />
@@ -259,6 +257,9 @@
     <ClInclude Include="AssetLoaderGraphicsComponent.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="Window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitignore" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

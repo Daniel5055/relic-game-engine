@@ -1,6 +1,6 @@
 #include "PlayerPhysicsComponent.h"
 
-#include "PhysicsData.h"
+# include "Material.h"
 #include "RigidBody.h"
 
 Jinny::PlayerPhysicsComponent::PlayerPhysicsComponent(double mass, double max_x_speed, double max_y_speed)
@@ -8,11 +8,9 @@ Jinny::PlayerPhysicsComponent::PlayerPhysicsComponent(double mass, double max_x_
 	m_rigid_body = nullptr;
 
 	// Create Data
-	m_data = new Framework::RigidBody(mass, 1000);
+	m_rigid_body = new Framework::RigidBody(mass, 1000, nullptr, Framework::Material::ENTITY);
 
-	m_data->doesHaveRigidBody();
-
-	m_data->applyMFForce({ 0, -300});
+	m_rigid_body->applyMFForce({ 0, -300});
 
 }
 
@@ -24,7 +22,7 @@ void Jinny::PlayerPhysicsComponent::initialize(GameObject& object)
 	ObjectEvent o_event = *object.getQueueIterator();
 	if (o_event.type == EventType::OBJECT_INITIALIZATION_SHAPE)
 	{
-		m_rigid_body = new Framework::RigidBody(o_event.shape, false, Framework::Material::ENTITY);
+		m_rigid_body->setShape(o_event.shape);
 	}
 
 	PhysicsMessage msg_1;
@@ -39,7 +37,7 @@ void Jinny::PlayerPhysicsComponent::initialize(GameObject& object)
 	msg_2.type = PMessageType::SET_PHYSICS_DATA;
 	msg_2.object_ID = object.getObjectID();
 
-	msg_2.data = m_data;
+	msg_2.data = m_rigid_body;
 
 	pushMessage(msg_2);
 
@@ -50,13 +48,13 @@ void Jinny::PlayerPhysicsComponent::update()
 	handleEvents();
 	handleMessages();
 
-	m_rigid_body->move(m_data->getTickMovement());
+	m_rigid_body->move();
 }
 
 Jinny::PlayerPhysicsComponent::~PlayerPhysicsComponent()
 {
-	delete m_data;
-	m_data = nullptr;
+	delete m_rigid_body;
+	m_rigid_body = nullptr;
 
 	delete m_rigid_body;
 	m_rigid_body = nullptr;
@@ -83,22 +81,22 @@ void Jinny::PlayerPhysicsComponent::handleEvents()
 			switch (it->input.key)
 			{
 			case 'a':
-				m_data->applyMFForce({ is_down * -500, 0 });
+				m_rigid_body->applyMFForce({ is_down * -500, 0 });
 
 				break;
 
 			case 'd':
-				m_data->applyMFForce({ is_down * 500, 0 });
+				m_rigid_body->applyMFForce({ is_down * 500, 0 });
 
 				break;
 
 			case 'w':
-				m_data->applyMFForce({ 0, is_down * -500 });
+				m_rigid_body->applyMFForce({ 0, is_down * -500 });
 
 				break;
 
 			case 's':
-				m_data->applyMFForce({ 0, is_down * 500 });
+				m_rigid_body->applyMFForce({ 0, is_down * 500 });
 
 				break;
 			}

@@ -4,7 +4,6 @@
 
 #include "Vector.h"
 #include "MaterialManager.h"
-#include "ExactDecimal.h"
 
 namespace Framework
 {
@@ -34,10 +33,6 @@ namespace Framework
 		double getCoefficientOfRestitution(RigidBody* rigid_body_1, RigidBody* rigid_body_2);
 
 		void applyDampening(RigidBody* data);
-		
-		// For corner collisions checking
-		double getDynamicCollisionTime(RigidBody* arrow_body, RigidBody* arrow_physics, RigidBody* target_body, RigidBody* target_physics, double max_time);
-		double getStaticCollisionTime(RigidBody* arrow_body, RigidBody* arrow_physics, RigidBody* target_body);
 
 		// Friction
 		double getStaticFrictionCoefficient(RigidBody* rigid_body_1, RigidBody* rigid_body_2);
@@ -52,10 +47,5 @@ namespace Framework
 		const double PIXELS_PER_METER;
 
 		void setVelocityAtTime(RigidBody* data, double time);
-
-
-
 	};
-
-
 }

@@ -54,13 +54,15 @@ void Framework::Graphics::clear(Framework::Color color)
 void Framework::Graphics::draw(Graphic* graphic)
 {
     // May slow down
+    SDL_Rect shape = (SDL_Rect)*graphic->getShape();
     if (graphic->getClip() == nullptr)
     {
-        SDL_RenderCopy(m_renderer_ptr, graphic->getTexture()->getTexture(), nullptr, &(SDL_Rect)*graphic->getShape());
+        SDL_RenderCopy(m_renderer_ptr, graphic->getTexture()->getTexture(), nullptr, &shape);
     }
     else
     {
-        SDL_RenderCopy(m_renderer_ptr, graphic->getTexture()->getTexture(), &(SDL_Rect)*graphic->getClip(), &(SDL_Rect)*graphic->getShape());
+		SDL_Rect clip = (SDL_Rect)*graphic->getClip();
+        SDL_RenderCopy(m_renderer_ptr, graphic->getTexture()->getTexture(), &clip, &shape);
     }
     
 }
@@ -78,7 +80,8 @@ void Framework::Graphics::draw(Graphic* graphic, int x_shift, int y_shift)
     }
     else
     {
-        SDL_RenderCopy(m_renderer_ptr, graphic->getTexture()->getTexture(), &(SDL_Rect)*graphic->getClip(), &shape);
+		SDL_Rect clip = (SDL_Rect)*graphic->getClip();
+        SDL_RenderCopy(m_renderer_ptr, graphic->getTexture()->getTexture(), &clip, &shape);
     }
 }
 

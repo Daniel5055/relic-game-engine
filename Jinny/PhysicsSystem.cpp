@@ -2,7 +2,6 @@
 
 #include "Physics.h"
 
-#include "PhysicsData.h"
 #include "RigidBody.h"
 #include "Shape.h"
 
@@ -16,6 +15,10 @@ void Jinny::PhysicsSystem::intialize(Framework::Physics* physics, MessageBoard<P
 	m_message_board = message_board;
 
 	f_physics = physics;
+
+	m_col_manager = new GridCollisionManager(physics, m_data);
+	m_col_manager->initialize();
+
 }
 
 void Jinny::PhysicsSystem::update()
@@ -29,15 +32,14 @@ void Jinny::PhysicsSystem::update()
 	// I think there is clash between dampening and friction
 	checkDampening();
 
-
-
 	// Iterate through objects
 	for (auto it = m_data.begin(); it != m_data.end(); it++)
 	{
-		it->second->setTimeAfterTick(f_physics->nextStep(it->second));
+		// Used to be f_physics->nextStep(it->second)?
+		it->second->setTimeAfterTick(f_physics->getTimeStep());
 	}
 
-	checkCollisions();
+	m_col_manager->updateCollisions();
 }
 
 void Jinny::PhysicsSystem::close()

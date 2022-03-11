@@ -1,7 +1,6 @@
 #include "GridCollisionManager.h"
 
 #include "Physics.h"
-#include "ExactDecimal.h"
 
 Jinny::GridCollisionManager::GridCollisionManager(Framework::Physics* physics, std::map<int, Framework::RigidBody*>& list)
 	:m_rigid_bodies(list)
@@ -21,7 +20,7 @@ void Jinny::GridCollisionManager::updateCollisions()
 	for (auto it_1 = m_rigid_bodies.begin(); it_1 != m_rigid_bodies.end(); it_1++)
 	{
 		// Check if has movement
-		if (!it_1->second->getXMovement().isZero() || !it_1->second->getYMovement().isZero())
+		if (!it_1->second->getXMovement() == 0 || !it_1->second->getYMovement() == 0)
 		{
 			m_moved_rigid_bodies.push_back(it_1->first);
 			m_corner_potentials[it_1->first] = -1;
@@ -421,7 +420,7 @@ double Jinny::GridCollisionManager::checkXCollision(Framework::RigidBody* arrow,
 		// Movement of target on later statement not included here as there are cases where this could miss collisions
 		if (p_collision == true)
 		{
-			new_time = getCollisionTime(Framework::eDec(target->getX() - arrow->getX() - arrow->getWidth()),
+			new_time = getCollisionTime(double(target->getX() - arrow->getX() - arrow->getWidth()),
 				arrow->getVelocity().x_value, target->getVelocity().x_value,
 				arrow->getAppliedForce().x_value / arrow->getMass(),
 				target->getAppliedForce().x_value / target->getMass(), target->getTimeAfterTick());
@@ -477,7 +476,7 @@ double Jinny::GridCollisionManager::checkXCollision(Framework::RigidBody* arrow,
 		// Movement of target on later staetement not included here as there are cases where this could miss collisions
 		if (p_collision == true)
 		{
-			new_time = getCollisionTime(Framework::eDec(target->getX() + target->getWidth() - arrow->getX()),
+			new_time = getCollisionTime(double(target->getX() + target->getWidth() - arrow->getX()),
 				arrow->getVelocity().x_value, target->getVelocity().x_value,
 				arrow->getAppliedForce().x_value / arrow->getMass(),
 				target->getAppliedForce().x_value / target->getMass(), target->getTimeAfterTick());
@@ -541,7 +540,7 @@ double Jinny::GridCollisionManager::checkYCollision(Framework::RigidBody* arrow,
 		// Movement of target on later statement not included here as there are cases where this could miss collisions
 		if (p_collision == true)
 		{
-			new_time = getCollisionTime(Framework::eDec(target->getY() - arrow->getY() - arrow->getHeight()),
+			new_time = getCollisionTime(double(target->getY() - arrow->getY() - arrow->getHeight()),
 				arrow->getVelocity().y_value, target->getVelocity().y_value,
 				arrow->getAppliedForce().y_value / arrow->getMass(),
 				target->getAppliedForce().y_value / target->getMass(), target->getTimeAfterTick());
@@ -597,7 +596,7 @@ double Jinny::GridCollisionManager::checkYCollision(Framework::RigidBody* arrow,
 		// Movement of target on later staetement not included here as there are cases where this could miss collisions
 		if (p_collision == true)
 		{
-			new_time = getCollisionTime(Framework::eDec(target->getY() + target->getHeight() - arrow->getY()),
+			new_time = getCollisionTime(double(target->getY() + target->getHeight() - arrow->getY()),
 				arrow->getVelocity().y_value, target->getVelocity().y_value,
 				arrow->getAppliedForce().y_value / arrow->getMass(),
 				target->getAppliedForce().y_value / target->getMass(), target->getTimeAfterTick());
@@ -631,21 +630,21 @@ double Jinny::GridCollisionManager::getCornerCollisionTime(Framework::RigidBody*
 {
 	if (arrow->getXMovement() > 0)
 	{
-		return getCollisionTime(Framework::eDec(target->getX() - arrow->getX() - arrow->getWidth()),
+		return getCollisionTime(double(target->getX() - arrow->getX() - arrow->getWidth()),
 			arrow->getVelocity().x_value, target->getVelocity().x_value,
 			arrow->getAppliedForce().x_value / arrow->getMass(),
 			target->getAppliedForce().x_value / target->getMass(), target->getTimeAfterTick());
 	}
 	else
 	{
-		return getCollisionTime(Framework::eDec(target->getX() + target->getWidth() - arrow->getX()),
+		return getCollisionTime(double(target->getX() + target->getWidth() - arrow->getX()),
 			arrow->getVelocity().x_value, target->getVelocity().x_value,
 			arrow->getAppliedForce().x_value / arrow->getMass(),
 			target->getAppliedForce().x_value / target->getMass(), target->getTimeAfterTick());
 	}
 }
 
-double Jinny::GridCollisionManager::getCollisionTime(Framework::eDec distance, double velocity_1, double velocity_2, double acceleration_1, double acceleration_2, double max_time)
+double Jinny::GridCollisionManager::getCollisionTime(double distance, double velocity_1, double velocity_2, double acceleration_1, double acceleration_2, double max_time)
 {
 	// variable useful for some stuff here
 	double time = -1;
@@ -664,7 +663,7 @@ double Jinny::GridCollisionManager::getCollisionTime(Framework::eDec distance, d
 				if (acceleration_1 != 0)
 				{
 					// Then redo calculations with max_time
-					Framework::eDec max_distance = Framework::eDec(velocity_2 * max_time + 0.5 * acceleration_2 * pow(max_time, 2) + distance / f_ppm);
+					double max_distance = double(velocity_2 * max_time + 0.5 * acceleration_2 * pow(max_time, 2) + distance / f_ppm);
 
 					double discriminant = pow(velocity_1, 2) + 2 * (max_distance) * (acceleration_1);
 
@@ -713,7 +712,7 @@ double Jinny::GridCollisionManager::getCollisionTime(Framework::eDec distance, d
 			if (acceleration_1 != 0)
 			{
 				// Then redo calculations with max_time
-				Framework::eDec max_distance = Framework::eDec(velocity_2 * max_time + 0.5 * acceleration_2 * pow(max_time, 2) + distance / f_ppm);
+				double max_distance = double(velocity_2 * max_time + 0.5 * acceleration_2 * pow(max_time, 2) + distance / f_ppm);
 
 				double discriminant = pow(velocity_1, 2) + 2 * (max_distance) * (acceleration_1);
 
@@ -785,7 +784,7 @@ double Jinny::GridCollisionManager::getCollisionTime(Framework::eDec distance, d
 			}
 			else
 			{
-				Framework::eDec max_distance = Framework::eDec(velocity_2 * max_time + 0.5 * acceleration_2 * pow(max_time, 2));
+				double max_distance = double(velocity_2 * max_time + 0.5 * acceleration_2 * pow(max_time, 2));
 
 				double discriminant = pow(velocity_1, 2) + 2 * (max_distance) * (acceleration_1);
 
@@ -828,7 +827,7 @@ double Jinny::GridCollisionManager::getCollisionTime(Framework::eDec distance, d
 
 	if (discriminant < 0)
 	{
-		Framework::eDec max_distance = Framework::eDec(velocity_2 * max_time + 0.5 * acceleration_2 * pow(max_time, 2));
+		double max_distance = double(velocity_2 * max_time + 0.5 * acceleration_2 * pow(max_time, 2));
 		discriminant = pow(velocity_1, 2) + 2 * (distance / f_ppm + max_distance) * acceleration_1;
 
 		if (discriminant < 0)
@@ -873,7 +872,7 @@ double Jinny::GridCollisionManager::getCollisionTime(Framework::eDec distance, d
 			// Check if time is not greater than max
 			if (time > max_time)
 			{
-				Framework::eDec max_distance = Framework::eDec(velocity_2 * max_time + 0.5 * acceleration_2 * pow(max_time, 2));
+				double max_distance = double(velocity_2 * max_time + 0.5 * acceleration_2 * pow(max_time, 2));
 				discriminant = pow(velocity_1, 2) + 2 * (distance / f_ppm + max_distance) * acceleration_1;
 
 				// Is this check neccessary? AAAAAAAAAAAAAAAAAAAA
@@ -913,7 +912,7 @@ double Jinny::GridCollisionManager::getCollisionTime(Framework::eDec distance, d
 		// Check if time is not greater than max
 		if (time > max_time)
 		{
-			Framework::eDec max_distance = Framework::eDec(velocity_2 * max_time + 0.5 * acceleration_2 * pow(max_time, 2));
+			double max_distance = double(velocity_2 * max_time + 0.5 * acceleration_2 * pow(max_time, 2));
 			discriminant = pow(velocity_1, 2) + 2 * (distance / f_ppm + max_distance) * acceleration_1;
 
 			// Is this check neccessary? AAAAAAAAAAAAAAAAAAAA
@@ -955,7 +954,7 @@ double Jinny::GridCollisionManager::getCollisionTime(Framework::eDec distance, d
 		// Check if time is not greater than max
 		if (time > max_time)
 		{
-			Framework::eDec max_distance = Framework::eDec(velocity_2 * max_time + 0.5 * acceleration_2 * pow(max_time, 2));
+			double max_distance = double(velocity_2 * max_time + 0.5 * acceleration_2 * pow(max_time, 2));
 			discriminant = pow(velocity_1, 2) + 2 * (distance / f_ppm + max_distance) * acceleration_1;
 
 			// Is this check neccessary? AAAAAAAAAAAAAAAAAAAA
@@ -1019,7 +1018,7 @@ double Jinny::GridCollisionManager::calculateStaticCollisionForce(double axis_ve
 	return (mass * -axis_velocity * coeff_restitution) / f_max_time_step;
 }
 
-Framework::eDec Jinny::GridCollisionManager::getMovementAtTime(double time, double velocity, double acceleration)
+double Jinny::GridCollisionManager::getMovementAtTime(double time, double velocity, double acceleration)
 {
-	return Framework::eDec(time * velocity + 0.5 * acceleration * time * time);
+	return double(time * velocity + 0.5 * acceleration * time * time);
 }

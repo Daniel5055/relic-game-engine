@@ -18,13 +18,13 @@ int main(int argc, char* args[])
 	// Main loop
 	while (!(game->isGameOver()))
 	{
-		auto begin = std::chrono::steady_clock::now();
+		//auto begin = std::chrono::steady_clock::now();
 
 		// Update Pattern	
 		game->update();
 
 		//fps
-		std::cout << 1000000 / std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - begin).count() << "fps" << std::endl;
+		//std::cout << 1000000 / std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - begin).count() << "fps" << std::endl;
 	}
 
 	// Close game

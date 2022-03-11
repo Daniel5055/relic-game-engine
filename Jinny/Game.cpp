@@ -59,6 +59,7 @@ void Jinny::Game::initialize(Scene* starting_scene)
 	InputComponent::setMessageBoard(m_input_message_board);
 	PhysicsComponent::setMessageBoard(m_physics_message_board);
 	CoreComponent::setMessageBoard(m_core_message_board);
+	GraphicsComponent::setMessageBoard(m_graphics_message_board);
 
 	// Scene Configuration
 	Scene::setObjectManager(m_objectManager);

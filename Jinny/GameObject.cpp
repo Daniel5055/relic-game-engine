@@ -10,7 +10,7 @@
 #include "InputMessage.h"
 #include "GraphicsMessage.h"
 #include "PhysicsMessage.h"
-#include "CoreMessage.h"
+#include "GameMessage.h"
 
 
 
