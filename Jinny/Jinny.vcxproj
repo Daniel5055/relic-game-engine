@@ -191,7 +191,6 @@
     <ClCompile Include="StaticRigidBodyPhysicsComponent.cpp" />
     <ClCompile Include="TextGraphicsComponent.cpp" />
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="AssetLoaderGraphicsComponent.cpp" />
     <ClCompile Include="Vector.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>

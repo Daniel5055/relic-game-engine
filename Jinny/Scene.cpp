@@ -7,6 +7,9 @@
 
 #include "AssetLoaderGraphicsComponent.h"
 
+// apperently necessary?
+#include "AssetLoaderGraphicsComponent.cpp"
+
 
 Jinny::GameObjectManager* Jinny::Scene::m_object_manager;
 unsigned int Jinny::Scene::m_window_width;

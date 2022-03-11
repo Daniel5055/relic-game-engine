@@ -4,8 +4,7 @@
 
 Jinny::StaticRigidBodyPhysicsComponent::StaticRigidBodyPhysicsComponent(Framework::Material material)
 {
-	m_rigid_body = nullptr;
-	m_material = material;
+	m_rigid_body = new Framework::RigidBody(1, 1, nullptr, material);
 }
 
 void Jinny::StaticRigidBodyPhysicsComponent::initialize(GameObject& object)

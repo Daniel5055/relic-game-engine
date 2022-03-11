@@ -279,9 +279,6 @@
     <ClCompile Include="Logger.cpp">
       <Filter>Framework\Core\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AssetLoaderGraphicsComponent.cpp">
-      <Filter>Object and Components\Components\Graphics Components\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MaterialManager.cpp">
       <Filter>Framework\Physics\Source Files</Filter>
     </ClCompile>
