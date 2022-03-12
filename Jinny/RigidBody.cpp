@@ -160,13 +160,13 @@ void Framework::RigidBody::move()
     m_exact_x += m_x_moved;
     m_exact_y += m_y_moved;
 
-    int whole_x = round(m_x_moved);
+    int whole_x = round(m_exact_x);
     if (whole_x != m_rigid_body_shape_ptr->x)
     {
         m_rigid_body_shape_ptr->x = whole_x;
     }
 
-    int whole_y = round(m_y_moved);
+    int whole_y = round(m_exact_y);
     if (whole_y != m_rigid_body_shape_ptr->y)
     {
         m_rigid_body_shape_ptr->y = whole_y;
@@ -186,6 +186,8 @@ int Framework::RigidBody::getRoundedY() const
 void Framework::RigidBody::setShape(Framework::Shape* shape_ptr)
 {
     m_rigid_body_shape_ptr = shape_ptr;
+    m_exact_x = shape_ptr->x;
+    m_exact_y = shape_ptr->y;
 }
 
 int Framework::RigidBody::getWidth() const

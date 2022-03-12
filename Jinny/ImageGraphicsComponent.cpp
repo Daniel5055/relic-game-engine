@@ -5,6 +5,7 @@ Jinny::ImageGraphicsComponent::ImageGraphicsComponent(std::string texture_name, 
 	// Create Graphic
 	setGraphic(new Framework::Graphic());
 
+	// If texture path not provided then send a message to load the texutre from the path
 	if (texture_path != "")
 	{
 		GraphicsMessage g_msg_1;
@@ -14,13 +15,12 @@ Jinny::ImageGraphicsComponent::ImageGraphicsComponent(std::string texture_name, 
 		pushMessage(g_msg_1);
 	}
 
+	// Then send a message to assign the texture to the graphic
 	GraphicsMessage g_msg_2;
 	g_msg_2.type = GMessageType::ASSIGN_TEXTURE;
 	g_msg_2.string_1 = texture_name;
 	g_msg_2.graphic = getGraphic();
 	pushMessage(g_msg_2);
-
-
 }
 
 void Jinny::ImageGraphicsComponent::initialize(GameObject& object)
@@ -44,6 +44,4 @@ void Jinny::ImageGraphicsComponent::initialize(GameObject& object)
 	g_msg.object_ID = object.getObjectID();
 	g_msg.graphic = getGraphic();
 	pushMessage(g_msg);
-
-
 }

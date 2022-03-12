@@ -18,6 +18,7 @@ void Jinny::StaticRigidBodyPhysicsComponent::initialize(GameObject& object)
 		m_rigid_body->setShape(o_event.shape);
 		m_rigid_body->setStatic(true);
 
+
 		PhysicsMessage msg;
 		msg.type = PMessageType::SET_RIGID_BODY;
 		msg.object_ID = object.getObjectID();

@@ -26,14 +26,6 @@ void Jinny::DynamicRigidBodyPhysicsComponent::initialize(GameObject& object)
 
 		m_rigid_body->setShape(o_event.shape);
 
-		PhysicsMessage msg_2;
-		msg_2.type = PMessageType::SET_PHYSICS_DATA;
-		msg_2.object_ID = object.getObjectID();
-
-		msg_2.data = m_rigid_body;
-
-		pushMessage(msg_2);
-
 		PhysicsMessage msg;
 		msg.type = PMessageType::SET_RIGID_BODY;
 		msg.object_ID = object.getObjectID();

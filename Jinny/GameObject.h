@@ -92,6 +92,8 @@ namespace Jinny
 		Framework::Shape m_shape;
 
 		// Event Queue of object
+		// TODO: Hmmm, whats the point of having an event system when components have instances of the game object anyway?
+		// Need to make this relation more seperated and make greater use of the event system
 		EventQueue m_event_queue;
 
 		// System Components (Components connected to systems)

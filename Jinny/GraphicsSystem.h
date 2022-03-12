@@ -4,7 +4,6 @@
 
 #include "GameSystem.h"
 
-
 #include "MessageBoard.h"
 #include "GraphicsMessage.h"
 
@@ -13,7 +12,6 @@ namespace Framework
 {
 	class Graphics;
 	class Graphic;
-
 	class Window;
 }
 

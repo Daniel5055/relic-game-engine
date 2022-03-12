@@ -44,12 +44,10 @@ void Framework::Graphics::close()
 
 void Framework::Graphics::clear(Framework::Color color)
 {
-    
+    // Clear screen
     SDL_SetRenderDrawColor(m_renderer_ptr, color.r, color.g, color.b, color.a);
     SDL_RenderClear(m_renderer_ptr);
-    
 }
-
 
 void Framework::Graphics::draw(Graphic* graphic)
 {
@@ -64,7 +62,6 @@ void Framework::Graphics::draw(Graphic* graphic)
 		SDL_Rect clip = (SDL_Rect)*graphic->getClip();
         SDL_RenderCopy(m_renderer_ptr, graphic->getTexture()->getTexture(), &clip, &shape);
     }
-    
 }
 
 void Framework::Graphics::draw(Graphic* graphic, int x_shift, int y_shift)
@@ -105,20 +102,16 @@ Framework::Texture* Framework::Graphics::createTexture(std::string path)
     texture->setTexture(SDL_CreateTextureFromSurface(m_renderer_ptr, surface_ptr));
 
     return texture;
-
-
 }
 
 
 Framework::Texture* Framework::Graphics::createTextTexture(std::string text, Framework::Font* font, Framework::Color color)
 {
-    
     Texture* texture = new Texture();   
     SDL_Surface* surface_ptr = TTF_RenderText_Blended(font->m_font_ptr, text.c_str(), color);
     texture->setTexture(SDL_CreateTextureFromSurface(m_renderer_ptr, surface_ptr));
 
     return texture;
-
 }
 
 Framework::Texture* Framework::Graphics::createWrappedTextTexture(std::string text, Font* font, Color color, Shape* shape)

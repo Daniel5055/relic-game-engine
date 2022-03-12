@@ -4,7 +4,7 @@
 
 namespace Jinny
 {
-	class ImageGraphicsComponent :public GraphicsComponent
+	class ImageGraphicsComponent : public GraphicsComponent
 	{
 	public:
 		// Constructor

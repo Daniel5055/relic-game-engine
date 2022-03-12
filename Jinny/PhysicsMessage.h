@@ -14,7 +14,6 @@ namespace Jinny
 	{
 		NULL_MESSAGE = 0,
 		SET_RIGID_BODY,
-		SET_PHYSICS_DATA,
 	};
 
 	struct PhysicsMessage
@@ -32,7 +31,6 @@ namespace Jinny
 		union
 		{
 			Framework::RigidBody* rigid_body;
-			Framework::RigidBody* data;
 			Framework::Vector vector;
 		};
 	};

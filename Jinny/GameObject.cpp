@@ -70,6 +70,7 @@ void Jinny::GameObject::addComponent(Component* component)
 
 void Jinny::GameObject::initialize()
 {
+    // Send shape to the components
     m_event_queue.push_back({ EventType::OBJECT_INITIALIZATION_SHAPE, &m_shape });
 
     for (InputComponent* input : m_input)
@@ -149,6 +150,7 @@ void Jinny::GameObject::close()
     }
 }
 
+// TODO: Can optimise these as well
 void Jinny::GameObject::recieveGraphicsMessage(GraphicsMessage g_msg)
 {
     for (GraphicsComponent* graphics : m_graphics)

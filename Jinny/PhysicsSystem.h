@@ -41,7 +41,6 @@ namespace Jinny
 
 		// --- Internal Functions ---
 
-
 		// Checking dampening
 		void checkDampening();
 
@@ -82,9 +81,6 @@ namespace Jinny
 			}
 		};
 
-		// map of objects' index and physics data
-		std::map<int, Framework::RigidBody*> m_data;
-
 		// Map of object IDs and their rigid bodies
 		std::map<int, Framework::RigidBody*> m_rigid_bodies;
 		
@@ -110,7 +106,5 @@ namespace Jinny
 		Framework::RigidBody* m_collision_boundary;
 
 		double m_acceleration_due_to_gravity;
-
-		
 	};
 }

@@ -159,7 +159,7 @@
     <ClCompile Include="AssetManager.cpp">
       <Filter>System Aids\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GraphicSystem.cpp">
+    <ClCompile Include="GraphicsSystem.cpp">
       <Filter>Game Systems\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">

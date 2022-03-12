@@ -5,8 +5,6 @@
 
 Jinny::PlayerPhysicsComponent::PlayerPhysicsComponent(double mass, double max_x_speed, double max_y_speed)
 {
-	m_rigid_body = nullptr;
-
 	// Create Data
 	m_rigid_body = new Framework::RigidBody(mass, 1000, nullptr, Framework::Material::ENTITY);
 
@@ -28,19 +26,8 @@ void Jinny::PlayerPhysicsComponent::initialize(GameObject& object)
 	PhysicsMessage msg_1;
 	msg_1.type = PMessageType::SET_RIGID_BODY;
 	msg_1.object_ID = object.getObjectID();
-
 	msg_1.rigid_body = m_rigid_body;
-
 	pushMessage(msg_1);
-
-	PhysicsMessage msg_2;
-	msg_2.type = PMessageType::SET_PHYSICS_DATA;
-	msg_2.object_ID = object.getObjectID();
-
-	msg_2.data = m_rigid_body;
-
-	pushMessage(msg_2);
-
 }
 
 void Jinny::PlayerPhysicsComponent::update()

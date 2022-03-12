@@ -167,7 +167,7 @@
     <ClCompile Include="LoggedGraphics.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="GameSystem.cpp" />
-    <ClCompile Include="GraphicSystem.cpp" />
+    <ClCompile Include="GraphicsSystem.cpp" />
     <ClCompile Include="InputSystem.cpp" />
     <ClCompile Include="LoggingComponent.cpp" />
     <ClCompile Include="MaterialManager.cpp" />

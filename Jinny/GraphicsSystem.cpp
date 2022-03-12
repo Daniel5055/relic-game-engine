@@ -36,22 +36,25 @@ void Jinny::GraphicsSystem::update()
 {
 	handleMessages();
 
+	// Clear screen with colour white
 	f_graphics->clear({ 0xFF, 0xFF, 0xFF, 0xFF });
 
+	// Get camera
 	Framework::Shape* camera = f_window->getCamera();
 
+	// Iterate through the graphic list and draw them based on where camera is
 	for (Framework::Graphic* graphic : m_graphic_ptrs)
 	{
-		
 		f_graphics->draw(graphic, camera->x, camera->y);
 	}
 
-
+	// Iterate through the gui graphic list and draw them based on where camera is
 	for (Framework::Graphic* graphic : m_gui_graphic_ptrs)
 	{
 		f_graphics->draw(graphic);
 	}
 
+	// Display
 	f_graphics->display();
 }
 
