@@ -8,7 +8,7 @@ Framework::RigidBody::RigidBody(double mass, double dampening, Framework::Shape*
 {
     m_mass = mass;
     m_dampening = dampening;
-    m_rigid_body_shape_ptr = shape_ptr;
+    m_shape_ptr = shape_ptr;
     m_material = material;
     m_is_static = false;
 
@@ -30,7 +30,7 @@ void Framework::RigidBody::setMass(double mass)
     m_mass = mass;
 }
 
-Framework::Vector Framework::RigidBody::getVelocity()
+Framework::Vector Framework::RigidBody::getVelocity() const
 {
     return m_current_velocity;
 }
@@ -42,18 +42,17 @@ void Framework::RigidBody::increaseVelocity(Vector additional_velocity)
 
 void Framework::RigidBody::stopXVelocity()
 {
-    m_current_velocity.x_value = 0;
+    m_current_velocity.x = 0;
 }
 
 void Framework::RigidBody::stopYVelocity()
 {
-    m_current_velocity.y_value = 0;
+    m_current_velocity.y = 0;
 }
 
 Framework::Vector Framework::RigidBody::getAppliedForce()
 {
     Vector applied_force = m_mf_force + m_sf_force;
-
     return applied_force;
 }
 
@@ -72,36 +71,29 @@ void Framework::RigidBody::applySFForce(Vector force)
     m_sf_force += force;
 }
 
-double Framework::RigidBody::getXMovement() const
+Framework::Vector Framework::RigidBody::getMovement() const
 {
-    return m_x_moved;
-}
-
-double Framework::RigidBody::getYMovement() const
-{
-    return m_y_moved;
+    return m_movement;
 }
 
 void Framework::RigidBody::setMovement(double x_moved, double y_moved)
 {
-    m_x_moved = x_moved;
-    m_y_moved = y_moved;
+    setMovement(Vector(x_moved, y_moved));
+}
+
+void Framework::RigidBody::setMovement(Vector movement)
+{
+    m_movement = movement;
 }
 
 void Framework::RigidBody::addTickMovement(double x_moved, double y_moved)
 {
-    m_x_moved += x_moved;
-    m_y_moved += y_moved;
+    addTickMovement(Vector(x_moved, y_moved));
 }
 
-void Framework::RigidBody::setXMovement(double x_moved)
+void Framework::RigidBody::addTickMovement(Vector movement)
 {
-    m_x_moved += x_moved;
-}
-
-void Framework::RigidBody::setYMovement(double y_moved)
-{
-    m_y_moved += y_moved;
+    m_movement = movement;
 }
 
 double Framework::RigidBody::getTimeAfterTick()
@@ -116,10 +108,10 @@ void Framework::RigidBody::setTimeAfterTick(double time)
 
 bool Framework::RigidBody::isStationary() const
 {
-    if (m_current_velocity.x_value == 0 && m_current_velocity.y_value == 0)
+    if (m_current_velocity.x == 0 && m_current_velocity.y == 0)
     {
         // TODO: could be janky this
-        if (m_x_moved == 0 && m_y_moved == 0)
+        if (m_movement.x == 0 && m_movement.y == 0)
         {
             return true;
         }
@@ -133,71 +125,59 @@ double Framework::RigidBody::getDampening() const
     return m_dampening;
 }
 
-double Framework::RigidBody::getX() const
-{
-    return m_exact_x;
-}
-
-double Framework::RigidBody::getY() const
-{
-    return m_exact_y;
-}
-
-void Framework::RigidBody::setX(int x)
-{
-    m_rigid_body_shape_ptr->x = x;
-    m_exact_x = x;
-}
-
-void Framework::RigidBody::setY(int y)
-{
-    m_rigid_body_shape_ptr->y = y;
-    m_exact_y = y;
-}
-
 void Framework::RigidBody::move()
 {
-    m_exact_x += m_x_moved;
-    m_exact_y += m_y_moved;
+    m_position += m_movement;
 
-    int whole_x = round(m_exact_x);
-    if (whole_x != m_rigid_body_shape_ptr->x)
+    int whole_x = round(m_position.x);
+    if (whole_x != m_shape_ptr->x)
     {
-        m_rigid_body_shape_ptr->x = whole_x;
+        m_shape_ptr->x = whole_x;
     }
 
-    int whole_y = round(m_exact_y);
-    if (whole_y != m_rigid_body_shape_ptr->y)
+    int whole_y = round(m_position.y);
+    if (whole_y != m_shape_ptr->y)
     {
-        m_rigid_body_shape_ptr->y = whole_y;
+        m_shape_ptr->y = whole_y;
     }
 }
 
 int Framework::RigidBody::getRoundedX() const
 {
-    return m_rigid_body_shape_ptr->x;
+    return m_shape_ptr->x;
 }
 
 int Framework::RigidBody::getRoundedY() const
 {
-    return m_rigid_body_shape_ptr->y;
+    return m_shape_ptr->y;
 }
 
 void Framework::RigidBody::setShape(Framework::Shape* shape_ptr)
 {
-    m_rigid_body_shape_ptr = shape_ptr;
-    m_exact_x = shape_ptr->x;
-    m_exact_y = shape_ptr->y;
+    m_shape_ptr = shape_ptr;
+    m_position = Vector(shape_ptr->x, shape_ptr->y);
 }
 
 int Framework::RigidBody::getWidth() const
 {
-    return m_rigid_body_shape_ptr->w;
+    return m_shape_ptr->w;
 }
 
 int Framework::RigidBody::getHeight() const
 {
-    return m_rigid_body_shape_ptr->h;
+    return m_shape_ptr->h;
+}
+
+Framework::Vector Framework::RigidBody::getPosition() const
+{
+    return m_position;
+}
+
+void Framework::RigidBody::setPosition(Vector position)
+{
+    m_position = position;
+    m_shape_ptr->x = round(position.x);
+	m_shape_ptr->y = round(position.y);
 }
 
 bool Framework::RigidBody::isStatic() const

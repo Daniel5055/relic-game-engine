@@ -1,22 +1,14 @@
 #include "Vector.h"
 
 #include <cmath>
+Framework::Vector::Vector(double x, double y)
+    :x(x), y(y)
+{
+}
 Framework::Vector& Framework::Vector::operator+=(const Vector& vector)
 {
-    x_value += vector.x_value;
-    y_value += vector.y_value;
-
-    /*
-    if (abs(x_value) < 0.0000000001)
-    {
-        x_value = 0;
-    }
-
-    if (abs(y_value) < 0.0000000001)
-    {
-        y_value = 0;
-    }
-    */
+    x += vector.x;
+    y += vector.y;
     return *this;
 }
 
@@ -26,22 +18,23 @@ Framework::Vector Framework::Vector::operator+(const Vector& vector)
     return out += vector;
 }
 
+Framework::Vector& Framework::Vector::operator-=(const Vector& vector)
+{
+    x -= vector.x;
+    y -= vector.y;
+    return *this;
+}
+
+Framework::Vector Framework::Vector::operator-(const Vector& vector)
+{
+    Vector out(*this);
+    return out -= vector;
+}
+
 Framework::Vector& Framework::Vector::operator/=(double num)
 {
-    x_value /= num;
-    y_value /= num;
-
-    /*
-    if (abs(x_value) < 0.0000000001)
-    {
-        x_value = 0;
-    }
-
-    if (abs(y_value) < 0.0000000001)
-    {
-        y_value = 0;
-    }
-    */
+    x /= num;
+    y /= num;
 
     return *this;
 }
@@ -54,20 +47,8 @@ Framework::Vector Framework::Vector::operator/(double num)
 
 Framework::Vector& Framework::Vector::operator*=(double num)
 {
-    x_value *= num;
-    y_value *= num;
-    /*
-    if (abs(x_value) < 0.00000001)
-    {
-        x_value = 0;
-    }
-    
-    if (abs(y_value) < 0.00000001)
-    {
-        y_value = 0;
-    }
-    */
-
+    x *= num;
+    y *= num;
     return *this;
 }
 
@@ -77,8 +58,24 @@ Framework::Vector Framework::Vector::operator*(double num)
     return out *= num;
 }
 
+double& Framework::Vector::operator[](int i)
+{
+    switch (i)
+    {
+    case 0:
+        return x;
+        break;
+    case 1:
+        return y;
+        break;
+    default:
+        throw "Vector struct only accepts index 0 or 1";
+        break;
+    }
+}
+
 void Framework::Vector::clear()
 {
-    x_value = 0;
-    y_value = 0;
+    x = 0;
+    y = 0;
 }

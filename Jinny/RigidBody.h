@@ -18,7 +18,7 @@ namespace Framework
 		void setMass(double mass);
 
 		// Velocity Accessors
-		Vector getVelocity();
+		Vector getVelocity() const;
 		void increaseVelocity(Vector additional_velocity);
 		void stopXVelocity();
 		void stopYVelocity();
@@ -31,13 +31,12 @@ namespace Framework
 		void clearSFForce();
 
 		// Movement Accessors
-		double getXMovement() const;
-		double getYMovement() const;
-
+		Vector getMovement() const;
 		void setMovement(double x_moved, double y_moved);
+		void setMovement(Vector movement);
+
 		void addTickMovement(double x_moved, double y_moved);
-		void setXMovement(double x_moved);
-		void setYMovement(double y_moved);
+		void addTickMovement(Vector movement);
 
 		// Time Accessors
 		double getTimeAfterTick();
@@ -51,16 +50,14 @@ namespace Framework
 
 		int getWidth() const;
 		int getHeight() const;
-		double getX() const;
-		double getY() const;
-		void setX(int x);
-		void setY(int y);
+		Vector getPosition() const;
+		void setPosition(Vector position);
 		int getRoundedX() const;
 		int getRoundedY() const;
 
 		void move();
 
-		// Static accessor
+		// Static accessors
 		bool isStatic() const;
 		void setStatic(bool is_static);
 
@@ -75,10 +72,10 @@ namespace Framework
 		Vector m_current_velocity;
 
 		// Movement after a single tick
-		double m_x_moved;
-		double m_y_moved;
+		Vector m_movement;
 
 		// Collision Time (neccessary for checking collision distances)
+		// 0 by default, max is tick length
 		double m_time_after_tick;
 
 		// multi and single frame forces
@@ -88,15 +85,16 @@ namespace Framework
 		// Dampening coefficient
 		double m_dampening;
 
-		// Shape
-		Shape* m_rigid_body_shape_ptr;
-		double m_exact_x;
-		double m_exact_y;
+		// Shape (position and size as integers)
+		Shape* m_shape_ptr;
+
+		// Position in double form
+		Vector m_position;
 
 		// Staticness (if reacts when collided with)
 		bool m_is_static;
 
-		// Materials
+		// Material (for friction
 		Material m_material;
 	};
 }

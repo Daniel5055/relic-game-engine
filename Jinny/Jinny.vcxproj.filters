@@ -270,9 +270,6 @@
     <ClCompile Include="StaticRigidBodyPhysicsComponent.cpp">
       <Filter>Object and Components\Components\Physics Components\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Vector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DynamicRigidBodyPhysicsComponent.cpp">
       <Filter>Object and Components\Components\Physics Components\Source Files</Filter>
     </ClCompile>
@@ -293,6 +290,9 @@
     </ClCompile>
     <ClCompile Include="GridCollisionManager.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector.cpp">
+      <Filter>Framework\Physics\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

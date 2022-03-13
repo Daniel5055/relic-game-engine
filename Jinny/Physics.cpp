@@ -35,10 +35,7 @@ double Framework::Physics::getPPM() const
 Framework::Vector Framework::Physics::nextStep(RigidBody* physics_data)
 {
 	// Classic SUVAT Equations
-	Vector distance_moved = getDisplacementAtTime(getTimeStep(), physics_data->getVelocity(), physics_data->getAppliedForce() / physics_data->getMass());
-
-	return distance_moved;
-
+	return getDisplacementAtTime(getTimeStep(), physics_data->getVelocity(), physics_data->getAppliedForce() / physics_data->getMass());
 }
 
 double Framework::Physics::getDisplacementAtTime(double time, double axis_velocity, double axis_acceleration)
@@ -61,23 +58,23 @@ double Framework::Physics::getCoefficientOfRestitution(RigidBody* rigid_body_1, 
 
 void Framework::Physics::applyDampening(RigidBody* data)
 {
-	if (abs(data->getVelocity().x_value) > 0)
+	if (abs(data->getVelocity().x) > 0)
 	{
-		if (abs(data->getVelocity().x_value) < 0.05)
+		if (abs(data->getVelocity().x) < 0.05)
 		{
-			data->applySFForce({ data->getMass() * -data->getVelocity().x_value / TIME_STEP, 0 });
+			data->applySFForce({ data->getMass() * -data->getVelocity().x / TIME_STEP, 0 });
 		}
 		else
 		{
-			double x_dampening_force = data->getVelocity().x_value * data->getVelocity().x_value * data->getDampening();
+			double x_dampening_force = data->getVelocity().x * data->getVelocity().x * data->getDampening();
 
 			double x_dampening = x_dampening_force / data->getMass() * TIME_STEP;
 
-			if (data->getVelocity().x_value > 0)
+			if (data->getVelocity().x > 0)
 			{
-				if (x_dampening > data->getVelocity().x_value)
+				if (x_dampening > data->getVelocity().x)
 				{
-					data->applySFForce({ data->getMass() * -data->getVelocity().x_value / TIME_STEP, 0 });
+					data->applySFForce({ data->getMass() * -data->getVelocity().x / TIME_STEP, 0 });
 				}
 				else
 				{
@@ -86,9 +83,9 @@ void Framework::Physics::applyDampening(RigidBody* data)
 			}
 			else
 			{
-				if (-x_dampening < data->getVelocity().x_value)
+				if (-x_dampening < data->getVelocity().x)
 				{
-					data->applySFForce({ data->getMass() * -data->getVelocity().x_value / TIME_STEP, 0 });
+					data->applySFForce({ data->getMass() * -data->getVelocity().x / TIME_STEP, 0 });
 				}
 				else
 				{
@@ -98,24 +95,24 @@ void Framework::Physics::applyDampening(RigidBody* data)
 		}	
 	}
 
-	if (abs(data->getVelocity().y_value) > 0)
+	if (abs(data->getVelocity().y) > 0)
 	{
 		
-		if (abs(data->getVelocity().y_value) < 0.05)
+		if (abs(data->getVelocity().y) < 0.05)
 		{
-			data->applySFForce({ 0, data->getMass() * -data->getVelocity().y_value / TIME_STEP });
+			data->applySFForce({ 0, data->getMass() * -data->getVelocity().y / TIME_STEP });
 		}
 		else
 		{
-			double y_dampening_force = data->getVelocity().y_value * data->getVelocity().y_value * data->getDampening();
+			double y_dampening_force = data->getVelocity().y * data->getVelocity().y * data->getDampening();
 
 			double y_dampening = y_dampening_force / data->getMass() * TIME_STEP;
 
-			if (data->getVelocity().y_value > 0)
+			if (data->getVelocity().y > 0)
 			{
-				if (y_dampening > data->getVelocity().y_value)
+				if (y_dampening > data->getVelocity().y)
 				{
-					data->applySFForce({ 0, data->getMass() * -data->getVelocity().y_value / TIME_STEP });
+					data->applySFForce({ 0, data->getMass() * -data->getVelocity().y / TIME_STEP });
 				}
 				else
 				{
@@ -124,9 +121,9 @@ void Framework::Physics::applyDampening(RigidBody* data)
 			}
 			else
 			{
-				if (-y_dampening < data->getVelocity().y_value)
+				if (-y_dampening < data->getVelocity().y)
 				{
-					data->applySFForce({ 0, data->getMass() * -data->getVelocity().y_value / TIME_STEP });
+					data->applySFForce({ 0, data->getMass() * -data->getVelocity().y / TIME_STEP });
 				}
 				else
 				{

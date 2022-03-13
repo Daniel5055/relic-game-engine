@@ -9,6 +9,7 @@ namespace Framework
 {
 	class RigidBody;
 
+	// A class for handling or delegating various physics calculations
 	class Physics
 	{
 	public:
@@ -23,6 +24,8 @@ namespace Framework
 		double getPPM() const;
 
 		// Perfroms physics on data, returns supposed distance moved as vector in pixels
+
+		// TODO: Seems redundant this
 		Vector nextStep(RigidBody* physics_data);
 
 		// For calculating collision positions
@@ -32,9 +35,11 @@ namespace Framework
 		// For calculating forces of collisions
 		double getCoefficientOfRestitution(RigidBody* rigid_body_1, RigidBody* rigid_body_2);
 
+		// TODO: need to improve this code
 		void applyDampening(RigidBody* data);
 
 		// Friction
+		// TODO: why not just let them access material manager?
 		double getStaticFrictionCoefficient(RigidBody* rigid_body_1, RigidBody* rigid_body_2);
 		double getDynamicFrictionCoefficient(RigidBody* rigid_body_1, RigidBody* rigid_body_2);
 

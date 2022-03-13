@@ -26,7 +26,7 @@ void Jinny::StartScene::initialize()
 	//GameObject button = new GameObject("Button", { 100, 300, 0, 0 }, new TextGraphicsComponent(""))
 
 	//AnimationComponent* animation = new ButtonAnimationComponent(graphics, 100, 150);
-	LoggingComponent* logging = new LoggingComponent();
+	//LoggingComponent* logging = new LoggingComponent();
 
 
 	//button->addComponent(animation);
@@ -37,16 +37,16 @@ void Jinny::StartScene::initialize()
 	// Text
 	addHUDObject(new GameObject("Text", { 100, 300, 0, 0 }, new TextGraphicsComponent("Hello World!", "Fancy", { 0x00, 0x00, 0x00, 0xFF }, ".\\Assets\\Fonts\\Astloch-bold.ttf", 60)));
 
-	GameObject* o = new GameObject("Player", { 300, 20, 20, 20 }, new ImageGraphicsComponent("Red"), new PlayerInputComponent(), new PlayerPhysicsComponent(10, 2, 10), nullptr);
+	//GameObject* o = new GameObject("Player", { 300, 20, 20, 20 }, new ImageGraphicsComponent("Red"), new PlayerInputComponent(), new PlayerPhysicsComponent(10, 2, 10), nullptr);
 	
-	o->addComponent(logging);
+	//o->addComponent(logging);
 
-	addWorldObject(o);
+	//addWorldObject(o);
 
-	addWorldObject(new GameObject("Static1", { 630, 0, 100, 500 }, new ImageGraphicsComponent("Black"), nullptr, new StaticRigidBodyPhysicsComponent()));
-	addWorldObject(new GameObject("Static2", { -90, 0, 100, 500 }, new ImageGraphicsComponent("Black"), nullptr, new StaticRigidBodyPhysicsComponent()));
-	addWorldObject(new GameObject("Static3", { 0, -90, 800, 100 }, new ImageGraphicsComponent("Black"), nullptr, new StaticRigidBodyPhysicsComponent()));
-	addWorldObject(new GameObject("Static4", { 0, 470, 800, 100}, new ImageGraphicsComponent("Black"), nullptr, new StaticRigidBodyPhysicsComponent()));
+	//addWorldObject(new GameObject("Static1", { 630, 0, 100, 500 }, new ImageGraphicsComponent("Black"), nullptr, new StaticRigidBodyPhysicsComponent()));
+	//addWorldObject(new GameObject("Static2", { -90, 0, 100, 500 }, new ImageGraphicsComponent("Black"), nullptr, new StaticRigidBodyPhysicsComponent()));
+	//addWorldObject(new GameObject("Static3", { 0, -90, 800, 100 }, new ImageGraphicsComponent("Black"), nullptr, new StaticRigidBodyPhysicsComponent()));
+	//addWorldObject(new GameObject("Static4", { 0, 470, 800, 100}, new ImageGraphicsComponent("Black"), nullptr, new StaticRigidBodyPhysicsComponent()));
 
 	//addWorldObject(new GameObject("Static2", { 200, 200, 100, 100 }, new ImageGraphicsComponent("Black"), nullptr, new StaticRigidBodyPhysicsComponent()));
 
@@ -57,7 +57,7 @@ void Jinny::StartScene::initialize()
 	//addWorldObject(new GameObject("Dy6", { 500, 300, 20, 20 }, new ImageGraphicsComponent("Red"), nullptr, new DynamicRigidBodyPhysicsComponent(5, 10, 10, { 300, 0 })));
 	//addWorldObject(new GameObject("Dy7", { 500, 400, 20, 20 }, new ImageGraphicsComponent("Black"), nullptr, new DynamicRigidBodyPhysicsComponent(5, 10, 10, { 100, 100 })));
 
-	addHUDObject(new GameObject("Static2", { 299, 49, 100, 150 }, new ImageGraphicsComponent("Hi"), nullptr, new StaticRigidBodyPhysicsComponent()));
+	//addHUDObject(new GameObject("Static2", { 299, 49, 100, 150 }, new ImageGraphicsComponent("Hi"), nullptr, new StaticRigidBodyPhysicsComponent()));
 
-	createCamera({ 0, 0, 640, 480 });
+	//createCamera({ 0, 0, 640, 480 });
 }

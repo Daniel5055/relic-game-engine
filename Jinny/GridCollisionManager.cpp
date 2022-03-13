@@ -126,8 +126,8 @@ void Jinny::GridCollisionManager::updateCollisions()
 				is_corner_collision = false;
 
 				// Set new tick movements for arrows
-				m_rigid_bodies[collision.a_index]->setXMovement(getMovementAtTime(time, m_rigid_bodies[collision.a_index]->getVelocity().x_value, m_rigid_bodies[collision.a_index]->getAppliedForce().x_value / m_rigid_bodies[collision.a_index]->getMass()));
-				m_rigid_bodies[collision.a_index]->setYMovement(getMovementAtTime(time, m_rigid_bodies[collision.a_index]->getVelocity().y_value, m_rigid_bodies[collision.a_index]->getAppliedForce().y_value / m_rigid_bodies[collision.a_index]->getMass()));
+				m_rigid_bodies[collision.a_index]->setXMovement(getMovementAtTime(time, m_rigid_bodies[collision.a_index]->getVelocity().x, m_rigid_bodies[collision.a_index]->getAppliedForce().x / m_rigid_bodies[collision.a_index]->getMass()));
+				m_rigid_bodies[collision.a_index]->setYMovement(getMovementAtTime(time, m_rigid_bodies[collision.a_index]->getVelocity().y, m_rigid_bodies[collision.a_index]->getAppliedForce().y / m_rigid_bodies[collision.a_index]->getMass()));
 
 				// Set time of collision for arrow
 				m_rigid_bodies[collision.a_index]->setTimeAfterTick(collision.time);
@@ -135,8 +135,8 @@ void Jinny::GridCollisionManager::updateCollisions()
 				// Make sure target hasnt already collided
 				if (collision.time < m_rigid_bodies[collision.t_index]->getTimeAfterTick())
 				{
-					m_rigid_bodies[collision.t_index]->setXMovement(getMovementAtTime(time, m_rigid_bodies[collision.t_index]->getVelocity().x_value, m_rigid_bodies[collision.t_index]->getAppliedForce().x_value / m_rigid_bodies[collision.t_index]->getMass()));
-					m_rigid_bodies[collision.t_index]->setYMovement(getMovementAtTime(time, m_rigid_bodies[collision.t_index]->getVelocity().y_value, m_rigid_bodies[collision.t_index]->getAppliedForce().y_value / m_rigid_bodies[collision.t_index]->getMass()));
+					m_rigid_bodies[collision.t_index]->setXMovement(getMovementAtTime(time, m_rigid_bodies[collision.t_index]->getVelocity().x, m_rigid_bodies[collision.t_index]->getAppliedForce().x / m_rigid_bodies[collision.t_index]->getMass()));
+					m_rigid_bodies[collision.t_index]->setYMovement(getMovementAtTime(time, m_rigid_bodies[collision.t_index]->getVelocity().y, m_rigid_bodies[collision.t_index]->getAppliedForce().y / m_rigid_bodies[collision.t_index]->getMass()));
 
 					// Set time of collision for target
 					m_rigid_bodies[collision.t_index]->setTimeAfterTick(collision.time);
@@ -153,7 +153,7 @@ void Jinny::GridCollisionManager::updateCollisions()
 			else if (collision.is_horizontal)
 			{
 				// Set new tick movement for arrow
-				m_rigid_bodies[collision.a_index]->setXMovement(getMovementAtTime(time, m_rigid_bodies[collision.a_index]->getVelocity().x_value, m_rigid_bodies[collision.a_index]->getAppliedForce().x_value / m_rigid_bodies[collision.a_index]->getMass()));
+				m_rigid_bodies[collision.a_index]->setXMovement(getMovementAtTime(time, m_rigid_bodies[collision.a_index]->getVelocity().x, m_rigid_bodies[collision.a_index]->getAppliedForce().x / m_rigid_bodies[collision.a_index]->getMass()));
 
 				// Set time of collision for arrow
 				m_rigid_bodies[collision.a_index]->setTimeAfterTick(collision.time);
@@ -161,7 +161,7 @@ void Jinny::GridCollisionManager::updateCollisions()
 				// Make sure target hasnt already collided
 				if (collision.time < m_rigid_bodies[collision.t_index]->getTimeAfterTick())
 				{
-					m_rigid_bodies[collision.t_index]->setXMovement(getMovementAtTime(time, m_rigid_bodies[collision.t_index]->getVelocity().x_value, m_rigid_bodies[collision.t_index]->getAppliedForce().x_value / m_rigid_bodies[collision.t_index]->getMass()));
+					m_rigid_bodies[collision.t_index]->setXMovement(getMovementAtTime(time, m_rigid_bodies[collision.t_index]->getVelocity().x, m_rigid_bodies[collision.t_index]->getAppliedForce().x / m_rigid_bodies[collision.t_index]->getMass()));
 
 					// Set time of collision for target
 					m_rigid_bodies[collision.t_index]->setTimeAfterTick(collision.time);
@@ -174,7 +174,7 @@ void Jinny::GridCollisionManager::updateCollisions()
 			else
 			{
 				// Set new tick movement for arrow
-				m_rigid_bodies[collision.a_index]->setYMovement(getMovementAtTime(time, m_rigid_bodies[collision.a_index]->getVelocity().y_value, m_rigid_bodies[collision.a_index]->getAppliedForce().y_value / m_rigid_bodies[collision.a_index]->getMass()));
+				m_rigid_bodies[collision.a_index]->setYMovement(getMovementAtTime(time, m_rigid_bodies[collision.a_index]->getVelocity().y, m_rigid_bodies[collision.a_index]->getAppliedForce().y / m_rigid_bodies[collision.a_index]->getMass()));
 
 				// Set time of collision for arrow
 				m_rigid_bodies[collision.a_index]->setTimeAfterTick(collision.time);
@@ -182,7 +182,7 @@ void Jinny::GridCollisionManager::updateCollisions()
 				// Make sure target hasnt already collided
 				if (collision.time < m_rigid_bodies[collision.t_index]->getTimeAfterTick())
 				{
-					m_rigid_bodies[collision.t_index]->setYMovement(getMovementAtTime(time, m_rigid_bodies[collision.t_index]->getVelocity().y_value, m_rigid_bodies[collision.t_index]->getAppliedForce().y_value / m_rigid_bodies[collision.t_index]->getMass()));
+					m_rigid_bodies[collision.t_index]->setYMovement(getMovementAtTime(time, m_rigid_bodies[collision.t_index]->getVelocity().y, m_rigid_bodies[collision.t_index]->getAppliedForce().y / m_rigid_bodies[collision.t_index]->getMass()));
 
 					// Set time of collision for target
 					m_rigid_bodies[collision.t_index]->setTimeAfterTick(collision.time);
@@ -224,26 +224,26 @@ void Jinny::GridCollisionManager::updateCollisions()
 		{
 			if (m_rigid_bodies[it->t_index]->isStatic())
 			{
-				double force = calculateStaticCollisionForce(m_rigid_bodies[it->a_index]->getVelocity().x_value, m_rigid_bodies[it->a_index]->getMass(), coeff_of_restitution);
+				double force = calculateStaticCollisionForce(m_rigid_bodies[it->a_index]->getVelocity().x, m_rigid_bodies[it->a_index]->getMass(), coeff_of_restitution);
 
 				// Finds total force of collision and set as force applied
-				it->force_applied = abs(force - (m_rigid_bodies[it->a_index]->getAppliedForce().x_value) - (m_rigid_bodies[it->a_index]->getMass() * m_rigid_bodies[it->a_index]->getVelocity().x_value / f_physics->getTimeStep()));
+				it->force_applied = abs(force - (m_rigid_bodies[it->a_index]->getAppliedForce().x) - (m_rigid_bodies[it->a_index]->getMass() * m_rigid_bodies[it->a_index]->getVelocity().x / f_physics->getTimeStep()));
 
-				m_rigid_bodies[it->a_index]->applySFForce({force - m_rigid_bodies[it->a_index]->getAppliedForce().x_value, 0 });
+				m_rigid_bodies[it->a_index]->applySFForce({force - m_rigid_bodies[it->a_index]->getAppliedForce().x, 0 });
 
 				// Prevents further movement through wall, "applySFForce" already notes that velocity is zero
 				m_rigid_bodies[it->a_index]->stopXVelocity();
 			}
 			else
 			{
-				std::pair <double, double> forces = calculateDynamicCollisionForces(m_rigid_bodies[it->a_index]->getVelocity().x_value, m_rigid_bodies[it->a_index]->getMass(),
-					m_rigid_bodies[it->t_index]->getVelocity().x_value, m_rigid_bodies[it->t_index]->getMass(), coeff_of_restitution);
+				std::pair <double, double> forces = calculateDynamicCollisionForces(m_rigid_bodies[it->a_index]->getVelocity().x, m_rigid_bodies[it->a_index]->getMass(),
+					m_rigid_bodies[it->t_index]->getVelocity().x, m_rigid_bodies[it->t_index]->getMass(), coeff_of_restitution);
 
 				// Finds total force of collision and add to force applied
-				it->force_applied = abs(forces.first - m_rigid_bodies[it->a_index]->getAppliedForce().x_value - (m_rigid_bodies[it->a_index]->getMass() * m_rigid_bodies[it->a_index]->getVelocity().x_value / f_physics->getTimeStep()));
+				it->force_applied = abs(forces.first - m_rigid_bodies[it->a_index]->getAppliedForce().x - (m_rigid_bodies[it->a_index]->getMass() * m_rigid_bodies[it->a_index]->getVelocity().x / f_physics->getTimeStep()));
 
-				m_rigid_bodies[it->a_index]->applySFForce({ forces.first - m_rigid_bodies[it->a_index]->getAppliedForce().x_value , 0 });
-				m_rigid_bodies[it->t_index]->applySFForce({ forces.second - m_rigid_bodies[it->t_index]->getAppliedForce().x_value, 0 });
+				m_rigid_bodies[it->a_index]->applySFForce({ forces.first - m_rigid_bodies[it->a_index]->getAppliedForce().x , 0 });
+				m_rigid_bodies[it->t_index]->applySFForce({ forces.second - m_rigid_bodies[it->t_index]->getAppliedForce().x, 0 });
 
 				// Prevents further movement through wall, "applySFForce" already notes that velocity is zero
 				m_rigid_bodies[it->a_index]->stopXVelocity();
@@ -254,12 +254,12 @@ void Jinny::GridCollisionManager::updateCollisions()
 		{
 			if (m_rigid_bodies[it->t_index]->isStatic())
 			{
-				double force = calculateStaticCollisionForce(m_rigid_bodies[it->a_index]->getVelocity().y_value, m_rigid_bodies[it->a_index]->getMass(), coeff_of_restitution);
+				double force = calculateStaticCollisionForce(m_rigid_bodies[it->a_index]->getVelocity().y, m_rigid_bodies[it->a_index]->getMass(), coeff_of_restitution);
 
 				// Finds total force of collision and add to force applied
-				it->force_applied = abs(force - (m_rigid_bodies[it->a_index]->getAppliedForce().y_value) - (m_rigid_bodies[it->a_index]->getMass() * m_rigid_bodies[it->a_index]->getVelocity().y_value / f_physics->getTimeStep()));
+				it->force_applied = abs(force - (m_rigid_bodies[it->a_index]->getAppliedForce().y) - (m_rigid_bodies[it->a_index]->getMass() * m_rigid_bodies[it->a_index]->getVelocity().y / f_physics->getTimeStep()));
 
-				m_rigid_bodies[it->a_index]->applySFForce({ 0, force - m_rigid_bodies[it->a_index]->getAppliedForce().y_value });
+				m_rigid_bodies[it->a_index]->applySFForce({ 0, force - m_rigid_bodies[it->a_index]->getAppliedForce().y });
 
 				// Prevents further movement through wall, "applySFForce" already notes that velocity is zero
 				m_rigid_bodies[it->a_index]->stopYVelocity();
@@ -268,14 +268,14 @@ void Jinny::GridCollisionManager::updateCollisions()
 			else
 			{
 
-				std::pair <double, double> forces = calculateDynamicCollisionForces(m_rigid_bodies[it->a_index]->getVelocity().y_value, m_rigid_bodies[it->a_index]->getMass(),
-					m_rigid_bodies[it->t_index]->getVelocity().y_value, m_rigid_bodies[it->t_index]->getMass(), coeff_of_restitution);
+				std::pair <double, double> forces = calculateDynamicCollisionForces(m_rigid_bodies[it->a_index]->getVelocity().y, m_rigid_bodies[it->a_index]->getMass(),
+					m_rigid_bodies[it->t_index]->getVelocity().y, m_rigid_bodies[it->t_index]->getMass(), coeff_of_restitution);
 
 				// Finds total force of collision and add to force applied
-				it->force_applied = abs(forces.first - m_rigid_bodies[it->a_index]->getAppliedForce().y_value - (m_rigid_bodies[it->a_index]->getMass() * m_rigid_bodies[it->a_index]->getVelocity().y_value / f_physics->getTimeStep()));
+				it->force_applied = abs(forces.first - m_rigid_bodies[it->a_index]->getAppliedForce().y - (m_rigid_bodies[it->a_index]->getMass() * m_rigid_bodies[it->a_index]->getVelocity().y / f_physics->getTimeStep()));
 
-				m_rigid_bodies[it->a_index]->applySFForce({ 0, forces.first - m_rigid_bodies[it->a_index]->getAppliedForce().y_value });
-				m_rigid_bodies[it->t_index]->applySFForce({ 0, forces.second - m_rigid_bodies[it->t_index]->getAppliedForce().y_value });
+				m_rigid_bodies[it->a_index]->applySFForce({ 0, forces.first - m_rigid_bodies[it->a_index]->getAppliedForce().y });
+				m_rigid_bodies[it->t_index]->applySFForce({ 0, forces.second - m_rigid_bodies[it->t_index]->getAppliedForce().y });
 
 
 
@@ -421,17 +421,17 @@ double Jinny::GridCollisionManager::checkXCollision(Framework::RigidBody* arrow,
 		if (p_collision == true)
 		{
 			new_time = getCollisionTime(double(target->getX() - arrow->getX() - arrow->getWidth()),
-				arrow->getVelocity().x_value, target->getVelocity().x_value,
-				arrow->getAppliedForce().x_value / arrow->getMass(),
-				target->getAppliedForce().x_value / target->getMass(), target->getTimeAfterTick());
+				arrow->getVelocity().x, target->getVelocity().x,
+				arrow->getAppliedForce().x / arrow->getMass(),
+				target->getAppliedForce().x / target->getMass(), target->getTimeAfterTick());
 
 			if (new_time < f_max_time_step && new_time >= 0)
 			{
 				// collision
 
 				// Check if still on y level
-				double y_arrow_moved = getMovementAtTime(new_time, arrow->getVelocity().y_value, arrow->getAppliedForce().y_value / arrow->getMass());
-				double y_target_moved = getMovementAtTime(new_time, target->getVelocity().y_value, target->getAppliedForce().y_value / target->getMass());
+				double y_arrow_moved = getMovementAtTime(new_time, arrow->getVelocity().y, arrow->getAppliedForce().y / arrow->getMass());
+				double y_target_moved = getMovementAtTime(new_time, target->getVelocity().y, target->getAppliedForce().y / target->getMass());
 
 				if (!(arrow->getY() + y_arrow_moved >= target->getY() + target->getHeight() + y_target_moved &&
 					arrow->getY() + arrow->getHeight() + y_arrow_moved <= target->getY() + y_target_moved))
@@ -477,17 +477,17 @@ double Jinny::GridCollisionManager::checkXCollision(Framework::RigidBody* arrow,
 		if (p_collision == true)
 		{
 			new_time = getCollisionTime(double(target->getX() + target->getWidth() - arrow->getX()),
-				arrow->getVelocity().x_value, target->getVelocity().x_value,
-				arrow->getAppliedForce().x_value / arrow->getMass(),
-				target->getAppliedForce().x_value / target->getMass(), target->getTimeAfterTick());
+				arrow->getVelocity().x, target->getVelocity().x,
+				arrow->getAppliedForce().x / arrow->getMass(),
+				target->getAppliedForce().x / target->getMass(), target->getTimeAfterTick());
 
 			if (new_time < f_max_time_step && new_time >= 0)
 			{
 				// collision
 
 				// Check if still on y level
-				double y_arrow_moved = getMovementAtTime(new_time, arrow->getVelocity().y_value, arrow->getAppliedForce().y_value / arrow->getMass());
-				double y_target_moved = getMovementAtTime(new_time, target->getVelocity().y_value, target->getAppliedForce().y_value / target->getMass());
+				double y_arrow_moved = getMovementAtTime(new_time, arrow->getVelocity().y, arrow->getAppliedForce().y / arrow->getMass());
+				double y_target_moved = getMovementAtTime(new_time, target->getVelocity().y, target->getAppliedForce().y / target->getMass());
 
 				if (!(arrow->getY() + y_arrow_moved >= target->getY() + target->getHeight() + y_target_moved &&
 					arrow->getY() + arrow->getHeight() + y_arrow_moved <= target->getY() + y_target_moved))
@@ -541,17 +541,17 @@ double Jinny::GridCollisionManager::checkYCollision(Framework::RigidBody* arrow,
 		if (p_collision == true)
 		{
 			new_time = getCollisionTime(double(target->getY() - arrow->getY() - arrow->getHeight()),
-				arrow->getVelocity().y_value, target->getVelocity().y_value,
-				arrow->getAppliedForce().y_value / arrow->getMass(),
-				target->getAppliedForce().y_value / target->getMass(), target->getTimeAfterTick());
+				arrow->getVelocity().y, target->getVelocity().y,
+				arrow->getAppliedForce().y / arrow->getMass(),
+				target->getAppliedForce().y / target->getMass(), target->getTimeAfterTick());
 
 			if (new_time < f_max_time_step && new_time >= 0)
 			{
 				// collision
 
 				// Check if still on y level
-				double x_arrow_moved = getMovementAtTime(new_time, arrow->getVelocity().x_value, arrow->getAppliedForce().x_value / arrow->getMass());
-				double x_target_moved = getMovementAtTime(new_time, target->getVelocity().x_value, target->getAppliedForce().x_value / target->getMass());
+				double x_arrow_moved = getMovementAtTime(new_time, arrow->getVelocity().x, arrow->getAppliedForce().x / arrow->getMass());
+				double x_target_moved = getMovementAtTime(new_time, target->getVelocity().x, target->getAppliedForce().x / target->getMass());
 
 				if (!(arrow->getX() + x_arrow_moved >= target->getX() + target->getWidth() + x_target_moved &&
 					arrow->getX() + arrow->getWidth() + x_arrow_moved <= target->getX() + x_target_moved))
@@ -597,17 +597,17 @@ double Jinny::GridCollisionManager::checkYCollision(Framework::RigidBody* arrow,
 		if (p_collision == true)
 		{
 			new_time = getCollisionTime(double(target->getY() + target->getHeight() - arrow->getY()),
-				arrow->getVelocity().y_value, target->getVelocity().y_value,
-				arrow->getAppliedForce().y_value / arrow->getMass(),
-				target->getAppliedForce().y_value / target->getMass(), target->getTimeAfterTick());
+				arrow->getVelocity().y, target->getVelocity().y,
+				arrow->getAppliedForce().y / arrow->getMass(),
+				target->getAppliedForce().y / target->getMass(), target->getTimeAfterTick());
 
 			if (new_time < f_max_time_step && new_time >= 0)
 			{
 				// collision
 
 				// Check if still on y level
-				double x_arrow_moved = getMovementAtTime(new_time, arrow->getVelocity().x_value, arrow->getAppliedForce().x_value / arrow->getMass());
-				double x_target_moved = getMovementAtTime(new_time, target->getVelocity().x_value, target->getAppliedForce().x_value / target->getMass());
+				double x_arrow_moved = getMovementAtTime(new_time, arrow->getVelocity().x, arrow->getAppliedForce().x / arrow->getMass());
+				double x_target_moved = getMovementAtTime(new_time, target->getVelocity().x, target->getAppliedForce().x / target->getMass());
 
 				if (!(arrow->getX() + x_arrow_moved >= target->getX() + target->getWidth() + x_target_moved &&
 					arrow->getX() + arrow->getWidth() + x_arrow_moved <= target->getX() + x_target_moved))
@@ -631,16 +631,16 @@ double Jinny::GridCollisionManager::getCornerCollisionTime(Framework::RigidBody*
 	if (arrow->getXMovement() > 0)
 	{
 		return getCollisionTime(double(target->getX() - arrow->getX() - arrow->getWidth()),
-			arrow->getVelocity().x_value, target->getVelocity().x_value,
-			arrow->getAppliedForce().x_value / arrow->getMass(),
-			target->getAppliedForce().x_value / target->getMass(), target->getTimeAfterTick());
+			arrow->getVelocity().x, target->getVelocity().x,
+			arrow->getAppliedForce().x / arrow->getMass(),
+			target->getAppliedForce().x / target->getMass(), target->getTimeAfterTick());
 	}
 	else
 	{
 		return getCollisionTime(double(target->getX() + target->getWidth() - arrow->getX()),
-			arrow->getVelocity().x_value, target->getVelocity().x_value,
-			arrow->getAppliedForce().x_value / arrow->getMass(),
-			target->getAppliedForce().x_value / target->getMass(), target->getTimeAfterTick());
+			arrow->getVelocity().x, target->getVelocity().x,
+			arrow->getAppliedForce().x / arrow->getMass(),
+			target->getAppliedForce().x / target->getMass(), target->getTimeAfterTick());
 	}
 }
 
