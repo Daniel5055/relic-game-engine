@@ -21,7 +21,11 @@ namespace Jinny
 
 		void initialize();
 
-		void updateCollisions();
+		// Determines the time of collision between two objects on a single axis
+		double getCollisionTime(double distance, double velocity_1, double velocity_2, double acceleration_1, double acceleration_2, double max_time);
+
+		std::pair<double, double> calculateDynamicCollisionVelocities(double a_velocity, double a_mass, double t_velocity, double t_mass, double coeff_restitution);
+		double calculateStaticCollisionVelocities(double axis_velocity, double coeff_restitution);
 
 	private:
 
@@ -56,23 +60,12 @@ namespace Jinny
 
 		// --- Internal Functions ---
 
-		// Checking if two objects are on the same level
-		bool onSameXLevel(Framework::RigidBody* body_1, Framework::RigidBody* body_2);
-		bool onSameYLevel(Framework::RigidBody* body_1, Framework::RigidBody* body_2);
-
-		// Check if a collision occurs, returns time of collision if true
-		double checkXCollision(Framework::RigidBody* arrow, Framework::RigidBody* target);
-		double checkYCollision(Framework::RigidBody* arrow, Framework::RigidBody* target);
-
-		// Called when corner collision happenes, returns time of collision
-		double getCornerCollisionTime(Framework::RigidBody* arrow, Framework::RigidBody* target);
-
 		// Determines the time of collision between two objects on a single axis
-		double getCollisionTime(double distance, double velocity_1, double velocity_2, double acceleration_1, double acceleration_2, double max_time);
+		//double getCollisionTime(double distance, double velocity_1, double velocity_2, double acceleration_1, double acceleration_2, double max_time);
 
 		// Calculate resultant force on objects in dynamic collision
-		std::pair<double, double> calculateDynamicCollisionForces(double a_velocity, double a_mass, double t_velocity, double t_mass, double coeff_restitution);
-		double calculateStaticCollisionForce(double axis_velocity, double mass, double coeff_restitution);
+		//std::pair<double, double> calculateDynamicCollisionVelocities(double a_velocity, double a_mass, double t_velocity, double t_mass, double coeff_restitution);
+		//double calculateStaticCollisionVelocities(double axis_velocity, double mass, double coeff_restitution);
 
 		// Deterime movement at time
 		double getMovementAtTime(double time, double velocity, double acceleration);

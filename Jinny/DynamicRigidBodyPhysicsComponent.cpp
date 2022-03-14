@@ -12,7 +12,7 @@ Jinny::DynamicRigidBodyPhysicsComponent::DynamicRigidBodyPhysicsComponent(double
 
 	m_rigid_body->applySFForce(force);
 
-	m_rigid_body->applyMFForce({ 0, -60});
+	//m_rigid_body->applyMFForce({ 0, -60});
 }
 
 void Jinny::DynamicRigidBodyPhysicsComponent::initialize(GameObject& object)
@@ -37,7 +37,6 @@ void Jinny::DynamicRigidBodyPhysicsComponent::initialize(GameObject& object)
 
 void Jinny::DynamicRigidBodyPhysicsComponent::update()
 {
-	m_rigid_body->move();
 }
 
 Jinny::DynamicRigidBodyPhysicsComponent::~DynamicRigidBodyPhysicsComponent()

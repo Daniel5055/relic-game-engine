@@ -16,8 +16,6 @@ Framework::RigidBody::RigidBody(double mass, double dampening, Framework::Shape*
 
     m_mf_force = { 0, 0 };
     m_sf_force = { 0, 0 };
-
-    m_time_after_tick = 0;
 }
 
 double Framework::RigidBody::getMass() const
@@ -50,6 +48,12 @@ void Framework::RigidBody::stopYVelocity()
     m_current_velocity.y = 0;
 }
 
+void Framework::RigidBody::stopVelocity()
+{
+    m_current_velocity.x = 0;
+    m_current_velocity.y = 0;
+}
+
 Framework::Vector Framework::RigidBody::getAppliedForce()
 {
     Vector applied_force = m_mf_force + m_sf_force;
@@ -71,50 +75,11 @@ void Framework::RigidBody::applySFForce(Vector force)
     m_sf_force += force;
 }
 
-Framework::Vector Framework::RigidBody::getMovement() const
-{
-    return m_movement;
-}
-
-void Framework::RigidBody::setMovement(double x_moved, double y_moved)
-{
-    setMovement(Vector(x_moved, y_moved));
-}
-
-void Framework::RigidBody::setMovement(Vector movement)
-{
-    m_movement = movement;
-}
-
-void Framework::RigidBody::addTickMovement(double x_moved, double y_moved)
-{
-    addTickMovement(Vector(x_moved, y_moved));
-}
-
-void Framework::RigidBody::addTickMovement(Vector movement)
-{
-    m_movement = movement;
-}
-
-double Framework::RigidBody::getTimeAfterTick()
-{
-    return m_time_after_tick;
-}
-
-void Framework::RigidBody::setTimeAfterTick(double time)
-{
-    m_time_after_tick = time;
-}
-
 bool Framework::RigidBody::isStationary() const
 {
     if (m_current_velocity.x == 0 && m_current_velocity.y == 0)
     {
-        // TODO: could be janky this
-        if (m_movement.x == 0 && m_movement.y == 0)
-        {
-            return true;
-        }
+        return true;
     }
 
     return false;
@@ -125,9 +90,9 @@ double Framework::RigidBody::getDampening() const
     return m_dampening;
 }
 
-void Framework::RigidBody::move()
+void Framework::RigidBody::move(Vector movement)
 {
-    m_position += m_movement;
+    m_position += movement;
 
     int whole_x = round(m_position.x);
     if (whole_x != m_shape_ptr->x)
@@ -166,6 +131,11 @@ int Framework::RigidBody::getWidth() const
 int Framework::RigidBody::getHeight() const
 {
     return m_shape_ptr->h;
+}
+
+Framework::Vector Framework::RigidBody::getSize() const
+{
+    return Vector(m_shape_ptr->w, m_shape_ptr->h);
 }
 
 Framework::Vector Framework::RigidBody::getPosition() const

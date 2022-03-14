@@ -5,6 +5,7 @@ namespace Framework
 	struct Vector
 	{
 		Vector(double x, double y);
+		Vector();
 		double x;
 		double y;
 

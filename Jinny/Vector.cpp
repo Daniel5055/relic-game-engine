@@ -5,6 +5,11 @@ Framework::Vector::Vector(double x, double y)
     :x(x), y(y)
 {
 }
+
+Framework::Vector::Vector()
+    :Vector(0, 0)
+{
+}
 Framework::Vector& Framework::Vector::operator+=(const Vector& vector)
 {
     x += vector.x;

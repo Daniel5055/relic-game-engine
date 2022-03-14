@@ -59,5 +59,27 @@ namespace Jinny
 		std::map<int, Framework::RigidBody*> m_rigid_bodies;
 		
 		double m_acceleration_due_to_gravity;
+
+		struct InfluenceRectangle
+		{
+			// position in top left corner
+			Framework::Vector position;
+
+			Framework::Vector size;
+		};
+
+		std::map<int, InfluenceRectangle> m_influence_rects;
+
+		// May replace ids with pointers to rigid bodies to make more concise code
+		struct Collision
+		{
+			double time;
+			int object_id_1;
+			int object_id_2;
+			int axis;
+		};
+
+		// May instead only need single collision which is smallest collision
+		std::vector<Collision> m_collisions;
 	};
 }

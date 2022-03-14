@@ -22,6 +22,7 @@ namespace Framework
 		void increaseVelocity(Vector additional_velocity);
 		void stopXVelocity();
 		void stopYVelocity();
+		void stopVelocity();
 		bool isStationary() const;
 
 		// Force Accessors
@@ -29,18 +30,6 @@ namespace Framework
 		void applyMFForce(Vector force);
 		void applySFForce(Vector force);
 		void clearSFForce();
-
-		// Movement Accessors
-		Vector getMovement() const;
-		void setMovement(double x_moved, double y_moved);
-		void setMovement(Vector movement);
-
-		void addTickMovement(double x_moved, double y_moved);
-		void addTickMovement(Vector movement);
-
-		// Time Accessors
-		double getTimeAfterTick();
-		void setTimeAfterTick(double time);
 
 		// Dampening Accessor
 		double getDampening() const;
@@ -50,12 +39,13 @@ namespace Framework
 
 		int getWidth() const;
 		int getHeight() const;
+		Vector getSize() const;
 		Vector getPosition() const;
 		void setPosition(Vector position);
 		int getRoundedX() const;
 		int getRoundedY() const;
 
-		void move();
+		void move(Vector movement);
 
 		// Static accessors
 		bool isStatic() const;
@@ -70,13 +60,6 @@ namespace Framework
 
 		// Current Velocity in meters per second
 		Vector m_current_velocity;
-
-		// Movement after a single tick
-		Vector m_movement;
-
-		// Collision Time (neccessary for checking collision distances)
-		// 0 by default, max is tick length
-		double m_time_after_tick;
 
 		// multi and single frame forces
 		Vector m_mf_force;
