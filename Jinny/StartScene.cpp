@@ -43,15 +43,15 @@ void Jinny::StartScene::initialize()
 
 	addWorldObject(o);
 
-	//addWorldObject(new GameObject("Static1", { 640, 0, 100, 480 }, new ImageGraphicsComponent("Black"), nullptr, new StaticRigidBodyPhysicsComponent()));
-	//addWorldObject(new GameObject("Static2", { -100, 0, 100, 480 }, new ImageGraphicsComponent("Black"), nullptr, new StaticRigidBodyPhysicsComponent()));
-	//addWorldObject(new GameObject("Static3", { 0, -100, 640, 100 }, new ImageGraphicsComponent("Black"), nullptr, new StaticRigidBodyPhysicsComponent()));
-	//addWorldObject(new GameObject("Static4", { 0, 480, 640, 100}, new ImageGraphicsComponent("Black"), nullptr, new StaticRigidBodyPhysicsComponent()));
+	addWorldObject(new GameObject("Static1", { 630, 0, 10, 480 }, new ImageGraphicsComponent("Black"), nullptr, new StaticRigidBodyPhysicsComponent()));
+	addWorldObject(new GameObject("Static2", { 0, 0, 10, 480 }, new ImageGraphicsComponent("Black"), nullptr, new StaticRigidBodyPhysicsComponent()));
+	addWorldObject(new GameObject("Static3", { 10, 470, 620, 10 }, new ImageGraphicsComponent("Black"), nullptr, new StaticRigidBodyPhysicsComponent()));
+	addWorldObject(new GameObject("Static4", { 10, 0, 620, 10}, new ImageGraphicsComponent("Black"), nullptr, new StaticRigidBodyPhysicsComponent()));
 
-	addWorldObject(new GameObject("Static2", { 200, 200, 100, 100 }, new ImageGraphicsComponent("Black"), nullptr, new StaticRigidBodyPhysicsComponent()));
+	//addWorldObject(new GameObject("Static2", { 200, 200, 100, 100 }, new ImageGraphicsComponent("Black"), nullptr, new StaticRigidBodyPhysicsComponent()));
 
-	//addWorldObject(new GameObject("Dy2", { 100, 100, 50, 50 }, new ImageGraphicsComponent("Red"), nullptr, new DynamicRigidBodyPhysicsComponent(10, 10, 10, Framework::Material::NULLIUM, {9, 9})));
-	//addWorldObject(new GameObject("Dy3", { 400, 400, 20, 20 }, new ImageGraphicsComponent("Black"), nullptr, new DynamicRigidBodyPhysicsComponent(5, 10, 10, Framework::Material::NULLIUM, { -400, -400})));
+	addWorldObject(new GameObject("Dy2", { 100, 100, 50, 50 }, new ImageGraphicsComponent("Red"), nullptr, new DynamicRigidBodyPhysicsComponent(10, 10, 10, Framework::Material::NULLIUM, {80, -10})));
+	addWorldObject(new GameObject("Dy3", { 200, 100, 50, 50 }, new ImageGraphicsComponent("Black"), nullptr, new DynamicRigidBodyPhysicsComponent(10, 10, 10, Framework::Material::NULLIUM, {10, -50})));
 	//addWorldObject(new GameObject("Dy4", { 610, 450, 20, 20 }, new ImageGraphicsComponent("Red"), nullptr, new DynamicRigidBodyPhysicsComponent(5, 10, 10)));
 	//addWorldObject(new GameObject("Dy5", { 500, 200, 20, 20 }, new ImageGraphicsComponent("Black"), nullptr, new DynamicRigidBodyPhysicsComponent(5, 10, 10, Framework::Material::NULLIUM, { 0, 500 })));
 	//addWorldObject(new GameObject("Dy6", { 500, 300, 20, 20 }, new ImageGraphicsComponent("Red"), nullptr, new DynamicRigidBodyPhysicsComponent(5, 10, 10, { 300, 0 })));

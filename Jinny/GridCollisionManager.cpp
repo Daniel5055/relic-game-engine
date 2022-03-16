@@ -24,7 +24,7 @@ double Jinny::GridCollisionManager::getCollisionTime(double distance, double vel
 	{
 		// Physics formula for time which two colliding objects will hit using suvat and two objects
 
-		time = ((distance / f_ppm) / (velocity_1 - velocity_2));
+		time = ((distance / f_ppm) / (abs(velocity_1 - velocity_2)));
 		if (time >= 0)
 		{
 			if (time > max_time)
@@ -68,6 +68,7 @@ double Jinny::GridCollisionManager::getCollisionTime(double distance, double vel
 				}
 				else
 				{
+					// what?
 					return ((distance / f_ppm + velocity_2 * max_time) / (velocity_1));
 				}
 
@@ -363,6 +364,7 @@ double Jinny::GridCollisionManager::getCollisionTime(double distance, double vel
 	// With regards to checking, I am not sure how many of the possibilities I have created are possible
 }
 
+// Need to rewrite
 std::pair<double, double> Jinny::GridCollisionManager::calculateDynamicCollisionVelocities(double a_velocity, double a_mass, double t_velocity, double t_mass, double coeff_restitution)
 {
 	double momentum = a_velocity * a_mass + t_velocity * t_mass;
@@ -370,8 +372,8 @@ std::pair<double, double> Jinny::GridCollisionManager::calculateDynamicCollision
 	std::pair<double, double> out;
 
 	double right_part = coeff_restitution * (a_velocity - t_velocity);
-	out.first = (momentum + a_mass * right_part) / (t_mass + a_mass);
-	out.second = (momentum - t_mass * right_part) / (t_mass + a_mass);
+	out.first = (momentum - t_mass * right_part) / (t_mass + a_mass);
+	out.second = (momentum + a_mass * right_part) / (t_mass + a_mass);
 
 	return out;
 }

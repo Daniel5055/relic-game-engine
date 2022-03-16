@@ -82,7 +82,7 @@ void Jinny::PhysicsSystem::update()
 				bool is_intersecting = true;
 				for (int axis : {0, 1})
 				{
-					if (it1->second.position[axis] >= it2->second.position[axis] + it2->second.size[axis] ||
+					if (it1->second.position[axis] >= it2->second.position[axis] + it2->second.size[axis] || 
 						it2->second.position[axis] >= it1->second.position[axis] + it1->second.size[axis])
 					{
 						is_intersecting = false;
@@ -97,24 +97,28 @@ void Jinny::PhysicsSystem::update()
 					for (int axis : {0, 1})
 					{
 						double distance = 0;
-						if (it2->second.position[axis] < it1->second.position[axis])
+						if (m_rigid_bodies[it2->first]->getPosition()[axis] < m_rigid_bodies[it1->first]->getPosition()[axis])
 						{
-							distance = it1->second.position[axis] - it2->second.position[axis] - m_rigid_bodies[it2->first]->getSize()[axis];
+							distance = m_rigid_bodies[it1->first]->getPosition()[axis] - m_rigid_bodies[it2->first]->getPosition()[axis] - m_rigid_bodies[it2->first]->getSize()[axis];
 
 						}
 						else
 						{
-							distance = it2->second.position[axis] - it1->second.position[axis] - m_rigid_bodies[it1->first]->getSize()[axis];
+							distance = m_rigid_bodies[it2->first]->getPosition()[axis] - m_rigid_bodies[it1->first]->getPosition()[axis] - m_rigid_bodies[it1->first]->getSize()[axis];
 						}
 
 						collision_times[axis] = m_col_manager->getCollisionTime(distance, m_rigid_bodies[it1->first]->getVelocity()[axis], m_rigid_bodies[it2->first]->getVelocity()[axis],
 							m_rigid_bodies[it1->first]->getAppliedForce()[axis] / m_rigid_bodies[it1->first]->getMass(),
 							m_rigid_bodies[it2->first]->getAppliedForce()[axis] / m_rigid_bodies[it1->first]->getMass(), f_physics->getTimeStep() - tick_time);
+						if (collision_times[axis] > f_physics->getTimeStep() - tick_time)
+						{
+							collision_times[axis] = -1;
+						}
 					}
 
 					// Check if objects are touching at time
-					double smallest = 0;
-					double largest = 1;
+					int smallest = 0;
+					int largest = 1;
 
 					if (collision_times[0] > collision_times[1])
 					{
@@ -124,7 +128,8 @@ void Jinny::PhysicsSystem::update()
 
 					for (int axis : {smallest, largest})
 					{
-						if (collision_times[axis] >= 0) 
+						// TODO: don't like this
+						if (collision_times[axis] > 0.00000000001) 
 						{
 							double displacement1 = f_physics->getDisplacementAtTime(collision_times[axis], m_rigid_bodies[it1->first]->getVelocity()[1 - axis],
 								m_rigid_bodies[it1->first]->getAppliedForce()[1 - axis] / m_rigid_bodies[it1->first]->getMass());
