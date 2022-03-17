@@ -129,7 +129,7 @@ void Jinny::PhysicsSystem::update()
 					for (int axis : {smallest, largest})
 					{
 						// TODO: don't like this
-						if (collision_times[axis] > 0.00000000001) 
+						if (collision_times[axis] >= 0.000001) 
 						{
 							double displacement1 = f_physics->getDisplacementAtTime(collision_times[axis], m_rigid_bodies[it1->first]->getVelocity()[1 - axis],
 								m_rigid_bodies[it1->first]->getAppliedForce()[1 - axis] / m_rigid_bodies[it1->first]->getMass());
@@ -168,44 +168,87 @@ void Jinny::PhysicsSystem::update()
 		}
 		tick_time += m_collisions[0].time;
 
-		// Calculate velocities of most recent collision
-		if (m_rigid_bodies[m_collisions[0].object_id_1]->isStatic() || m_rigid_bodies[m_collisions[0].object_id_2]->isStatic())
+		while (true)
 		{
-			Framework::RigidBody* dynamic_body = m_rigid_bodies[m_collisions[0].object_id_1];
-			if (m_rigid_bodies[m_collisions[0].object_id_1]->isStatic())
+			// If collision time is zero (regardless of body type)
+
+			// Calculate velocities of most recent collision
+			if (m_rigid_bodies[m_collisions[0].object_id_1]->isStatic() || m_rigid_bodies[m_collisions[0].object_id_2]->isStatic())
 			{
-				dynamic_body = m_rigid_bodies[m_collisions[0].object_id_2];
+				Framework::RigidBody* dynamic_body = m_rigid_bodies[m_collisions[0].object_id_1];
+				if (m_rigid_bodies[m_collisions[0].object_id_1]->isStatic())
+				{
+					dynamic_body = m_rigid_bodies[m_collisions[0].object_id_2];
+				}
+
+				if (m_collisions[0].time == 0)
+				{
+					Framework::Vector force = dynamic_body->getAppliedForce() * -2;
+					force[1 - m_collisions[0].axis] = 0;
+
+					dynamic_body->applySFForce(force);
+				}
+				else
+				{
+					Framework::Vector new_velocity = dynamic_body->getVelocity();
+					new_velocity[m_collisions[0].axis] = m_col_manager->calculateStaticCollisionVelocities(dynamic_body->getVelocity()[m_collisions[0].axis],
+						f_physics->getCoefficientOfRestitution(m_rigid_bodies[m_collisions[0].object_id_1], m_rigid_bodies[m_collisions[0].object_id_2]));
+
+					dynamic_body->stopVelocity();
+					dynamic_body->increaseVelocity(new_velocity);
+					
+				}
+
+			}
+			else
+			{
+				if (m_collisions[0].time == 0)
+				{
+					Framework::Vector force1 = m_rigid_bodies[m_collisions[0].object_id_1]->getAppliedForce();
+					force1[1 - m_collisions[0].axis] = 0;
+
+					Framework::Vector force2 = m_rigid_bodies[m_collisions[0].object_id_2]->getAppliedForce();
+					force2[1 - m_collisions[0].axis] = 0;
+
+					m_rigid_bodies[m_collisions[0].object_id_1]->applySFForce(force2 + force1 * -1);
+					m_rigid_bodies[m_collisions[0].object_id_2]->applySFForce(force1 + force2 * -1);
+				}
+				else
+				{
+					Framework::Vector new_velocity_1 = m_rigid_bodies[m_collisions[0].object_id_1]->getVelocity();
+					Framework::Vector new_velocity_2 = m_rigid_bodies[m_collisions[0].object_id_2]->getVelocity();
+					std::pair<double, double> new_velocities = m_col_manager->calculateDynamicCollisionVelocities(m_rigid_bodies[m_collisions[0].object_id_1]->getVelocity()[m_collisions[0].axis],
+						m_rigid_bodies[m_collisions[0].object_id_1]->getMass(), m_rigid_bodies[m_collisions[0].object_id_2]->getVelocity()[m_collisions[0].axis],
+						m_rigid_bodies[m_collisions[0].object_id_2]->getMass(),
+						f_physics->getCoefficientOfRestitution(m_rigid_bodies[m_collisions[0].object_id_1], m_rigid_bodies[m_collisions[0].object_id_2]));
+
+					new_velocity_1[m_collisions[0].axis] = new_velocities.first;
+					new_velocity_2[m_collisions[0].axis] = new_velocities.second;
+
+					m_rigid_bodies[m_collisions[0].object_id_1]->stopVelocity();
+					m_rigid_bodies[m_collisions[0].object_id_1]->increaseVelocity(new_velocity_1);
+
+					m_rigid_bodies[m_collisions[0].object_id_2]->stopVelocity();
+					m_rigid_bodies[m_collisions[0].object_id_2]->increaseVelocity(new_velocity_2);
+
+				}
 			}
 
-			Framework::Vector new_velocity = dynamic_body->getVelocity();
-			new_velocity[m_collisions[0].axis] = m_col_manager->calculateStaticCollisionVelocities(dynamic_body->getVelocity()[m_collisions[0].axis],
-				f_physics->getCoefficientOfRestitution(m_rigid_bodies[m_collisions[0].object_id_1], m_rigid_bodies[m_collisions[0].object_id_2]));
+			// Clear temp forces of colliding objects (or maybe not)
+			//m_rigid_bodies[m_collisions[0].object_id_1]->clearSFForce();
+			//m_rigid_bodies[m_collisions[0].object_id_2]->clearSFForce();
 
-			dynamic_body->stopVelocity();
-			dynamic_body->increaseVelocity(new_velocity);
+			// If there are more collisions that occured at the same time the continue calculations for next collision else break from loop
+			if (m_collisions.size() > 1 && m_collisions[0].time == m_collisions[1].time)
+			{
+				m_collisions.erase(m_collisions.begin());
+			}
+			else
+			{
+				break;
+			}
+
 		}
-		else
-		{
-			Framework::Vector new_velocity_1 = m_rigid_bodies[m_collisions[0].object_id_1]->getVelocity();
-			Framework::Vector new_velocity_2 = m_rigid_bodies[m_collisions[0].object_id_2]->getVelocity();
-			std::pair<double, double> new_velocities = m_col_manager->calculateDynamicCollisionVelocities(m_rigid_bodies[m_collisions[0].object_id_1]->getVelocity()[m_collisions[0].axis],
-				m_rigid_bodies[m_collisions[0].object_id_1]->getMass(), m_rigid_bodies[m_collisions[0].object_id_2]->getVelocity()[m_collisions[0].axis],
-				m_rigid_bodies[m_collisions[0].object_id_2]->getMass(),
-				f_physics->getCoefficientOfRestitution(m_rigid_bodies[m_collisions[0].object_id_1], m_rigid_bodies[m_collisions[0].object_id_2]));
-
-			new_velocity_1[m_collisions[0].axis] = new_velocities.first;
-			new_velocity_2[m_collisions[0].axis] = new_velocities.second;
-
-			m_rigid_bodies[m_collisions[0].object_id_1]->stopVelocity();
-			m_rigid_bodies[m_collisions[0].object_id_1]->increaseVelocity(new_velocity_1);
-
-			m_rigid_bodies[m_collisions[0].object_id_2]->stopVelocity();
-			m_rigid_bodies[m_collisions[0].object_id_2]->increaseVelocity(new_velocity_2);
-		}
-
-		// Clear temp forces of colliding objects
-		m_rigid_bodies[m_collisions[0].object_id_1]->clearSFForce();
-		m_rigid_bodies[m_collisions[0].object_id_2]->clearSFForce();
 	}
 
 	// Move the objects by the remaining time
