@@ -24,8 +24,8 @@ namespace Jinny
 		// Determines the time of collision between two objects on a single axis
 		double getCollisionTime(double distance, double velocity_1, double velocity_2, double acceleration_1, double acceleration_2, double max_time);
 
-		std::pair<double, double> calculateDynamicCollisionVelocities(double a_velocity, double a_mass, double t_velocity, double t_mass, double coeff_restitution);
-		double calculateStaticCollisionVelocities(double axis_velocity, double coeff_restitution);
+		std::pair<double, double> calculateDynamicCollisionForces(double a_velocity, double a_mass, double t_velocity, double t_mass, double coeff_restitution, double time_left);
+		double calculateStaticCollisionForces(double axis_velocity, double mass, double coeff_restitution, double time_left);
 
 	private:
 

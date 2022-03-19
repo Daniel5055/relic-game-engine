@@ -28,7 +28,6 @@ void Jinny::PhysicsSystem::update()
 
 	double tick_time = 0;
 
-
 	// Check for intersections
 	// May be slow in this part but can optimise later
 	// If intersect then calculate collision of rigid bodies along both axises
@@ -109,7 +108,7 @@ void Jinny::PhysicsSystem::update()
 
 						collision_times[axis] = m_col_manager->getCollisionTime(distance, m_rigid_bodies[it1->first]->getVelocity()[axis], m_rigid_bodies[it2->first]->getVelocity()[axis],
 							m_rigid_bodies[it1->first]->getAppliedForce()[axis] / m_rigid_bodies[it1->first]->getMass(),
-							m_rigid_bodies[it2->first]->getAppliedForce()[axis] / m_rigid_bodies[it1->first]->getMass(), f_physics->getTimeStep() - tick_time);
+							m_rigid_bodies[it2->first]->getAppliedForce()[axis] / m_rigid_bodies[it2->first]->getMass(), f_physics->getTimeStep() - tick_time);
 						if (collision_times[axis] > f_physics->getTimeStep() - tick_time)
 						{
 							collision_times[axis] = -1;
@@ -129,7 +128,7 @@ void Jinny::PhysicsSystem::update()
 					for (int axis : {smallest, largest})
 					{
 						// TODO: don't like this
-						if (collision_times[axis] >= 0.000001) 
+						if (collision_times[axis] > 0) 
 						{
 							double displacement1 = f_physics->getDisplacementAtTime(collision_times[axis], m_rigid_bodies[it1->first]->getVelocity()[1 - axis],
 								m_rigid_bodies[it1->first]->getAppliedForce()[1 - axis] / m_rigid_bodies[it1->first]->getMass());
@@ -141,10 +140,77 @@ void Jinny::PhysicsSystem::update()
 							if (displacement1 + it1->second.position[1 - axis] <= displacement2 + it2->second.position[1 - axis] + it2->second.size[1 - axis] + 1 ||
 								displacement2 + it2->second.position[1 - axis] <= displacement1 + it1->second.position[1 - axis] + it1->second.size[1 - axis] + 1)
 							{
-								m_collisions.push_back({ collision_times[axis], it1->first, it2->first, axis});
+								if (m_collisions.size() > 0)
+								{
+									if (m_collisions[0].time > collision_times[axis])
+									{
+										m_collisions.clear();
+										m_collisions.push_back({ collision_times[axis], axis, {m_rigid_bodies[it1->first], m_rigid_bodies[it2->first]}});
+									}
+									else if (m_collisions[0].time == collision_times[axis])
+									{
+										m_collisions.push_back({ collision_times[axis], axis, {m_rigid_bodies[it1->first], m_rigid_bodies[it2->first]}});
+									}
+								}
+								else
+								{
+									m_collisions.push_back({ collision_times[axis], axis, {m_rigid_bodies[it1->first], m_rigid_bodies[it2->first]}});
+								}
+
 								break;
 							}
 						}
+						else if (collision_times[axis] == 0)
+						{
+							// If time is zero and velocities not zero then do based on force
+							if (m_rigid_bodies[it1->first]->getVelocity()[axis] != 0 || m_rigid_bodies[it2->first]->getVelocity()[axis] != 0)
+							{
+								bool is_collision = false;
+								if (m_rigid_bodies[it1->first]->getPosition()[axis] > m_rigid_bodies[it2->first]->getPosition()[axis] &&
+									m_rigid_bodies[it1->first]->getVelocity()[axis] < m_rigid_bodies[it2->first]->getVelocity()[axis])
+								{
+									is_collision = true;
+									m_collisions.push_back({ collision_times[axis], axis, {m_rigid_bodies[it1->first], m_rigid_bodies[it2->first]}});
+
+								}
+								else if (m_rigid_bodies[it1->first]->getPosition()[axis] < m_rigid_bodies[it2->first]->getPosition()[axis] &&
+										 m_rigid_bodies[it1->first]->getVelocity()[axis] > m_rigid_bodies[it2->first]->getVelocity()[axis])
+								{
+									is_collision = true;
+									m_collisions.push_back({ collision_times[axis], axis, {m_rigid_bodies[it1->first], m_rigid_bodies[it2->first]}});
+								}
+
+								if (is_collision)
+								{
+									if (m_collisions.size() > 0)
+									{
+										if (m_collisions[0].time > collision_times[axis])
+										{
+											m_collisions.clear();
+											m_collisions.push_back({ collision_times[axis], axis, {m_rigid_bodies[it1->first], m_rigid_bodies[it2->first]}});
+										}
+										else if (m_collisions[0].time == collision_times[axis])
+										{
+											m_collisions.push_back({ collision_times[axis], axis, {m_rigid_bodies[it1->first], m_rigid_bodies[it2->first]}});
+										}
+									}
+									else
+									{
+										m_collisions.push_back({ collision_times[axis], axis, {m_rigid_bodies[it1->first], m_rigid_bodies[it2->first]}});
+									}
+
+									break;
+								}
+							}
+							else
+							{
+								m_collisions.push_back({ collision_times[axis], axis, {m_rigid_bodies[it1->first], m_rigid_bodies[it2->first]}});
+
+							}
+
+							break;
+						}
+
 					}
 				}
 			}
@@ -156,98 +222,62 @@ void Jinny::PhysicsSystem::update()
 			break;
 		}
 
-		// Sort collisions by time
-		std::sort(m_collisions.begin(), m_collisions.end(), [](Collision a, Collision b) { return a.time < b.time; });
-
 		// Move objects to new positon at most recent collision time
 		for (auto it = m_rigid_bodies.begin(); it != m_rigid_bodies.end(); it++)
 		{
 			it->second->move(f_physics->getDisplacementAtTime(m_collisions[0].time, it->second->getVelocity(),
 				it->second->getAppliedForce() / it->second->getMass()));
-			it->second->increaseVelocity(it->second->getAppliedForce() * m_collisions[0].time);
+			it->second->increaseVelocity(it->second->getAppliedForce() * m_collisions[0].time / it->second->getMass());
 		}
 		tick_time += m_collisions[0].time;
 
-		while (true)
+		// Iterate through collisions
+		for (int it = 0; it < m_collisions.size(); it++)
 		{
-			// If collision time is zero (regardless of body type)
-
 			// Calculate velocities of most recent collision
-			if (m_rigid_bodies[m_collisions[0].object_id_1]->isStatic() || m_rigid_bodies[m_collisions[0].object_id_2]->isStatic())
+			if (m_collisions[it].rigid_bodies[0]->isStatic() || m_collisions[it].rigid_bodies[1]->isStatic())
 			{
-				Framework::RigidBody* dynamic_body = m_rigid_bodies[m_collisions[0].object_id_1];
-				if (m_rigid_bodies[m_collisions[0].object_id_1]->isStatic())
+				Framework::RigidBody* dynamic_body = m_collisions[it].rigid_bodies[0];
+				if (m_collisions[it].rigid_bodies[0]->isStatic())
 				{
-					dynamic_body = m_rigid_bodies[m_collisions[0].object_id_2];
+					dynamic_body = m_collisions[it].rigid_bodies[1];
 				}
 
-				if (m_collisions[0].time == 0)
-				{
-					Framework::Vector force = dynamic_body->getAppliedForce() * -2;
-					force[1 - m_collisions[0].axis] = 0;
+				Framework::Vector normal = dynamic_body->getAppliedForce() * -2;
+				normal[1 - m_collisions[it].axis] = 0;
 
-					dynamic_body->applySFForce(force);
-				}
-				else
-				{
-					Framework::Vector new_velocity = dynamic_body->getVelocity();
-					new_velocity[m_collisions[0].axis] = m_col_manager->calculateStaticCollisionVelocities(dynamic_body->getVelocity()[m_collisions[0].axis],
-						f_physics->getCoefficientOfRestitution(m_rigid_bodies[m_collisions[0].object_id_1], m_rigid_bodies[m_collisions[0].object_id_2]));
+				dynamic_body->applySFForce(normal);
+				
+				Framework::Vector collision_force = Framework::Vector();
+				collision_force[m_collisions[it].axis] = m_col_manager->calculateStaticCollisionForces(dynamic_body->getVelocity()[m_collisions[it].axis], dynamic_body->getMass(),
+					f_physics->getCoefficientOfRestitution(m_collisions[it].rigid_bodies[0], m_collisions[it].rigid_bodies[1]), f_physics->getTimeStep() - tick_time);
 
-					dynamic_body->stopVelocity();
-					dynamic_body->increaseVelocity(new_velocity);
-					
-				}
-
+				dynamic_body->increaseVelocity(collision_force / dynamic_body->getMass() * (f_physics->getTimeStep() - tick_time));
 			}
 			else
 			{
-				if (m_collisions[0].time == 0)
-				{
-					Framework::Vector force1 = m_rigid_bodies[m_collisions[0].object_id_1]->getAppliedForce();
-					force1[1 - m_collisions[0].axis] = 0;
+				Framework::Vector normal1 = m_collisions[it].rigid_bodies[0]->getAppliedForce() * -2;
+				normal1[1 - m_collisions[it].axis] = 0;
+				Framework::Vector normal2 = m_collisions[it].rigid_bodies[1]->getAppliedForce() * -2;
+				normal2[1 - m_collisions[it].axis] = 0;
 
-					Framework::Vector force2 = m_rigid_bodies[m_collisions[0].object_id_2]->getAppliedForce();
-					force2[1 - m_collisions[0].axis] = 0;
+				m_collisions[it].rigid_bodies[0]->applySFForce(normal1);
+				m_collisions[it].rigid_bodies[1]->applySFForce(normal2);
 
-					m_rigid_bodies[m_collisions[0].object_id_1]->applySFForce(force2 + force1 * -1);
-					m_rigid_bodies[m_collisions[0].object_id_2]->applySFForce(force1 + force2 * -1);
-				}
-				else
-				{
-					Framework::Vector new_velocity_1 = m_rigid_bodies[m_collisions[0].object_id_1]->getVelocity();
-					Framework::Vector new_velocity_2 = m_rigid_bodies[m_collisions[0].object_id_2]->getVelocity();
-					std::pair<double, double> new_velocities = m_col_manager->calculateDynamicCollisionVelocities(m_rigid_bodies[m_collisions[0].object_id_1]->getVelocity()[m_collisions[0].axis],
-						m_rigid_bodies[m_collisions[0].object_id_1]->getMass(), m_rigid_bodies[m_collisions[0].object_id_2]->getVelocity()[m_collisions[0].axis],
-						m_rigid_bodies[m_collisions[0].object_id_2]->getMass(),
-						f_physics->getCoefficientOfRestitution(m_rigid_bodies[m_collisions[0].object_id_1], m_rigid_bodies[m_collisions[0].object_id_2]));
+				std::pair<double, double> collision_forces = m_col_manager->calculateDynamicCollisionForces(m_collisions[it].rigid_bodies[0]->getVelocity()[m_collisions[0].axis],
+					m_collisions[it].rigid_bodies[0]->getMass(), m_collisions[it].rigid_bodies[1]->getVelocity()[m_collisions[0].axis],
+					m_collisions[it].rigid_bodies[1]->getMass(),
+					f_physics->getCoefficientOfRestitution(m_collisions[it].rigid_bodies[0], m_collisions[it].rigid_bodies[1]),
+					f_physics->getTimeStep() - tick_time);
 
-					new_velocity_1[m_collisions[0].axis] = new_velocities.first;
-					new_velocity_2[m_collisions[0].axis] = new_velocities.second;
+				Framework::Vector collision_force1 = Framework::Vector();
+				collision_force1[m_collisions[it].axis] = collision_forces.first;
+				Framework::Vector collision_force2 = Framework::Vector();
+				collision_force2[m_collisions[it].axis] = collision_forces.second;
 
-					m_rigid_bodies[m_collisions[0].object_id_1]->stopVelocity();
-					m_rigid_bodies[m_collisions[0].object_id_1]->increaseVelocity(new_velocity_1);
-
-					m_rigid_bodies[m_collisions[0].object_id_2]->stopVelocity();
-					m_rigid_bodies[m_collisions[0].object_id_2]->increaseVelocity(new_velocity_2);
-
-				}
+				m_collisions[it].rigid_bodies[0]->increaseVelocity(collision_force1 / m_collisions[it].rigid_bodies[0]->getMass() * (f_physics->getTimeStep() - tick_time));
+				m_collisions[it].rigid_bodies[1]->increaseVelocity(collision_force2 / m_collisions[it].rigid_bodies[1]->getMass() * (f_physics->getTimeStep() - tick_time));
 			}
-
-			// Clear temp forces of colliding objects (or maybe not)
-			//m_rigid_bodies[m_collisions[0].object_id_1]->clearSFForce();
-			//m_rigid_bodies[m_collisions[0].object_id_2]->clearSFForce();
-
-			// If there are more collisions that occured at the same time the continue calculations for next collision else break from loop
-			if (m_collisions.size() > 1 && m_collisions[0].time == m_collisions[1].time)
-			{
-				m_collisions.erase(m_collisions.begin());
-			}
-			else
-			{
-				break;
-			}
-
 		}
 	}
 
@@ -257,7 +287,7 @@ void Jinny::PhysicsSystem::update()
 	{
 		it->second->move(f_physics->getDisplacementAtTime(f_physics->getTimeStep() - tick_time, it->second->getVelocity(),
 			it->second->getAppliedForce() / it->second->getMass()));
-		it->second->increaseVelocity(it->second->getAppliedForce() * (f_physics->getTimeStep() - tick_time));
+		it->second->increaseVelocity(it->second->getAppliedForce() * (f_physics->getTimeStep() - tick_time) / it->second->getMass());
 
 		// Clear single tick forces
 		it->second->clearSFForce();

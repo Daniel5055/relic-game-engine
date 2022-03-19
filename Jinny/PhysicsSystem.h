@@ -74,9 +74,10 @@ namespace Jinny
 		struct Collision
 		{
 			double time;
-			int object_id_1;
-			int object_id_2;
 			int axis;
+
+			Framework::RigidBody* rigid_bodies[2];
+			Framework::Vector applying_forces;
 		};
 
 		// May instead only need single collision which is smallest collision
