@@ -23,10 +23,9 @@ double Jinny::GridCollisionManager::getCollisionTime(double distance, double vel
 	if ((acceleration_1 == acceleration_2))
 	{
 		// Physics formula for time which two colliding objects will hit using suvat and two objects
+		time = (distance / f_ppm) / (velocity_1 - velocity_2);
 
-		time = ((distance / f_ppm) / (velocity_1 - velocity_2));
-
-		if (time >= 0)
+		if (time > 0)
 		{
 			if (time > max_time)
 			{
@@ -79,6 +78,17 @@ double Jinny::GridCollisionManager::getCollisionTime(double distance, double vel
 				return time;
 			}
 		}
+		else if (time == 0)
+		{
+			if (velocity_1 > velocity_2)
+			{
+				return time;
+			}
+			else
+			{
+				return -1;
+			}
+		}
 		else
 		{
 			if (acceleration_1 != 0)
@@ -128,34 +138,20 @@ double Jinny::GridCollisionManager::getCollisionTime(double distance, double vel
 	// For cases where they are already in contact
 	else if (distance == 0)
 	{
-		if ((velocity_1 > 0 && velocity_2 <= 0) || (velocity_1 < 0 && velocity_2 >= 0))
+		if (velocity_1 > velocity_2)
 		{
 			return 0;
 		}
-		else if (abs(velocity_1) > abs(velocity_2))
-		{
-			// Will collide
-			return 0;
-		}
-		else if (abs(velocity_1) < abs(velocity_2))
-		{
-			// Will not collide
-			return -1;
-		}
-		else
+		else if (velocity_1 == velocity_2)
 		{
 			// equal to zero
-			if ((acceleration_1 > 0 && acceleration_2 <= 0) || (acceleration_1 < 0 && acceleration_2 >= 0))
+			if (acceleration_1 > acceleration_2)
 			{
-				return 0;
-			}
-			else if (abs(acceleration_1) > abs(acceleration_2))
-			{
-				// Will collide
 				return 0;
 			}
 			else
 			{
+				// I dont understand any of these max time calculatations?
 				double max_distance = double(velocity_2 * max_time + 0.5 * acceleration_2 * pow(max_time, 2));
 
 				double discriminant = pow(velocity_1, 2) + 2 * (max_distance) * (acceleration_1);
@@ -190,6 +186,10 @@ double Jinny::GridCollisionManager::getCollisionTime(double distance, double vel
 				}
 
 			}
+		}
+		else
+		{
+			return -1;
 		}
 	}
 
