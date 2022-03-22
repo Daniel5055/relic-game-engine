@@ -1,0 +1,10 @@
+Unresolved bugs I have noticed
+
+Physics engine freezes when clipping between wall and object with 0 velocity.
+Only happened once and have been unable to recreate.
+
+Sometimes collisions act like they have friction of sorts when colliding.
+But more extreme.
+Like sometimes the velocity along the axis perpendicular to the collision will completely flip.
+I believe it is due to my handling of corner collisions but I am not sure how.
+Unable to consistently recreate.

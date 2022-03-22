@@ -383,10 +383,12 @@ std::pair<double, double> Jinny::GridCollisionManager::calculateDynamicCollision
 
 double Jinny::GridCollisionManager::calculateStaticCollisionForces(double axis_velocity, double mass, double coeff_restitution, double time_left)
 {
+	/*
 	if (abs(axis_velocity) < 0.05)
 	{
 		return 0;
 	}
+	*/
 	return (-axis_velocity * coeff_restitution - axis_velocity) * mass / time_left;
 }
 

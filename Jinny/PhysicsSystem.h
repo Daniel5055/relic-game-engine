@@ -47,6 +47,7 @@ namespace Jinny
 		// Checking friction
 		//void checkFriction();
 
+
 		// Message Board
 		MessageBoard<PhysicsMessage>* m_message_board;
 
@@ -69,6 +70,8 @@ namespace Jinny
 		};
 
 		std::map<int, InfluenceRectangle> m_influence_rects;
+
+		bool doesIntersect(InfluenceRectangle r1, InfluenceRectangle r2);
 
 		// May replace ids with pointers to rigid bodies to make more concise code
 		struct Collision

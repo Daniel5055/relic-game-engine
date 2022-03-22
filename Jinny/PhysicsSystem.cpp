@@ -4,6 +4,7 @@
 
 #include "RigidBody.h"
 #include "Shape.h"
+#include <iostream>
 
 Jinny::PhysicsSystem::PhysicsSystem()
 {
@@ -38,13 +39,14 @@ void Jinny::PhysicsSystem::update()
 	// Loop only broken when no more collisions left
 	while (true)
 	{
+		collision_loop:;
+
 		m_collisions.clear();
 		m_influence_rects.clear();
 
 		// Calculate influence rects
 		for (const auto rigid_body : m_rigid_bodies)
 		{
-
 			Framework::Vector size = Framework::Vector(rigid_body.second->getWidth(), rigid_body.second->getHeight());
 			Framework::Vector position = rigid_body.second->getPosition();
 
@@ -77,20 +79,67 @@ void Jinny::PhysicsSystem::update()
 
 			for (it2++; it2 != m_influence_rects.end(); it2++)
 			{
-				// Check if intersects
-				bool is_intersecting = true;
-				for (int axis : {0, 1})
-				{
-					if (it1->second.position[axis] >= it2->second.position[axis] + it2->second.size[axis] || 
-						it2->second.position[axis] >= it1->second.position[axis] + it1->second.size[axis])
-					{
-						is_intersecting = false;
-					}
-				}
 
 				// Check if collision
-				if (is_intersecting)
+				if (doesIntersect(it1->second, it2->second))
 				{
+					// Check if bodies are clipping
+					InfluenceRectangle r[2];
+					r[0]  = {m_rigid_bodies[it1->first]->getPosition(), m_rigid_bodies[it1->first]->getSize()};
+					r[1] = {m_rigid_bodies[it2->first]->getPosition(), m_rigid_bodies[it2->first]->getSize()};
+					if (doesIntersect(r[0], r[1]))
+					{
+						int smallest_distance = 1000000;
+						int closest_axis = -1;
+						int leftMost = -1;
+
+						for (int axis : {0, 1})
+						{
+							for (int r_i : {0, 1})
+							{
+								double distance = r[r_i].position[axis] + r[r_i].size[axis] - r[1 - r_i].position[axis];
+
+								if (distance < smallest_distance)
+								{
+									smallest_distance = distance;
+									closest_axis = axis;
+									leftMost = r_i;
+								}
+							}
+						}
+
+						// Basically treat one of them as static if they arent already
+						Framework::RigidBody* dynamic_body = m_rigid_bodies[it1->first];
+						int dynamic_id = 0;
+						if (dynamic_body->isStatic())
+						{
+							dynamic_body = m_rigid_bodies[it2->first];
+							int dynamic_id = 1;
+						}
+
+						Framework::Vector new_position = dynamic_body->getPosition();
+						
+						if (it1->first == 3 && it2->first == 6)
+						{
+							std::cout << "what" << std::endl;
+						}
+
+						if (dynamic_id == leftMost)
+						{
+							new_position[closest_axis] = r[1 - leftMost].position[closest_axis] - r[leftMost].size[closest_axis];
+						}
+						else
+						{
+							new_position[closest_axis] = r[leftMost].position[closest_axis] + r[leftMost].size[closest_axis];
+						}
+
+						std::cout << "Clipping between " << it1->first << " and " << it2->first << std::endl;
+						dynamic_body->setPosition(new_position);
+
+						goto collision_loop;
+						// Could be a problem of having object clip into another object by fixing this clipping issue
+					}
+
 					// Get time of collision
 					double collision_times[2] = { 0, 0 };
 					for (int axis : {0, 1})
@@ -275,6 +324,20 @@ void Jinny::PhysicsSystem::handleMessages()
 			break;
 		}
 	}
+}
+
+bool Jinny::PhysicsSystem::doesIntersect(InfluenceRectangle r1, InfluenceRectangle r2)
+{
+	// Check if intersects
+	for (int axis : {0, 1})
+	{
+		if (r1.position[axis] >= r2.position[axis] + r2.size[axis] || 
+			r2.position[axis] >= r1.position[axis] + r1.size[axis])
+		{
+			return false;
+		}
+	}
+	return true;
 }
 
 
