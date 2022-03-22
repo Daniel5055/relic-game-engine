@@ -89,7 +89,7 @@ void Jinny::PhysicsSystem::update()
 					r[1] = {m_rigid_bodies[it2->first]->getPosition(), m_rigid_bodies[it2->first]->getSize()};
 					if (doesIntersect(r[0], r[1]))
 					{
-						int smallest_distance = 1000000;
+						double smallest_distance = 1000000;
 						int closest_axis = -1;
 						int leftMost = -1;
 
@@ -108,33 +108,50 @@ void Jinny::PhysicsSystem::update()
 							}
 						}
 
-						// Basically treat one of them as static if they arent already
-						Framework::RigidBody* dynamic_body = m_rigid_bodies[it1->first];
-						int dynamic_id = 0;
-						if (dynamic_body->isStatic())
+						if (m_rigid_bodies[it1->first]->isStatic() || m_rigid_bodies[it2->first]->isStatic())
 						{
-							dynamic_body = m_rigid_bodies[it2->first];
-							int dynamic_id = 1;
-						}
+							Framework::RigidBody* dynamic_body = m_rigid_bodies[it1->first];
+							int dynamic_id = 0;
+							if (dynamic_body->isStatic())
+							{
+								dynamic_body = m_rigid_bodies[it2->first];
+								dynamic_id = 1;
+							}
 
-						Framework::Vector new_position = dynamic_body->getPosition();
-						
-						if (it1->first == 3 && it2->first == 6)
-						{
-							std::cout << "what" << std::endl;
-						}
+							Framework::Vector new_position = dynamic_body->getPosition();
 
-						if (dynamic_id == leftMost)
-						{
-							new_position[closest_axis] = r[1 - leftMost].position[closest_axis] - r[leftMost].size[closest_axis];
+							if (dynamic_id == leftMost)
+							{
+								new_position[closest_axis] = r[1 - leftMost].position[closest_axis] - r[leftMost].size[closest_axis];
+							}
+							else
+							{
+								new_position[closest_axis] = r[leftMost].position[closest_axis] + r[leftMost].size[closest_axis];
+							}
+
+							if (new_position[closest_axis] < 0)
+							{
+								std::cout << "debug" << std::endl;
+							}
+
+							dynamic_body->setPosition(new_position);
 						}
 						else
 						{
-							new_position[closest_axis] = r[leftMost].position[closest_axis] + r[leftMost].size[closest_axis];
-						}
+							Framework::Vector movement = { 0, 0 };
+							movement[closest_axis] = smallest_distance / 2;
+							if (leftMost == 0)
+							{
+								m_rigid_bodies[it1->first]->move(movement * -1);
+								m_rigid_bodies[it2->first]->move(movement);
+							}
+							else
+							{
+								m_rigid_bodies[it2->first]->move(movement * -1);
+								m_rigid_bodies[it1->first]->move(movement);
 
-						std::cout << "Clipping between " << it1->first << " and " << it2->first << std::endl;
-						dynamic_body->setPosition(new_position);
+							}
+						}
 
 						goto collision_loop;
 						// Could be a problem of having object clip into another object by fixing this clipping issue
@@ -155,7 +172,7 @@ void Jinny::PhysicsSystem::update()
 							distance = m_rigid_bodies[it2->first]->getPosition()[axis] - m_rigid_bodies[it1->first]->getPosition()[axis] - m_rigid_bodies[it1->first]->getSize()[axis];
 						}
 
-						if (it1->second.position[axis] < it2->second.position[axis])
+						if (m_rigid_bodies[it1->first]->getPosition()[axis] < m_rigid_bodies[it2->first]->getPosition()[axis])
 						{
 							collision_times[axis] = m_col_manager->getCollisionTime(distance, m_rigid_bodies[it1->first]->getVelocity()[axis], m_rigid_bodies[it2->first]->getVelocity()[axis],
 								m_rigid_bodies[it1->first]->getAppliedForce()[axis] / m_rigid_bodies[it1->first]->getMass(),

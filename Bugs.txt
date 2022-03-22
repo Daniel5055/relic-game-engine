@@ -1,10 +1,22 @@
 Unresolved bugs I have noticed
 
+1. SOLVED - accidental redecleration of "dynamic_id" meaning it could never be = 1
 Physics engine freezes when clipping between wall and object with 0 velocity.
 Only happened once and have been unable to recreate.
 
+2. 
 Sometimes collisions act like they have friction of sorts when colliding.
 But more extreme.
 Like sometimes the velocity along the axis perpendicular to the collision will completely flip.
 I believe it is due to my handling of corner collisions but I am not sure how.
 Unable to consistently recreate.
+
+3. SOLVED - Was an issue with deterimining which object was more negative in position as I took their influence rect positions instead of their real positions
+Rigid body seemed to go at least 5 pixels into a static body before anti clipping triggers?
+Likely a collision problem with high speeds?
+Only seen once
+
+
+4. LIKELY SOLVED - Have not been able to recreate and likley solved with 3.
+Rigidbody seemed to be stuck in wall for a second, triggering anti clip 10 times before escaping
+Not sure if this actually happened though because I am not sure if that is what really happened
