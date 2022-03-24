@@ -20,3 +20,17 @@ Only seen once
 4. LIKELY SOLVED - Have not been able to recreate and likley solved with 3.
 Rigidbody seemed to be stuck in wall for a second, triggering anti clip 10 times before escaping
 Not sure if this actually happened though because I am not sure if that is what really happened
+
+5. SOLVED - It was an issue with the old collision time function registering false collisions at tiny velocities
+At very small, smiliar velocities, objects would continually collide with each other as if they were stuck too each other.
+However at larger velocities nothing noticable happens.
+
+6. SOLVED - Had to add an additional check for when velocities are the same and ensure no collision happens
+Program freezes between collisions when using materials for object.
+
+7. SOLVED - Set the max dynamic friction to half the relative velocity for each object. Works perfectly
+With a somewhat bouncy floor, objects gradually lose their velocity at an ever decreasing rate to the point they rapidly bounce.
+Whilst I want to change that and prevent the rapid collisions from happening at small velocities,
+when there is another object on top, the two objects continually apply friction to each other.
+And whilst each try to reduce the relative velocity to 0, they consequently oscillate back and forth as
+both try to apply the friciton to each other to reduce the relative velocity to 0

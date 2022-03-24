@@ -66,6 +66,11 @@ double Jinny::GridCollisionManager::getCollisionTime(double distance, double vel
 						return (b_negative + sqrt(discriminant)) / a;
 					}
 				}
+				else if (velocity_1 == velocity_2)
+				{
+					return -1;
+
+				}
 				else
 				{
 					// what?
@@ -91,6 +96,9 @@ double Jinny::GridCollisionManager::getCollisionTime(double distance, double vel
 		}
 		else
 		{
+			return -1;
+
+			// Not sure about this code so I will ignore this
 			if (acceleration_1 != 0)
 			{
 				// Then redo calculations with max_time
@@ -142,7 +150,7 @@ double Jinny::GridCollisionManager::getCollisionTime(double distance, double vel
 		{
 			return 0;
 		}
-		else if (velocity_1 == velocity_2)
+		else if (abs(velocity_1 - velocity_2) < 0.000000001)
 		{
 			// equal to zero
 			if (acceleration_1 > acceleration_2)
@@ -368,9 +376,18 @@ double Jinny::GridCollisionManager::getCollisionTime(double distance, double vel
 // Need to rewrite
 std::pair<double, double> Jinny::GridCollisionManager::calculateDynamicCollisionForces(double a_velocity, double a_mass, double t_velocity, double t_mass, double coeff_restitution, double time_left)
 {
-	double momentum = a_velocity * a_mass + t_velocity * t_mass;
-
 	std::pair<double, double> out;
+
+	// To prevent velocities becoming really really small when they should just be 0
+	if (abs(a_velocity) < 0.0001 && abs(t_velocity) < 0.0001)
+	{
+		out.first = -a_velocity * a_mass / time_left;
+		out.second = -t_velocity * t_mass / time_left;
+
+		return out;
+	}
+
+	double momentum = a_velocity * a_mass + t_velocity * t_mass;
 
 	double right_part = coeff_restitution * (a_velocity - t_velocity);
 	double v_a = (momentum - t_mass * right_part) / (t_mass + a_mass);
@@ -383,12 +400,12 @@ std::pair<double, double> Jinny::GridCollisionManager::calculateDynamicCollision
 
 double Jinny::GridCollisionManager::calculateStaticCollisionForces(double axis_velocity, double mass, double coeff_restitution, double time_left)
 {
-	/*
-	if (abs(axis_velocity) < 0.05)
+	// To stop infinite bouncing
+	if (abs(axis_velocity) < 0.5 * coeff_restitution)
 	{
-		return 0;
+		return (-axis_velocity * mass / time_left);
 	}
-	*/
+
 	return (-axis_velocity * coeff_restitution - axis_velocity) * mass / time_left;
 }
 

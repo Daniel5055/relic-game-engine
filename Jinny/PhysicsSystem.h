@@ -44,10 +44,6 @@ namespace Jinny
 		// Checking dampening
 		//void checkDampening();
 
-		// Checking friction
-		//void checkFriction();
-
-
 		// Message Board
 		MessageBoard<PhysicsMessage>* m_message_board;
 

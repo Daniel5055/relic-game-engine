@@ -8,7 +8,7 @@
 
 Jinny::PhysicsSystem::PhysicsSystem()
 {
-	m_acceleration_due_to_gravity = 0;
+	m_acceleration_due_to_gravity = 9.81;
 }
 
 void Jinny::PhysicsSystem::intialize(Framework::Physics* physics, MessageBoard<PhysicsMessage>* message_board)
@@ -154,7 +154,6 @@ void Jinny::PhysicsSystem::update()
 						}
 
 						goto collision_loop;
-						// Could be a problem of having object clip into another object by fixing this clipping issue
 					}
 
 					// Get time of collision
@@ -165,11 +164,16 @@ void Jinny::PhysicsSystem::update()
 						if (m_rigid_bodies[it2->first]->getPosition()[axis] < m_rigid_bodies[it1->first]->getPosition()[axis])
 						{
 							distance = m_rigid_bodies[it1->first]->getPosition()[axis] - m_rigid_bodies[it2->first]->getPosition()[axis] - m_rigid_bodies[it2->first]->getSize()[axis];
-
 						}
 						else
 						{
 							distance = m_rigid_bodies[it2->first]->getPosition()[axis] - m_rigid_bodies[it1->first]->getPosition()[axis] - m_rigid_bodies[it1->first]->getSize()[axis];
+						}
+
+						if (distance < 0)
+						{
+							collision_times[axis] = -1;
+							continue;
 						}
 
 						if (m_rigid_bodies[it1->first]->getPosition()[axis] < m_rigid_bodies[it2->first]->getPosition()[axis])
@@ -183,7 +187,6 @@ void Jinny::PhysicsSystem::update()
 							collision_times[axis] = m_col_manager->getCollisionTime(distance, m_rigid_bodies[it2->first]->getVelocity()[axis], m_rigid_bodies[it1->first]->getVelocity()[axis],
 								m_rigid_bodies[it2->first]->getAppliedForce()[axis] / m_rigid_bodies[it2->first]->getMass(),
 								m_rigid_bodies[it1->first]->getAppliedForce()[axis] / m_rigid_bodies[it1->first]->getMass(), f_physics->getTimeStep() - tick_time);
-
 						}
 
 						if (collision_times[axis] > f_physics->getTimeStep() - tick_time)
@@ -258,34 +261,50 @@ void Jinny::PhysicsSystem::update()
 		tick_time += m_collisions[0].time;
 
 		// Iterate through collisions
-		for (int it = 0; it < m_collisions.size(); it++)
+		for (unsigned int it = 0; it < m_collisions.size(); it++)
 		{
 			// Calculate velocities of most recent collision
 			if (m_collisions[it].rigid_bodies[0]->isStatic() || m_collisions[it].rigid_bodies[1]->isStatic())
 			{
 				Framework::RigidBody* dynamic_body = m_collisions[it].rigid_bodies[0];
+				int dynamic_id = 0;
 				if (m_collisions[it].rigid_bodies[0]->isStatic())
 				{
 					dynamic_body = m_collisions[it].rigid_bodies[1];
+					dynamic_id = 1;
 				}
 
-				Framework::Vector normal = dynamic_body->getAppliedForce() * -2;
+				// Technically should be newton's third law but objects often absorb some of the force (not quite sure what to do here but -1 works)
+				Framework::Vector normal = dynamic_body->getAppliedForce() * -1; //-(1 + f_physics->getCoefficientOfRestitution(m_collisions[it].rigid_bodies[0], m_collisions[it].rigid_bodies[1]));
+
+				m_collisions[it].applying_forces = { 0, 0 };
+				m_collisions[it].applying_forces[dynamic_id] = normal[m_collisions[it].axis];
+
 				normal[1 - m_collisions[it].axis] = 0;
 
 				dynamic_body->applySFForce(normal);
 				
-				Framework::Vector collision_force = Framework::Vector();
+				// Calculate collision force
+				Framework::Vector collision_force = {0, 0};
 				collision_force[m_collisions[it].axis] = m_col_manager->calculateStaticCollisionForces(dynamic_body->getVelocity()[m_collisions[it].axis], dynamic_body->getMass(),
 					f_physics->getCoefficientOfRestitution(m_collisions[it].rigid_bodies[0], m_collisions[it].rigid_bodies[1]), f_physics->getTimeStep() - tick_time);
+
+				m_collisions[it].applying_forces[dynamic_id] += collision_force[m_collisions[it].axis];
 
 				dynamic_body->increaseVelocity(collision_force / dynamic_body->getMass() * (f_physics->getTimeStep() - tick_time));
 			}
 			else
 			{
+				// Might have to apply cooef on normal?
 				Framework::Vector normal1 = m_collisions[it].rigid_bodies[0]->getAppliedForce() * -1;
 				normal1[1 - m_collisions[it].axis] = 0;
 				Framework::Vector normal2 = m_collisions[it].rigid_bodies[1]->getAppliedForce() * -1;
 				normal2[1 - m_collisions[it].axis] = 0;
+
+				// Calculate collision force
+				m_collisions[it].applying_forces = { 0, 0 };
+				m_collisions[it].applying_forces[0] = normal1[m_collisions[it].axis] + normal2[m_collisions[it].axis] * -1;
+				m_collisions[it].applying_forces[1] = normal2[m_collisions[it].axis] + normal1[m_collisions[it].axis] * -1;
 
 				m_collisions[it].rigid_bodies[0]->applySFForce(normal1 + normal2 * -1);
 				m_collisions[it].rigid_bodies[1]->applySFForce(normal2 + normal1 * -1);
@@ -301,10 +320,106 @@ void Jinny::PhysicsSystem::update()
 				Framework::Vector collision_force2 = Framework::Vector();
 				collision_force2[m_collisions[it].axis] = collision_forces.second;
 
+				m_collisions[it].applying_forces[0] += collision_forces.first;
+				m_collisions[it].applying_forces[1] += collision_forces.second;
+
 				m_collisions[it].rigid_bodies[0]->increaseVelocity(collision_force1 / m_collisions[it].rigid_bodies[0]->getMass() * (f_physics->getTimeStep() - tick_time));
 				m_collisions[it].rigid_bodies[1]->increaseVelocity(collision_force2 / m_collisions[it].rigid_bodies[1]->getMass() * (f_physics->getTimeStep() - tick_time));
 			}
 		}
+
+		// Apply friction
+		std::map<Framework::RigidBody*, Framework::Vector> friction_applied;
+
+		for (Collision collision : m_collisions)
+		{
+			// Apply friction to each object
+			for (int r : {0, 1})
+			{
+				// Check if rigid body exists in friction map
+				if (!friction_applied.count(collision.rigid_bodies[r]))
+				{
+					friction_applied.insert({ collision.rigid_bodies[r], {0, 0} });
+				}
+
+				Framework::Vector friction = { 0, 0 };
+				if (collision.rigid_bodies[r]->getVelocity()[1 - collision.axis] == 0 && collision.rigid_bodies[r]->getVelocity()[1 - collision.axis] == 0)
+				{
+					friction[1 - collision.axis] = abs(collision.applying_forces[r]) *
+						f_physics->getStaticFrictionCoefficient(collision.rigid_bodies[0], collision.rigid_bodies[1]);
+
+					// Get relative perpendicular force 
+					double perp_force = collision.rigid_bodies[r]->getAppliedForce()[1 - collision.axis] - collision.rigid_bodies[1 - r]->getAppliedForce()[1 - collision.axis];
+
+					// Make sure static friction force is not larger than the perpendicular force
+					if (abs(perp_force) < friction[1 - collision.axis])
+					{
+						friction[1 - collision.axis] = abs(perp_force);
+					}
+
+					// Then apply friction force in opposite direction of relative force
+					if (perp_force > 0)
+					{
+						friction_applied[collision.rigid_bodies[r]] += friction * -1;
+					}
+					else
+					{
+						friction_applied[collision.rigid_bodies[r]] += friction;
+					}
+				}
+				else
+				{
+					// Calculate dynamic friction
+					friction[1 - collision.axis] = abs(collision.applying_forces[r]) *
+						f_physics->getDynamicFrictionCoefficient(collision.rigid_bodies[0], collision.rigid_bodies[1]);
+
+					double velocity_diff = collision.rigid_bodies[r]->getVelocity()[1 - collision.axis] - collision.rigid_bodies[1 - r]->getVelocity()[1 - collision.axis];
+
+					Framework::Vector max_friction = {0, 0};
+
+					// For balancing out forces in the same directon (- * - = + and + * + = +)
+					if (collision.rigid_bodies[r]->getAppliedForce()[1 - collision.axis] * velocity_diff >= 0)
+					{
+						max_friction[1 - collision.axis] = abs(collision.rigid_bodies[r]->getAppliedForce()[1 - collision.axis]);
+
+					}
+
+					// For stopping dynamic friction force from changing velocity direction
+					if (collision.rigid_bodies[1 - r]->isStatic())
+					{
+						max_friction[1 - collision.axis] += abs(velocity_diff * collision.rigid_bodies[r]->getMass() / (f_physics->getTimeStep() - tick_time));
+						
+					}
+					else
+					{
+						max_friction[1 - collision.axis] += abs(velocity_diff / 2 * collision.rigid_bodies[r]->getMass() / (f_physics->getTimeStep() - tick_time));
+
+					}
+
+					if (friction[1 - collision.axis] > max_friction[1 - collision.axis])
+					{
+						friction = max_friction;
+					}
+
+					// Get relative direction of object
+					if (velocity_diff > 0)
+					{
+						friction_applied[collision.rigid_bodies[r]] += friction * -1;
+					}
+					else
+					{
+						friction_applied[collision.rigid_bodies[r]] += friction;
+					}
+				}
+			}
+		}
+
+		// Iterate through friction forces applied and apply the forces finally
+		for (auto it = friction_applied.begin(); it != friction_applied.end(); it++)
+		{
+			it->first->applySFForce(it->second);
+		}
+
 	}
 
 	// Move the objects by the remaining time
@@ -338,6 +453,10 @@ void Jinny::PhysicsSystem::handleMessages()
 		{
 		case PMessageType::SET_RIGID_BODY:
 			m_rigid_bodies[msg.object_ID] = msg.rigid_body;
+			if (!msg.rigid_body->isStatic())
+			{
+				msg.rigid_body->applyMFForce({ 0, msg.rigid_body->getMass() * m_acceleration_due_to_gravity });
+			}
 			break;
 		}
 	}
@@ -356,618 +475,6 @@ bool Jinny::PhysicsSystem::doesIntersect(InfluenceRectangle r1, InfluenceRectang
 	}
 	return true;
 }
-
-
-// What a horrible looking function, could do so much better
-
-//void Jinny::PhysicsSystem::checkFriction()
-//{
-//	for (auto it = m_collisions.begin(); it != m_collisions.end(); it++)
-//	{
-//		if (it->is_horizontal_collision)
-//		{
-//			// Check for static or dynamic friction
-//			if (it->is_static_collision)
-//			{
-//				if (m_rigid_bodies[it->arrow_index]->getVelocity().y == 0)
-//				{
-//					double friction_force = it->force_applied * f_physics->getStaticFrictionCoefficient(m_rigid_bodies[it->arrow_index],
-//						m_rigid_bodies[it->target_index]);
-//
-//					// Check if static friction for arrow
-//					if (abs(m_rigid_bodies[it->arrow_index]->getAppliedForce().y) > 0)
-//					{
-//						if (abs(friction_force) >= abs(m_rigid_bodies[it->arrow_index]->getAppliedForce().y))
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ 0, -m_rigid_bodies[it->arrow_index]->getAppliedForce().y });
-//						}
-//						else if (m_rigid_bodies[it->arrow_index]->getAppliedForce().y > 0)
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ 0, -friction_force });
-//						}
-//						else
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ 0, friction_force });
-//						}
-//					}
-//				}
-//				else
-//				{
-//					// Then dynamic friction
-//					double friction_force = it->force_applied * f_physics->getDynamicFrictionCoefficient(m_rigid_bodies[it->arrow_index],
-//						m_rigid_bodies[it->target_index]);
-//
-//					double arrow_velocity_change = friction_force / m_rigid_bodies[it->arrow_index]->getMass() * f_physics->getTimeStep();
-//					if (arrow_velocity_change > abs(m_rigid_bodies[it->arrow_index]->getVelocity().y))
-//					{
-//						double zeroing_force = m_rigid_bodies[it->arrow_index]->getMass() * abs(m_rigid_bodies[it->arrow_index]->getVelocity().y) / f_physics->getTimeStep();
-//						if (m_rigid_bodies[it->arrow_index]->getVelocity().y > 0)
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ 0, -zeroing_force });
-//						}
-//						else
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ 0, zeroing_force });
-//						}
-//					}
-//					else if (m_rigid_bodies[it->arrow_index]->getVelocity().y > 0)
-//					{
-//						m_rigid_bodies[it->arrow_index]->applySFForce({ 0, -friction_force });
-//					}
-//					else
-//					{
-//						m_rigid_bodies[it->arrow_index]->applySFForce({ 0, friction_force });
-//					}
-//				}
-//			}
-//			else
-//			{
-//				if (m_rigid_bodies[it->arrow_index]->getVelocity().y == m_rigid_bodies[it->target_index]->getVelocity().y)
-//				{
-//					double friction_force = it->force_applied * f_physics->getStaticFrictionCoefficient(m_rigid_bodies[it->arrow_index],
-//						m_rigid_bodies[it->target_index]);
-//
-//					// Check if static friction for arrow
-//					if (abs(m_rigid_bodies[it->arrow_index]->getAppliedForce().y) > 0)
-//					{
-//						if (abs(friction_force) >= abs(m_rigid_bodies[it->arrow_index]->getAppliedForce().y))
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ 0, -m_rigid_bodies[it->arrow_index]->getAppliedForce().y });
-//						}
-//						else if (m_rigid_bodies[it->arrow_index]->getAppliedForce().y > 0)
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ 0, -friction_force });
-//						}
-//						else
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ 0, friction_force });
-//						}
-//					}
-//
-//					if (abs(m_rigid_bodies[it->target_index]->getAppliedForce().y) > 0)
-//					{
-//						if (abs(friction_force) >= abs(m_rigid_bodies[it->target_index]->getAppliedForce().y))
-//						{
-//							m_rigid_bodies[it->target_index]->applySFForce({ 0, -m_rigid_bodies[it->target_index]->getAppliedForce().y });
-//						}
-//						else if (m_rigid_bodies[it->target_index]->getAppliedForce().y > 0)
-//						{
-//							m_rigid_bodies[it->target_index]->applySFForce({ 0, -friction_force });
-//						}
-//						else
-//						{
-//							m_rigid_bodies[it->target_index]->applySFForce({ 0, friction_force });
-//						}
-//					}
-//				}
-//				else
-//				{
-//					// Then dynamic friction
-//					double friction_force = it->force_applied * f_physics->getDynamicFrictionCoefficient(m_rigid_bodies[it->arrow_index],
-//						m_rigid_bodies[it->target_index]);
-//
-//					double relative_velocity = m_rigid_bodies[it->arrow_index]->getVelocity().y - m_rigid_bodies[it->target_index]->getVelocity().y;
-//					double arrow_velocity_change = friction_force / m_rigid_bodies[it->arrow_index]->getMass() * f_physics->getTimeStep();
-//					if (arrow_velocity_change > abs(relative_velocity))
-//					{
-//						double zeroing_force = m_rigid_bodies[it->arrow_index]->getMass() * abs(relative_velocity) / f_physics->getTimeStep();
-//						if (relative_velocity > 0)
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ 0, -zeroing_force });
-//						}
-//						else
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ 0, zeroing_force });
-//						}
-//					}
-//					else if (relative_velocity > 0)
-//					{
-//						m_rigid_bodies[it->arrow_index]->applySFForce({ 0, -friction_force });
-//					}
-//					else
-//					{
-//						m_rigid_bodies[it->arrow_index]->applySFForce({ 0, friction_force });
-//					}
-//
-//					double target_velocity_change = friction_force / m_rigid_bodies[it->target_index]->getMass() * f_physics->getTimeStep();
-//					if (target_velocity_change > abs(relative_velocity))
-//					{
-//						double zeroing_force = m_rigid_bodies[it->target_index]->getMass() * abs(relative_velocity) / f_physics->getTimeStep();
-//						if (relative_velocity > 0)
-//						{
-//							m_rigid_bodies[it->target_index]->applySFForce({ 0, zeroing_force });
-//						}
-//						else
-//						{
-//							m_rigid_bodies[it->target_index]->applySFForce({ 0, -zeroing_force });
-//						}
-//					}
-//					else if (relative_velocity > 0)
-//					{
-//						m_rigid_bodies[it->target_index]->applySFForce({ 0, friction_force });
-//					}
-//					else
-//					{
-//						m_rigid_bodies[it->target_index]->applySFForce({ 0, -friction_force });
-//					}
-//				}
-//			}
-//		}
-//		// Else then horizontal
-//		else
-//		{
-//			// Check for static or dynamic friction
-//			if (it->is_static_collision)
-//			{
-//				if (m_rigid_bodies[it->arrow_index]->getVelocity().x == 0)
-//				{
-//					double friction_force = it->force_applied * f_physics->getStaticFrictionCoefficient(m_rigid_bodies[it->arrow_index],
-//						m_rigid_bodies[it->target_index]);
-//
-//					// Check if static friction for arrow
-//					if (abs(m_rigid_bodies[it->arrow_index]->getAppliedForce().x) > 0)
-//					{
-//						if (abs(friction_force) >= abs(m_rigid_bodies[it->arrow_index]->getAppliedForce().x))
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ -m_rigid_bodies[it->arrow_index]->getAppliedForce().x, 0 });
-//						}
-//						else if (m_rigid_bodies[it->arrow_index]->getAppliedForce().x > 0)
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ -friction_force, 0 });
-//						}
-//						else
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ friction_force, 0 });
-//						}
-//					}
-//				}
-//				else
-//				{
-//					// Then dynamic friction
-//					double friction_force = it->force_applied * f_physics->getDynamicFrictionCoefficient(m_rigid_bodies[it->arrow_index],
-//						m_rigid_bodies[it->target_index]);
-//
-//					double arrow_velocity_change = friction_force / m_rigid_bodies[it->arrow_index]->getMass() * f_physics->getTimeStep();
-//					if (arrow_velocity_change > abs(m_rigid_bodies[it->arrow_index]->getVelocity().x))
-//					{
-//						double zeroing_force = m_rigid_bodies[it->arrow_index]->getMass() * abs(m_rigid_bodies[it->arrow_index]->getVelocity().x) / f_physics->getTimeStep();
-//						if (m_rigid_bodies[it->arrow_index]->getVelocity().x > 0)
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ -zeroing_force, 0 });
-//						}
-//						else
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ zeroing_force, 0 });
-//						}
-//					}
-//					else if (m_rigid_bodies[it->arrow_index]->getVelocity().x > 0)
-//					{
-//						m_rigid_bodies[it->arrow_index]->applySFForce({ -friction_force, 0 });
-//					}
-//					else
-//					{
-//						m_rigid_bodies[it->arrow_index]->applySFForce({ friction_force, 0 });
-//					}
-//				}
-//			}
-//			else
-//			{
-//				if (m_rigid_bodies[it->arrow_index]->getVelocity().x == m_rigid_bodies[it->target_index]->getVelocity().x)
-//				{
-//					double friction_force = it->force_applied * f_physics->getStaticFrictionCoefficient(m_rigid_bodies[it->arrow_index],
-//						m_rigid_bodies[it->target_index]);
-//
-//					// Check if static friction for arrow
-//					if (abs(m_rigid_bodies[it->arrow_index]->getAppliedForce().x) > 0)
-//					{
-//						if (abs(friction_force) >= abs(m_rigid_bodies[it->arrow_index]->getAppliedForce().x))
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ -m_rigid_bodies[it->arrow_index]->getAppliedForce().x, 0 });
-//						}
-//						else if (m_rigid_bodies[it->arrow_index]->getAppliedForce().x > 0)
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ -friction_force, 0 });
-//						}
-//						else
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ friction_force, 0 });
-//						}
-//					}
-//
-//					if (abs(m_rigid_bodies[it->target_index]->getAppliedForce().x) > 0)
-//					{
-//						if (abs(friction_force) >= abs(m_rigid_bodies[it->target_index]->getAppliedForce().x))
-//						{
-//							m_rigid_bodies[it->target_index]->applySFForce({ -m_rigid_bodies[it->target_index]->getAppliedForce().y, 0 });
-//						}
-//						else if (m_rigid_bodies[it->target_index]->getAppliedForce().x > 0)
-//						{
-//							m_rigid_bodies[it->target_index]->applySFForce({ -friction_force, 0 });
-//						}
-//						else
-//						{
-//							m_rigid_bodies[it->target_index]->applySFForce({ friction_force, 0 });
-//						}
-//					}
-//				}
-//				else
-//				{
-//					// Then dynamic friction
-//					double friction_force = it->force_applied * f_physics->getDynamicFrictionCoefficient(m_rigid_bodies[it->arrow_index],
-//						m_rigid_bodies[it->target_index]);
-//
-//					double relative_velocity = m_rigid_bodies[it->arrow_index]->getVelocity().x - m_rigid_bodies[it->target_index]->getVelocity().x;
-//					double arrow_velocity_change = friction_force / m_rigid_bodies[it->arrow_index]->getMass() * f_physics->getTimeStep();
-//					if (arrow_velocity_change > abs(relative_velocity))
-//					{
-//						double zeroing_force = m_rigid_bodies[it->arrow_index]->getMass() * abs(relative_velocity) / f_physics->getTimeStep();
-//						if (relative_velocity > 0)
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ -zeroing_force, 0 });
-//						}
-//						else
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ zeroing_force, 0 });
-//						}
-//					}
-//					else if (relative_velocity > 0)
-//					{
-//						m_rigid_bodies[it->arrow_index]->applySFForce({ -friction_force, 0 });
-//					}
-//					else
-//					{
-//						m_rigid_bodies[it->arrow_index]->applySFForce({ friction_force, 0 });
-//					}
-//
-//					double target_velocity_change = friction_force / m_rigid_bodies[it->target_index]->getMass() * f_physics->getTimeStep();
-//					if (target_velocity_change > abs(relative_velocity))
-//					{
-//						double zeroing_force = m_rigid_bodies[it->target_index]->getMass() * abs(relative_velocity) / f_physics->getTimeStep();
-//						if (relative_velocity > 0)
-//						{
-//							m_rigid_bodies[it->target_index]->applySFForce({ zeroing_force, 0 });
-//						}
-//						else
-//						{
-//							m_rigid_bodies[it->target_index]->applySFForce({ -zeroing_force, 0 });
-//						}
-//					}
-//					else if (relative_velocity > 0)
-//					{
-//						m_rigid_bodies[it->target_index]->applySFForce({ friction_force, 0 });
-//					}
-//					else
-//					{
-//						m_rigid_bodies[it->target_index]->applySFForce({ -friction_force, 0 });
-//					}
-//				}
-//			}
-//		}
-//	}
-//
-//	for (auto it = m_past_collisions.begin(); it != m_past_collisions.end(); it++)
-//	{
-//		if (it->is_horizontal_collision)
-//		{
-//			// Check for static or dynamic friction
-//			if (it->is_static_collision)
-//			{
-//				if (m_rigid_bodies[it->arrow_index]->getVelocity().y == 0)
-//				{
-//					double friction_force = it->force_applied * f_physics->getStaticFrictionCoefficient(m_rigid_bodies[it->arrow_index],
-//						m_rigid_bodies[it->target_index]);
-//
-//					// Check if static friction for arrow
-//					if (abs(m_rigid_bodies[it->arrow_index]->getAppliedForce().y) > 0)
-//					{
-//						if (abs(friction_force) >= abs(m_rigid_bodies[it->arrow_index]->getAppliedForce().y))
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ 0, -m_rigid_bodies[it->arrow_index]->getAppliedForce().y });
-//						}
-//						else if (m_rigid_bodies[it->arrow_index]->getAppliedForce().y > 0)
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ 0, -friction_force });
-//						}
-//						else
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ 0, friction_force });
-//						}
-//					}
-//				}
-//				else
-//				{
-//					// Then dynamic friction
-//					double friction_force = it->force_applied * f_physics->getDynamicFrictionCoefficient(m_rigid_bodies[it->arrow_index],
-//						m_rigid_bodies[it->target_index]);
-//
-//					double arrow_velocity_change = friction_force / m_rigid_bodies[it->arrow_index]->getMass() * f_physics->getTimeStep();
-//					if (arrow_velocity_change > abs(m_rigid_bodies[it->arrow_index]->getVelocity().y))
-//					{
-//						double zeroing_force = m_rigid_bodies[it->arrow_index]->getMass() * abs(m_rigid_bodies[it->arrow_index]->getVelocity().y) / f_physics->getTimeStep();
-//						if (m_rigid_bodies[it->arrow_index]->getVelocity().y > 0)
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ 0, -zeroing_force });
-//						}
-//						else
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ 0, zeroing_force });
-//						}
-//					}
-//					else if (m_rigid_bodies[it->arrow_index]->getVelocity().y > 0)
-//					{
-//						m_rigid_bodies[it->arrow_index]->applySFForce({ 0, -friction_force });
-//					}
-//					else
-//					{
-//						m_rigid_bodies[it->arrow_index]->applySFForce({ 0, friction_force });
-//					}
-//				}
-//			}
-//			else
-//			{
-//				if (m_rigid_bodies[it->arrow_index]->getVelocity().y == m_rigid_bodies[it->target_index]->getVelocity().y)
-//				{
-//					double friction_force = it->force_applied * f_physics->getStaticFrictionCoefficient(m_rigid_bodies[it->arrow_index],
-//						m_rigid_bodies[it->target_index]);
-//
-//					// Check if static friction for arrow
-//					if (abs(m_rigid_bodies[it->arrow_index]->getAppliedForce().y) > 0)
-//					{
-//						if (abs(friction_force) >= abs(m_rigid_bodies[it->arrow_index]->getAppliedForce().y))
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ 0, -m_rigid_bodies[it->arrow_index]->getAppliedForce().y });
-//						}
-//						else if (m_rigid_bodies[it->arrow_index]->getAppliedForce().y > 0)
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ 0, -friction_force });
-//						}
-//						else
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ 0, friction_force });
-//						}
-//					}
-//
-//					if (abs(m_rigid_bodies[it->target_index]->getAppliedForce().y) > 0)
-//					{
-//						if (abs(friction_force) >= abs(m_rigid_bodies[it->target_index]->getAppliedForce().y))
-//						{
-//							m_rigid_bodies[it->target_index]->applySFForce({ 0, -m_rigid_bodies[it->target_index]->getAppliedForce().y });
-//						}
-//						else if (m_rigid_bodies[it->target_index]->getAppliedForce().y > 0)
-//						{
-//							m_rigid_bodies[it->target_index]->applySFForce({ 0, -friction_force });
-//						}
-//						else
-//						{
-//							m_rigid_bodies[it->target_index]->applySFForce({ 0, friction_force });
-//						}
-//					}
-//				}
-//				else
-//				{
-//					// Then dynamic friction
-//					double friction_force = it->force_applied * f_physics->getDynamicFrictionCoefficient(m_rigid_bodies[it->arrow_index],
-//						m_rigid_bodies[it->target_index]);
-//
-//					double relative_velocity = m_rigid_bodies[it->arrow_index]->getVelocity().y - m_rigid_bodies[it->target_index]->getVelocity().y;
-//					double arrow_velocity_change = friction_force / m_rigid_bodies[it->arrow_index]->getMass() * f_physics->getTimeStep();
-//					if (arrow_velocity_change > abs(relative_velocity))
-//					{
-//						double zeroing_force = m_rigid_bodies[it->arrow_index]->getMass() * abs(relative_velocity) / f_physics->getTimeStep();
-//						if (relative_velocity > 0)
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ 0, -zeroing_force });
-//						}
-//						else
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ 0, zeroing_force });
-//						}
-//					}
-//					else if (relative_velocity > 0)
-//					{
-//						m_rigid_bodies[it->arrow_index]->applySFForce({ 0, -friction_force });
-//					}
-//					else
-//					{
-//						m_rigid_bodies[it->arrow_index]->applySFForce({ 0, friction_force });
-//					}
-//
-//					double target_velocity_change = friction_force / m_rigid_bodies[it->target_index]->getMass() * f_physics->getTimeStep();
-//					if (target_velocity_change > abs(relative_velocity))
-//					{
-//						double zeroing_force = m_rigid_bodies[it->target_index]->getMass() * abs(relative_velocity) / f_physics->getTimeStep();
-//						if (relative_velocity > 0)
-//						{
-//							m_rigid_bodies[it->target_index]->applySFForce({ 0, zeroing_force });
-//						}
-//						else
-//						{
-//							m_rigid_bodies[it->target_index]->applySFForce({ 0, -zeroing_force });
-//						}
-//					}
-//					else if (relative_velocity > 0)
-//					{
-//						m_rigid_bodies[it->target_index]->applySFForce({ 0, friction_force });
-//					}
-//					else
-//					{
-//						m_rigid_bodies[it->target_index]->applySFForce({ 0, -friction_force });
-//					}
-//				}
-//			}
-//		}
-//		// Else then horizontal
-//		else
-//		{
-//			// Check for static or dynamic friction
-//			if (it->is_static_collision)
-//			{
-//				if (m_rigid_bodies[it->arrow_index]->getVelocity().x == 0)
-//				{
-//					double friction_force = it->force_applied * f_physics->getStaticFrictionCoefficient(m_rigid_bodies[it->arrow_index],
-//						m_rigid_bodies[it->target_index]);
-//
-//					// Check if static friction for arrow
-//					if (abs(m_rigid_bodies[it->arrow_index]->getAppliedForce().x) > 0)
-//					{
-//						if (abs(friction_force) >= abs(m_rigid_bodies[it->arrow_index]->getAppliedForce().x))
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ -m_rigid_bodies[it->arrow_index]->getAppliedForce().x, 0 });
-//						}
-//						else if (m_rigid_bodies[it->arrow_index]->getAppliedForce().x > 0)
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ -friction_force, 0 });
-//						}
-//						else
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ friction_force, 0 });
-//						}
-//					}
-//				}
-//				else
-//				{
-//					// Then dynamic friction
-//					double friction_force = it->force_applied * f_physics->getDynamicFrictionCoefficient(m_rigid_bodies[it->arrow_index],
-//						m_rigid_bodies[it->target_index]);
-//
-//					double arrow_velocity_change = friction_force / m_rigid_bodies[it->arrow_index]->getMass() * f_physics->getTimeStep();
-//					if (arrow_velocity_change > abs(m_rigid_bodies[it->arrow_index]->getVelocity().x))
-//					{
-//						double zeroing_force = m_rigid_bodies[it->arrow_index]->getMass() * abs(m_rigid_bodies[it->arrow_index]->getVelocity().x) / f_physics->getTimeStep();
-//						if (m_rigid_bodies[it->arrow_index]->getVelocity().x > 0)
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ -zeroing_force, 0 });
-//						}
-//						else
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ zeroing_force, 0 });
-//						}
-//					}
-//					else if (m_rigid_bodies[it->arrow_index]->getVelocity().x > 0)
-//					{
-//						m_rigid_bodies[it->arrow_index]->applySFForce({ -friction_force, 0 });
-//					}
-//					else
-//					{
-//						m_rigid_bodies[it->arrow_index]->applySFForce({ friction_force, 0 });
-//					}
-//				}
-//			}
-//			else
-//			{
-//				if (m_rigid_bodies[it->arrow_index]->getVelocity().x == m_rigid_bodies[it->target_index]->getVelocity().x)
-//				{
-//					double friction_force = it->force_applied * f_physics->getStaticFrictionCoefficient(m_rigid_bodies[it->arrow_index],
-//						m_rigid_bodies[it->target_index]);
-//
-//					// Check if static friction for arrow
-//					if (abs(m_rigid_bodies[it->arrow_index]->getAppliedForce().x) > 0)
-//					{
-//						if (abs(friction_force) >= abs(m_rigid_bodies[it->arrow_index]->getAppliedForce().x))
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ -m_rigid_bodies[it->arrow_index]->getAppliedForce().x, 0 });
-//						}
-//						else if (m_rigid_bodies[it->arrow_index]->getAppliedForce().x > 0)
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ -friction_force, 0 });
-//						}
-//						else
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ friction_force, 0 });
-//						}
-//					}
-//
-//					if (abs(m_rigid_bodies[it->target_index]->getAppliedForce().x) > 0)
-//					{
-//						if (abs(friction_force) >= abs(m_rigid_bodies[it->target_index]->getAppliedForce().x))
-//						{
-//							m_rigid_bodies[it->target_index]->applySFForce({ -m_rigid_bodies[it->target_index]->getAppliedForce().y, 0 });
-//						}
-//						else if (m_rigid_bodies[it->target_index]->getAppliedForce().x > 0)
-//						{
-//							m_rigid_bodies[it->target_index]->applySFForce({ -friction_force, 0 });
-//						}
-//						else
-//						{
-//							m_rigid_bodies[it->target_index]->applySFForce({ friction_force, 0 });
-//						}
-//					}
-//				}
-//				else
-//				{
-//					// Then dynamic friction
-//					double friction_force = it->force_applied * f_physics->getDynamicFrictionCoefficient(m_rigid_bodies[it->arrow_index],
-//						m_rigid_bodies[it->target_index]);
-//
-//					double relative_velocity = m_rigid_bodies[it->arrow_index]->getVelocity().x - m_rigid_bodies[it->target_index]->getVelocity().x;
-//					double arrow_velocity_change = friction_force / m_rigid_bodies[it->arrow_index]->getMass() * f_physics->getTimeStep();
-//					if (arrow_velocity_change > abs(relative_velocity))
-//					{
-//						double zeroing_force = m_rigid_bodies[it->arrow_index]->getMass() * abs(relative_velocity) / f_physics->getTimeStep();
-//						if (relative_velocity > 0)
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ -zeroing_force, 0 });
-//						}
-//						else
-//						{
-//							m_rigid_bodies[it->arrow_index]->applySFForce({ zeroing_force, 0 });
-//						}
-//					}
-//					else if (relative_velocity > 0)
-//					{
-//						m_rigid_bodies[it->arrow_index]->applySFForce({ -friction_force, 0 });
-//					}
-//					else
-//					{
-//						m_rigid_bodies[it->arrow_index]->applySFForce({ friction_force, 0 });
-//					}
-//
-//					double target_velocity_change = friction_force / m_rigid_bodies[it->target_index]->getMass() * f_physics->getTimeStep();
-//					if (target_velocity_change > abs(relative_velocity))
-//					{
-//						double zeroing_force = m_rigid_bodies[it->target_index]->getMass() * abs(relative_velocity) / f_physics->getTimeStep();
-//						if (relative_velocity > 0)
-//						{
-//							m_rigid_bodies[it->target_index]->applySFForce({ zeroing_force, 0 });
-//						}
-//						else
-//						{
-//							m_rigid_bodies[it->target_index]->applySFForce({ -zeroing_force, 0 });
-//						}
-//					}
-//					else if (relative_velocity > 0)
-//					{
-//						m_rigid_bodies[it->target_index]->applySFForce({ friction_force, 0 });
-//					}
-//					else
-//					{
-//						m_rigid_bodies[it->target_index]->applySFForce({ -friction_force, 0 });
-//					}
-//				}
-//			}
-//		}
-//	}
-//}
 
 //void Jinny::PhysicsSystem::checkDampening()
 //{

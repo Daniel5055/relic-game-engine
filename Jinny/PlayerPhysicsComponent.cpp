@@ -63,17 +63,17 @@ void Jinny::PlayerPhysicsComponent::handleEvents()
 			switch (it->input.key)
 			{
 			case 'a':
-				m_rigid_body->applyMFForce({ is_down * -50, 0 });
+				m_rigid_body->applyMFForce({ is_down * -100, 0 });
 
 				break;
 
 			case 'd':
-				m_rigid_body->applyMFForce({ is_down * 50, 0 });
+				m_rigid_body->applyMFForce({ is_down * 100, 0 });
 
 				break;
 
 			case 'w':
-				m_rigid_body->applyMFForce({ 0, is_down * -50 });
+				m_rigid_body->applyMFForce({ 0, is_down * -200 });
 
 				break;
 
