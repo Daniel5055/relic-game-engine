@@ -27,6 +27,8 @@ void Jinny::PhysicsSystem::update()
 	// Handle Messages
 	handleMessages();
 
+	double test = 0;
+
 	double tick_time = 0;
 
 	// Check for intersections
@@ -39,7 +41,7 @@ void Jinny::PhysicsSystem::update()
 	// Loop only broken when no more collisions left
 	while (true)
 	{
-		collision_loop:;
+	collision_loop:;
 
 		m_collisions.clear();
 		m_influence_rects.clear();
@@ -85,8 +87,8 @@ void Jinny::PhysicsSystem::update()
 				{
 					// Check if bodies are clipping
 					InfluenceRectangle r[2];
-					r[0]  = {m_rigid_bodies[it1->first]->getPosition(), m_rigid_bodies[it1->first]->getSize()};
-					r[1] = {m_rigid_bodies[it2->first]->getPosition(), m_rigid_bodies[it2->first]->getSize()};
+					r[0] = { m_rigid_bodies[it1->first]->getPosition(), m_rigid_bodies[it1->first]->getSize() };
+					r[1] = { m_rigid_bodies[it2->first]->getPosition(), m_rigid_bodies[it2->first]->getSize() };
 					if (doesIntersect(r[0], r[1]))
 					{
 						double smallest_distance = 1000000;
@@ -208,7 +210,7 @@ void Jinny::PhysicsSystem::update()
 					for (int axis : {smallest, largest})
 					{
 						// TODO: don't like this
-						if (collision_times[axis] >= 0) 
+						if (collision_times[axis] >= 0)
 						{
 							double displacement1 = f_physics->getDisplacementAtTime(collision_times[axis], m_rigid_bodies[it1->first]->getVelocity()[1 - axis],
 								m_rigid_bodies[it1->first]->getAppliedForce()[1 - axis] / m_rigid_bodies[it1->first]->getMass());
@@ -225,16 +227,16 @@ void Jinny::PhysicsSystem::update()
 									if (m_collisions[0].time > collision_times[axis])
 									{
 										m_collisions.clear();
-										m_collisions.push_back({ collision_times[axis], axis, {m_rigid_bodies[it1->first], m_rigid_bodies[it2->first]}});
+										m_collisions.push_back({ collision_times[axis], axis, {m_rigid_bodies[it1->first], m_rigid_bodies[it2->first]} });
 									}
 									else if (m_collisions[0].time == collision_times[axis])
 									{
-										m_collisions.push_back({ collision_times[axis], axis, {m_rigid_bodies[it1->first], m_rigid_bodies[it2->first]}});
+										m_collisions.push_back({ collision_times[axis], axis, {m_rigid_bodies[it1->first], m_rigid_bodies[it2->first]} });
 									}
 								}
 								else
 								{
-									m_collisions.push_back({ collision_times[axis], axis, {m_rigid_bodies[it1->first], m_rigid_bodies[it2->first]}});
+									m_collisions.push_back({ collision_times[axis], axis, {m_rigid_bodies[it1->first], m_rigid_bodies[it2->first]} });
 								}
 
 								break;
@@ -283,9 +285,9 @@ void Jinny::PhysicsSystem::update()
 				normal[1 - m_collisions[it].axis] = 0;
 
 				dynamic_body->applySFForce(normal);
-				
+
 				// Calculate collision force
-				Framework::Vector collision_force = {0, 0};
+				Framework::Vector collision_force = { 0, 0 };
 				collision_force[m_collisions[it].axis] = m_col_manager->calculateStaticCollisionForces(dynamic_body->getVelocity()[m_collisions[it].axis], dynamic_body->getMass(),
 					f_physics->getCoefficientOfRestitution(m_collisions[it].rigid_bodies[0], m_collisions[it].rigid_bodies[1]), f_physics->getTimeStep() - tick_time);
 
@@ -331,9 +333,9 @@ void Jinny::PhysicsSystem::update()
 		// Apply friction
 		std::map<Framework::RigidBody*, Framework::Vector> friction_applied;
 
+		// Calculate friction
 		for (Collision collision : m_collisions)
 		{
-			// Apply friction to each object
 			for (int r : {0, 1})
 			{
 				// Check if rigid body exists in friction map
@@ -343,8 +345,17 @@ void Jinny::PhysicsSystem::update()
 				}
 
 				Framework::Vector friction = { 0, 0 };
-				if (collision.rigid_bodies[r]->getVelocity()[1 - collision.axis] == 0 && collision.rigid_bodies[r]->getVelocity()[1 - collision.axis] == 0)
+
+				// Check for static friction
+				if (collision.rigid_bodies[0]->getVelocity()[1 - collision.axis] == collision.rigid_bodies[1]->getVelocity()[1 - collision.axis])
 				{
+					// Check if rigid body exists in friction map
+					if (!friction_applied.count(collision.rigid_bodies[r]))
+					{
+						friction_applied.insert({ collision.rigid_bodies[r], {0, 0} });
+					}
+
+					Framework::Vector friction = { 0, 0 };
 					friction[1 - collision.axis] = abs(collision.applying_forces[r]) *
 						f_physics->getStaticFrictionCoefficient(collision.rigid_bodies[0], collision.rigid_bodies[1]);
 
@@ -369,13 +380,12 @@ void Jinny::PhysicsSystem::update()
 				}
 				else
 				{
-					// Calculate dynamic friction
 					friction[1 - collision.axis] = abs(collision.applying_forces[r]) *
 						f_physics->getDynamicFrictionCoefficient(collision.rigid_bodies[0], collision.rigid_bodies[1]);
 
 					double velocity_diff = collision.rigid_bodies[r]->getVelocity()[1 - collision.axis] - collision.rigid_bodies[1 - r]->getVelocity()[1 - collision.axis];
 
-					Framework::Vector max_friction = {0, 0};
+					Framework::Vector max_friction = { 0, 0 };
 
 					// For balancing out forces in the same directon (- * - = + and + * + = +)
 					if (collision.rigid_bodies[r]->getAppliedForce()[1 - collision.axis] * velocity_diff >= 0)
@@ -388,7 +398,7 @@ void Jinny::PhysicsSystem::update()
 					if (collision.rigid_bodies[1 - r]->isStatic())
 					{
 						max_friction[1 - collision.axis] += abs(velocity_diff * collision.rigid_bodies[r]->getMass() / (f_physics->getTimeStep() - tick_time));
-						
+
 					}
 					else
 					{
@@ -419,12 +429,11 @@ void Jinny::PhysicsSystem::update()
 		{
 			it->first->applySFForce(it->second);
 		}
-
 	}
 
 	// Move the objects by the remaining time
 	// Move objects to new positon at most recent collision time
-    for (auto it = m_rigid_bodies.begin(); it != m_rigid_bodies.end(); it++)
+	for (auto it = m_rigid_bodies.begin(); it != m_rigid_bodies.end(); it++)
 	{
 		it->second->move(f_physics->getDisplacementAtTime(f_physics->getTimeStep() - tick_time, it->second->getVelocity(),
 			it->second->getAppliedForce() / it->second->getMass()));
@@ -467,7 +476,7 @@ bool Jinny::PhysicsSystem::doesIntersect(InfluenceRectangle r1, InfluenceRectang
 	// Check if intersects
 	for (int axis : {0, 1})
 	{
-		if (r1.position[axis] >= r2.position[axis] + r2.size[axis] || 
+		if (r1.position[axis] >= r2.position[axis] + r2.size[axis] ||
 			r2.position[axis] >= r1.position[axis] + r1.size[axis])
 		{
 			return false;

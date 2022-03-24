@@ -36,6 +36,14 @@ Framework::Vector Framework::RigidBody::getVelocity() const
 void Framework::RigidBody::increaseVelocity(Vector additional_velocity)
 {
     m_current_velocity += additional_velocity;
+    if (abs(m_current_velocity[0]) < 0.00000000001)
+    {
+        m_current_velocity[0] = 0.0;
+    }
+    if (abs(m_current_velocity[1]) < 0.00000000001)
+    {
+        m_current_velocity[1] = 0.0;
+    }
 }
 
 void Framework::RigidBody::stopXVelocity()
