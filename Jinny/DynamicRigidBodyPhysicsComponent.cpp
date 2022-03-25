@@ -8,11 +8,9 @@ Jinny::DynamicRigidBodyPhysicsComponent::DynamicRigidBodyPhysicsComponent(double
 
 	
 	// Create Data
-	m_rigid_body = new Framework::RigidBody(mass, 200, nullptr, material);
+	m_rigid_body = new Framework::RigidBody(mass, 0, {max_x_speed, max_y_speed}, nullptr, material);
 
 	m_rigid_body->applySFForce(force);
-
-	//m_rigid_body->applyMFForce({ 0, -60});
 }
 
 void Jinny::DynamicRigidBodyPhysicsComponent::initialize(GameObject& object)

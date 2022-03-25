@@ -15,71 +15,71 @@
 
 namespace Framework
 {
-	class Physics;
-	class RigidBody;
+    class Physics;
+    class RigidBody;
 
-	struct Shape;
+    struct Shape;
 }
 
 namespace Jinny
 {
-	class PhysicsSystem : public GameSystem
-	{
-	public:
-		// Constructor
-		PhysicsSystem();
-		// Initialize
-		void intialize(Framework::Physics* physics, MessageBoard<PhysicsMessage>* message_board);
+    class PhysicsSystem : public GameSystem
+    {
+    public:
+        // Constructor
+        PhysicsSystem();
+        // Initialize
+        void intialize(Framework::Physics* physics, MessageBoard<PhysicsMessage>* message_board);
 
-		// Updating
-		void update();
+        // Updating
+        void update();
 
-		// Closing
-		void close();
-	private:
-		void handleMessages();	
+        // Closing
+        void close();
+    private:
+        void handleMessages();
 
-		// --- Internal Functions ---
+        // --- Internal Functions ---
 
-		// Checking dampening
-		//void checkDampening();
+        // Checking dampening
+        //void checkDampening();
 
-		// Message Board
-		MessageBoard<PhysicsMessage>* m_message_board;
+        // Message Board
+        MessageBoard<PhysicsMessage>* m_message_board;
 
-		// Framework
-		Framework::Physics* f_physics;
+        // Framework
+        Framework::Physics* f_physics;
 
-		GridCollisionManager* m_col_manager;
+        GridCollisionManager* m_col_manager;
 
-		// Map of object IDs and their rigid bodies
-		std::map<int, Framework::RigidBody*> m_rigid_bodies;
-		
-		double m_acceleration_due_to_gravity;
+        // Map of object IDs and their rigid bodies
+        std::map<int, Framework::RigidBody*> m_rigid_bodies;
 
-		struct InfluenceRectangle
-		{
-			// position in top left corner
-			Framework::Vector position;
+        double m_acceleration_due_to_gravity;
 
-			Framework::Vector size;
-		};
+        struct InfluenceRectangle
+        {
+            // position in top left corner
+            Framework::Vector position;
 
-		std::map<int, InfluenceRectangle> m_influence_rects;
+            Framework::Vector size;
+        };
 
-		bool doesIntersect(InfluenceRectangle r1, InfluenceRectangle r2);
+        std::map<int, InfluenceRectangle> m_influence_rects;
 
-		// May replace ids with pointers to rigid bodies to make more concise code
-		struct Collision
-		{
-			double time;
-			int axis;
+        bool doesIntersect(InfluenceRectangle r1, InfluenceRectangle r2);
 
-			Framework::RigidBody* rigid_bodies[2];
-			Framework::Vector applying_forces;
-		};
+        // May replace ids with pointers to rigid bodies to make more concise code
+        struct Collision
+        {
+            double time;
+            int axis;
 
-		// May instead only need single collision which is smallest collision
-		std::vector<Collision> m_collisions;
-	};
+            Framework::RigidBody* rigid_bodies[2];
+            Framework::Vector applying_forces;
+        };
+
+        // May instead only need single collision which is smallest collision
+        std::vector<Collision> m_collisions;
+    };
 }

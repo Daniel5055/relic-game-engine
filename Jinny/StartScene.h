@@ -4,9 +4,9 @@
 
 namespace Jinny
 {
-	class StartScene : public Scene
-	{
-	public:
-		void initialize();
-	};
+    class StartScene : public Scene
+    {
+    public:
+        void initialize();
+    };
 }

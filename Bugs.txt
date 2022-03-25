@@ -16,7 +16,6 @@ Rigid body seemed to go at least 5 pixels into a static body before anti clippin
 Likely a collision problem with high speeds?
 Only seen once
 
-
 4. LIKELY SOLVED - Have not been able to recreate and likley solved with 3.
 Rigidbody seemed to be stuck in wall for a second, triggering anti clip 10 times before escaping
 Not sure if this actually happened though because I am not sure if that is what really happened
@@ -34,3 +33,4 @@ Whilst I want to change that and prevent the rapid collisions from happening at 
 when there is another object on top, the two objects continually apply friction to each other.
 And whilst each try to reduce the relative velocity to 0, they consequently oscillate back and forth as
 both try to apply the friciton to each other to reduce the relative velocity to 0
+

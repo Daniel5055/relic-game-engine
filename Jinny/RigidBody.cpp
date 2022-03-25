@@ -4,13 +4,14 @@
 
 #include <cmath>
 
-Framework::RigidBody::RigidBody(double mass, double dampening, Framework::Shape* shape_ptr, Framework::Material material)
+Framework::RigidBody::RigidBody(double mass, double damping_force, Framework::Vector max_speed, Framework::Shape* shape_ptr, Framework::Material material)
 {
     m_mass = mass;
-    m_dampening = dampening;
+    m_max_speed = max_speed;
     m_shape_ptr = shape_ptr;
     m_material = material;
     m_is_static = false;
+    m_damping = damping_force;
 
     m_current_velocity = { 0, 0 };
 
@@ -36,6 +37,26 @@ Framework::Vector Framework::RigidBody::getVelocity() const
 void Framework::RigidBody::increaseVelocity(Vector additional_velocity)
 {
     m_current_velocity += additional_velocity;
+
+    // Ensure speed is within limit if specified
+    for (int axis : {0, 1})
+    {
+        if (m_max_speed[axis] != 0 && abs(m_current_velocity[axis]) > m_max_speed[axis])
+        {
+            if (m_current_velocity[axis] > 0)
+            {
+                m_current_velocity[axis] = m_max_speed[axis];
+            }
+            else
+            {
+                m_current_velocity[axis] = -m_max_speed[axis];
+
+            }
+        }
+    }
+
+
+    // Prevent stupidly small non zero velocities
     if (abs(m_current_velocity[0]) < 0.00000000001)
     {
         m_current_velocity[0] = 0.0;
@@ -44,22 +65,6 @@ void Framework::RigidBody::increaseVelocity(Vector additional_velocity)
     {
         m_current_velocity[1] = 0.0;
     }
-}
-
-void Framework::RigidBody::stopXVelocity()
-{
-    m_current_velocity.x = 0;
-}
-
-void Framework::RigidBody::stopYVelocity()
-{
-    m_current_velocity.y = 0;
-}
-
-void Framework::RigidBody::stopVelocity()
-{
-    m_current_velocity.x = 0;
-    m_current_velocity.y = 0;
 }
 
 Framework::Vector Framework::RigidBody::getAppliedForce()
@@ -93,22 +98,22 @@ bool Framework::RigidBody::isStationary() const
     return false;
 }
 
-double Framework::RigidBody::getDampening() const
+double Framework::RigidBody::getDamping() const
 {
-    return m_dampening;
+    return m_damping;
 }
 
 void Framework::RigidBody::move(Vector movement)
 {
     m_position += movement;
 
-    int whole_x = round(m_position.x);
+    int whole_x = (int) round(m_position.x);
     if (whole_x != m_shape_ptr->x)
     {
         m_shape_ptr->x = whole_x;
     }
 
-    int whole_y = round(m_position.y);
+    int whole_y = (int) round(m_position.y);
     if (whole_y != m_shape_ptr->y)
     {
         m_shape_ptr->y = whole_y;
@@ -154,8 +159,8 @@ Framework::Vector Framework::RigidBody::getPosition() const
 void Framework::RigidBody::setPosition(Vector position)
 {
     m_position = position;
-    m_shape_ptr->x = round(position.x);
-	m_shape_ptr->y = round(position.y);
+    m_shape_ptr->x = (int) round(position.x);
+    m_shape_ptr->y = (int) round(position.y);
 }
 
 bool Framework::RigidBody::isStatic() const
