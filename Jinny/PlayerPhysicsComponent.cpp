@@ -6,7 +6,7 @@
 Jinny::PlayerPhysicsComponent::PlayerPhysicsComponent(double mass, double max_x_speed, double max_y_speed)
 {
     // Create Data
-    m_rigid_body = new Framework::RigidBody(mass, 500, {max_x_speed, max_y_speed}, nullptr, Framework::Material::ENTITY);
+    m_rigid_body = new Framework::RigidBody(mass, 0, {max_x_speed, max_y_speed}, nullptr, Framework::Material::ENTITY);
 }
 
 void Jinny::PlayerPhysicsComponent::initialize(GameObject& object)
@@ -63,22 +63,22 @@ void Jinny::PlayerPhysicsComponent::handleEvents()
             switch (it->input.key)
             {
             case 'a':
-                m_rigid_body->applyMFForce({ is_down * -500, 0 });
+                m_rigid_body->applyMFForce({ is_down * -100, 0 });
 
                 break;
 
             case 'd':
-                m_rigid_body->applyMFForce({ is_down * 500, 0 });
+                m_rigid_body->applyMFForce({ is_down * 100, 0 });
 
                 break;
 
             case 'w':
-                m_rigid_body->applyMFForce({ 0, is_down * -500 });
+                m_rigid_body->applyMFForce({ 0, is_down * -100 });
 
                 break;
 
             case 's':
-                m_rigid_body->applyMFForce({ 0, is_down * 500 });
+                m_rigid_body->applyMFForce({ 0, is_down * 100 });
 
                 break;
             }

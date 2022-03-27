@@ -79,6 +79,22 @@ double& Framework::Vector::operator[](int i)
     }
 }
 
+double Framework::Vector::operator[](int i) const
+{
+    switch (i)
+    {
+    case 0:
+        return x;
+        break;
+    case 1:
+        return y;
+        break;
+    default:
+        throw "Vector struct only accepts index 0 or 1";
+        break;
+    }
+}
+
 void Framework::Vector::clear()
 {
     x = 0;

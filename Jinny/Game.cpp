@@ -45,7 +45,7 @@ Jinny::Game::Game()
 	f_core = new Framework::Core();
 	f_window = new Framework::Window();
 	f_input = new Framework::Input();
-	f_physics = new Framework::Physics(0.016, 128.0, 0.25);
+	f_physics = new Framework::Physics(0.016, 128.0);
 }
 
 void Jinny::Game::initialize(Scene* starting_scene)

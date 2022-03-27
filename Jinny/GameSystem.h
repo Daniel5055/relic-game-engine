@@ -4,26 +4,26 @@
 
 namespace Jinny
 {
-	class GameSystem
-	{
+    class GameSystem
+    {
 
-	public:
-		//ctor / dtor
-		GameSystem();
-		~GameSystem();
+    public:
+        //ctor / dtor
+        GameSystem();
+        ~GameSystem();
 
-		// Main Public Functions
-		virtual void init();
-		virtual void update() = 0;
-		virtual void close();
-
-
-	protected:
-		// Accessors
-	private:
+        // Main Public Functions
+        virtual void init();
+        virtual void update() = 0;
+        virtual void close();
 
 
-	};
+    protected:
+        // Accessors
+    private:
+
+
+    };
 }
 
 

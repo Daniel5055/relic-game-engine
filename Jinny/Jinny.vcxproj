@@ -160,7 +160,7 @@
     <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="GraphicsComponent.cpp" />
-    <ClCompile Include="GridCollisionManager.cpp" />
+    <ClCompile Include="GridPhysicsEngine.cpp" />
     <ClCompile Include="ImageGraphicsComponent.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="InputComponent.cpp" />
@@ -177,6 +177,7 @@
     <ClCompile Include="ObjectEvent.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
+    <ClCompile Include="PhysicsEngine.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
     <ClCompile Include="PlayerInputComponent.cpp" />
@@ -199,7 +200,6 @@
     <ClInclude Include="AssetManager.h" />
     <ClInclude Include="ButtonAnimationComponent.h" />
     <ClInclude Include="CameraCoreComponent.h" />
-    <ClInclude Include="GridCollisionManager.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Core.h" />
@@ -213,6 +213,7 @@
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="GraphicsComponent.h" />
     <ClInclude Include="GraphicsMessage.h" />
+    <ClInclude Include="GridPhysicsEngine.h" />
     <ClInclude Include="ImageGraphicsComponent.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InputEvent.h" />
@@ -239,6 +240,7 @@
     <ClInclude Include="GameObjectManager.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="PhysicsComponent.h" />
+    <ClInclude Include="PhysicsEngine.h" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="PhysicsMessage.h" />
     <ClInclude Include="PhysicsSystem.h" />

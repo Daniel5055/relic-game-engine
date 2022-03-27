@@ -7,6 +7,9 @@ namespace Framework
 {
     enum class Material;
 
+    /**
+     * Class that contains physics-related data on a rigid body.
+     */
     class RigidBody
     {
     public:

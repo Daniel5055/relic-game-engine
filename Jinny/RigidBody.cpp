@@ -107,13 +107,13 @@ void Framework::RigidBody::move(Vector movement)
 {
     m_position += movement;
 
-    int whole_x = (int) round(m_position.x);
+    int whole_x = (int)round(m_position.x);
     if (whole_x != m_shape_ptr->x)
     {
         m_shape_ptr->x = whole_x;
     }
 
-    int whole_y = (int) round(m_position.y);
+    int whole_y = (int)round(m_position.y);
     if (whole_y != m_shape_ptr->y)
     {
         m_shape_ptr->y = whole_y;
@@ -159,8 +159,8 @@ Framework::Vector Framework::RigidBody::getPosition() const
 void Framework::RigidBody::setPosition(Vector position)
 {
     m_position = position;
-    m_shape_ptr->x = (int) round(position.x);
-    m_shape_ptr->y = (int) round(position.y);
+    m_shape_ptr->x = (int)round(position.x);
+    m_shape_ptr->y = (int)round(position.y);
 }
 
 bool Framework::RigidBody::isStatic() const

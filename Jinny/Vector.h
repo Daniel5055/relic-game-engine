@@ -24,6 +24,7 @@ namespace Framework
 
 		// Vector supports getting and setting by index, where x is 0 and y is 1
 		double& operator[](int i);
+		double operator[](int i) const;
 
 		// Useful Functions
 		void clear();

@@ -51,7 +51,7 @@ void Jinny::StartScene::initialize()
     //addWorldObject(new GameObject("Static2", { 200, 200, 100, 100 }, new ImageGraphicsComponent("Black"), nullptr, new StaticRigidBodyPhysicsComponent()));
 
     //addWorldObject(new GameObject("Dy2", { 10, 30, 20, 20 }, new ImageGraphicsComponent("Red"), nullptr, new DynamicRigidBodyPhysicsComponent(10, 10, 10, Framework::Material::NULLIUM, {50, 0})));
-    addWorldObject(new GameObject("Dy3", { 300, 200, 20, 20 }, new ImageGraphicsComponent("Black"), nullptr, new DynamicRigidBodyPhysicsComponent(10, 10, 10, Framework::Material::NULLIUM, { 130, 100 })));
+    addWorldObject(new GameObject("Dy3", { 300, 200, 20, 20 }, new ImageGraphicsComponent("Black"), nullptr, new DynamicRigidBodyPhysicsComponent(10, 10, 10, Framework::Material::WOOD, { 130, 100 })));
     //addWorldObject(new GameObject("Dy4", { 400, 300, 20, 20 }, new ImageGraphicsComponent("Red"), nullptr, new DynamicRigidBodyPhysicsComponent(10, 10, 10, Framework::Material::WOOD, { 0, 0 })));
     //addWorldObject(new GameObject("Dy5", { 500, 200, 20, 20 }, new ImageGraphicsComponent("Black"), nullptr, new DynamicRigidBodyPhysicsComponent(5, 10, 10, Framework::Material::NULLIUM, { 0, 500 })));
     //addWorldObject(new GameObject("Dy6", { 500, 300, 20, 20 }, new ImageGraphicsComponent("Red"), nullptr, new DynamicRigidBodyPhysicsComponent(5, 10, 10, { 300, 0 })));
