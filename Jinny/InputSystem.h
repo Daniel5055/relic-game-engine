@@ -16,51 +16,45 @@
 
 namespace Framework
 {
-	class Input;
-	enum class MouseEvent;
+    class Input;
+    enum class MouseEvent;
 
-	class Window;
+    class Window;
 }
 
 namespace Jinny
 {
-	class InputSystem : public GameSystem
-	{
-	public:
-		typedef std::pair<int, Framework::Shape*> InputData;
+    class InputSystem : public GameSystem
+    {
+    public:
+        typedef std::pair<int, Framework::Shape*> InputData;
 
-		// ctor
-		InputSystem();
+        // Constructor
+        InputSystem(const Framework::Window& t_window, const Framework::Input& t_input, MessageBoard<InputMessage>& t_message_board);
 
-		// Initialization
-		void initialize(Framework::Window* window, Framework::Input* input, MessageBoard<InputMessage>* message_board);
+        // Update
+        void update();
 
-		// Update
-		void update();
+    private:
+        // Virtual Overides for update function
+        void handleMessages();
 
-		// Close
-		void close();
+        // --- Framework ---
+        const Framework::Input& f_input;
+        const Framework::Window& f_window;
 
-	private:
-		// Virtual Overides for update function
-		void handleMessages();
+        // --- Data ---
 
-		// --- Framework ---
-		Framework::Input* f_input;
-		Framework::Window* f_window;
+        // Message Board
+        MessageBoard<InputMessage>& m_message_board;
 
-		// --- Data ---
+        // Input Subscriptions
+        std::map<Framework::MouseEvent, std::vector<InputData>> m_mouse_button_subscriptions;
 
-		// Message Board
-		MessageBoard<InputMessage>* m_message_board;
-		
-		// Input Subscriptions
-		std::map<Framework::MouseEvent, std::vector<InputData>> m_mouse_button_subscriptions;
+        std::map<InputData, bool> m_mouse_over_subscribtions;
 
-		std::map<InputData, bool> m_mouse_over_subscribtions;
-
-		std::map<char, std::vector<int>> m_key_supscriptions;
-	};
+        std::map<char, std::vector<int>> m_key_supscriptions;
+    };
 }
 
 

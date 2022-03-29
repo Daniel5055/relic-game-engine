@@ -4,33 +4,33 @@
 
 Jinny::StaticRigidBodyPhysicsComponent::StaticRigidBodyPhysicsComponent(Framework::Material material)
 {
-	m_rigid_body = new Framework::RigidBody(1, 0, {0, 0}, nullptr, material);
+    m_rigid_body = new Framework::RigidBody(1, 0, { 0, 0 }, nullptr, material);
 }
 
 void Jinny::StaticRigidBodyPhysicsComponent::initialize(GameObject& object)
 {
-	setObject(&object);
+    setObject(&object);
 
-	// Set Shape
-	ObjectEvent o_event = *object.getQueueIterator();
-	if (o_event.type == EventType::OBJECT_INITIALIZATION_SHAPE)
-	{
-		m_rigid_body->setShape(o_event.shape);
-		m_rigid_body->setStatic(true);
+    // Set Shape
+    ObjectEvent o_event = *object.getQueueIterator();
+    if (o_event.type == EventType::OBJECT_INITIALIZATION_SHAPE)
+    {
+        m_rigid_body->setShape(o_event.shape);
+        m_rigid_body->setStatic(true);
 
 
-		PhysicsMessage msg;
-		msg.type = PMessageType::SET_RIGID_BODY;
-		msg.object_ID = object.getObjectID();
-		msg.rigid_body = m_rigid_body;
+        PhysicsMessage msg;
+        msg.type = PMessageType::SET_RIGID_BODY;
+        msg.object_ID = object.getObjectID();
+        msg.rigid_body = m_rigid_body;
 
-		pushMessage(msg);
-		
-	}
+        pushMessage(msg);
+
+    }
 }
 
 Jinny::StaticRigidBodyPhysicsComponent::~StaticRigidBodyPhysicsComponent()
 {
-	delete m_rigid_body;
-	m_rigid_body = nullptr;
+    delete m_rigid_body;
+    m_rigid_body = nullptr;
 }

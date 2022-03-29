@@ -7,52 +7,37 @@
 
 #include <SDL.h>
 
-Framework::InputEvent Framework::Input::pollEvent()
+Framework::InputEvent Framework::Input::pollEvent() const
 {
     SDL_Event e;
     InputEvent e_out;
 
+    // Poll events
     SDL_PollEvent(&e);
 
+    // Read the SDL events and return them as wrapped InputEvents
     switch (e.type)
     {
     case SDL_QUIT:
-    
-        return { InputEventType::EXIT_BUTTON_PRESSED };
-
+        e_out.type = InputEventType::EXIT_BUTTON_PRESSED;
         break;
     
     case SDL_KEYDOWN:
-        
-
         e_out.type = InputEventType::KEY_DOWN;
-
         e_out.key = e.key.keysym.sym;
-
-        return e_out;
-
         break;
+
     case SDL_KEYUP:
         e_out.type = InputEventType::KEY_UP;
-
         e_out.key = e.key.keysym.sym;
-
-        return e_out;
-
         break;
 
     case SDL_MOUSEMOTION:
-        e_out;
-
         e_out.type = InputEventType::MOUSE_EVENT;
         e_out.mouse_event = MouseEvent::MOUSE_MOTION;
-        return e_out;
-
         break;
    
     case SDL_MOUSEBUTTONDOWN:
-        e_out;
-
         e_out.type = InputEventType::MOUSE_EVENT;
 
         if (e.button.button == SDL_BUTTON_LEFT)
@@ -63,14 +48,9 @@ Framework::InputEvent Framework::Input::pollEvent()
         {
             e_out.mouse_event = MouseEvent::RIGHT_DOWN;
         }
-        
-        return e_out;
-
         break;
 
     case SDL_MOUSEBUTTONUP:
-        e_out;
-
         e_out.type = InputEventType::MOUSE_EVENT;
 
         if (e.button.button == SDL_BUTTON_LEFT)
@@ -81,17 +61,16 @@ Framework::InputEvent Framework::Input::pollEvent()
         {
             e_out.mouse_event = MouseEvent::RIGHT_UP;
         }
-
-        return e_out;
-
+        break;
+    default:
+        e_out.type = InputEventType::NULL_EVENT;
         break;
     }
 
-
-    return { InputEventType::NULL_EVENT };
+    return e_out;
 }
 
-bool Framework::Input::isInBoundary(const Point& point, const Shape& shape)
+bool Framework::Input::isInBoundary(const Point& point, const Shape& shape) const
 {
     bool inside = true;
 

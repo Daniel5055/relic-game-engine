@@ -18,25 +18,25 @@ void Jinny::PhysicsComponent::close()
 
 void Jinny::PhysicsComponent::recieveMessage(PhysicsMessage p_msg)
 {
-	m_message_queue.push(p_msg);
+    m_message_queue.push(p_msg);
 }
 
 Jinny::PhysicsMessage Jinny::PhysicsComponent::popMessage()
 {
-	PhysicsMessage msg;
+    PhysicsMessage msg;
 
-	if (m_message_queue.size() > 0)
-	{
-		msg = m_message_queue.front();
-		m_message_queue.pop();
+    if (m_message_queue.size() > 0)
+    {
+        msg = m_message_queue.front();
+        m_message_queue.pop();
 
-	}
-	else
-	{
-		msg.type = PMessageType::NULL_MESSAGE;
-	}
+    }
+    else
+    {
+        msg.type = PMessageType::NULL_MESSAGE;
+    }
 
-	return msg;
+    return msg;
 }
 
 void Jinny::PhysicsComponent::handleEvents()
@@ -49,10 +49,10 @@ void Jinny::PhysicsComponent::handleMessages()
 
 void Jinny::PhysicsComponent::pushMessage(PhysicsMessage p_msg)
 {
-	m_message_board->pushMessage(p_msg);
+    m_message_board->pushMessage(p_msg);
 }
 
 void Jinny::PhysicsComponent::setMessageBoard(MessageBoard<PhysicsMessage>* message_board)
 {
-	m_message_board = message_board;
+    m_message_board = message_board;
 }

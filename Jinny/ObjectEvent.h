@@ -5,43 +5,43 @@
 // Framework Dependencies
 namespace Framework
 {
-	struct Shape;
+    struct Shape;
 }
 
 namespace Jinny
 {
 
-	enum class EventType
-	{
-		OBJECT_INITIALIZATION_SHAPE,
-		INPUT_TRIGGERED,
-	};
+    enum class EventType
+    {
+        OBJECT_INITIALIZATION_SHAPE,
+        INPUT_TRIGGERED,
+    };
 
-	struct ObjectEvent
-	{
-		ObjectEvent(EventType t)
-		{
-			type = t;
-		}
+    struct ObjectEvent
+    {
+        ObjectEvent(EventType t)
+        {
+            type = t;
+        }
 
-		ObjectEvent(EventType t, Framework::Shape* s)
-		{
-			type = t;
-			shape = s;
+        ObjectEvent(EventType t, Framework::Shape* s)
+        {
+            type = t;
+            shape = s;
 
-		}
+        }
 
-		EventType type;
+        EventType type;
 
-		union
-		{
-			Framework::Shape* shape;
-			ObjectInput input;
-		};
-		
+        union
+        {
+            Framework::Shape* shape;
+            ObjectInput input;
+        };
 
-		// More?
-	};
+
+        // More?
+    };
 }
 
 

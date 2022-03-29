@@ -6,52 +6,52 @@
 
 namespace Jinny
 {
-	class CoreComponent : public Component
-	{
-	public:
-		// --- virtual functions ---
-		// Initialization
-		virtual void initialize(GameObject& object);
+    class CoreComponent : public Component
+    {
+    public:
+        // --- virtual functions ---
+        // Initialization
+        virtual void initialize(GameObject& object);
 
-		// Updating
-		virtual void update();
+        // Updating
+        virtual void update();
 
-		// Closing
-		virtual void close();
+        // Closing
+        virtual void close();
 
-		// --- static functions ---
+        // --- static functions ---
 
-		// Functions to be used by object
-		void recieveMessage(GameMessage c_msg);
+        // Functions to be used by object
+        void recieveMessage(GameMessage c_msg);
 
-		// To set messageBoard
-		static void setMessageBoard(MessageBoard<GameMessage>* message_board);
+        // To set messageBoard
+        static void setMessageBoard(MessageBoard<GameMessage>* message_board);
 
-	protected:
-		// --- inherited functions ---
+    protected:
+        // --- inherited functions ---
 
-		// Pops Message from queue
-		GameMessage popMessage();
+        // Pops Message from queue
+        GameMessage popMessage();
 
-		// --- inherited virtual functions ---
+        // --- inherited virtual functions ---
 
-		// Event Handling
-		virtual void handleEvents();
+        // Event Handling
+        virtual void handleEvents();
 
-		// Message Handling
-		virtual void handleMessages();
+        // Message Handling
+        virtual void handleMessages();
 
-		// Message Pushing
-		void pushMessage(GameMessage g_msg);
+        // Message Pushing
+        void pushMessage(GameMessage g_msg);
 
-	private:
+    private:
 
-		// --- Data ---
+        // --- Data ---
 
-		// Message Queue
-		std::queue<GameMessage> m_message_queue;
+        // Message Queue
+        std::queue<GameMessage> m_message_queue;
 
-		// Access to message board
-		static MessageBoard<GameMessage>* m_message_board;
-	};
+        // Access to message board
+        static MessageBoard<GameMessage>* m_message_board;
+    };
 }

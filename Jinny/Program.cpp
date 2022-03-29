@@ -1,5 +1,3 @@
-
-#include <vector>
 #include <chrono>
 #include <iostream>
 
@@ -7,28 +5,23 @@
 #include "StartScene.h"
 
 
-// Game decleration
-Jinny::Game* game = new Jinny::Game();
-
+// Main loop
 int main(int argc, char* args[])
 {
-	// Game initialization
-	game->initialize(new Jinny::StartScene());
+    // Initialisation of game
+    Jinny::Game game{ new Jinny::StartScene() };
 
-	// Main loop
-	while (!(game->isGameOver()))
-	{
-		//auto begin = std::chrono::steady_clock::now();
+    // Game loop
+    while (!(game.isGameOver()))
+    {
+        //auto begin = std::chrono::steady_clock::now();
 
-		// Update Pattern	
-		game->update();
+        // Update Pattern
+        game.update();
 
-		//fps
-		//std::cout << 1000000 / std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - begin).count() << "fps" << std::endl;
-	}
+        //fps
+        //std::cout << 1000000 / std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - begin).count() << "fps" << std::endl;
+    }
 
-	// Close game
-	game->close();
-
-	return 0;
+    return 0;
 }

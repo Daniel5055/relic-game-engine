@@ -9,74 +9,70 @@
 #include "PhysicsMessage.h"
 #include "GameMessage.h"
 
-// Framework decleration
-namespace Framework
-{
-	class Window;
-	class Input;
-	class Core;
-	class Graphics;
-	class Physics;
-}
+// Including framework
+#include "Window.h"
+#include "Input.h"
+#include "Core.h"
+#include "Physics.h"
+#include "Graphics.h"
+#include "LoggedGraphics.h"
+
+// Including systems
+#include "GraphicsSystem.h"
+#include "InputSystem.h"
+#include "PhysicsSystem.h"
+
+#include "GameObjectManager.h"
 
 namespace Jinny
 {
-	class GameObjectManager;
-	class Scene;
+    class Scene;
 
-	// System decleration
-	class PhysicsSystem;
-	class GraphicsSystem;
-	class InputSystem;
+    /**
+     * The backbone of the game engine, declaring all the framework classes and systems.
+     * This class calls all the game loop related methods to the systems
+     */
+    class Game
+    {
+    public:
+        // Constructor
+        Game();
+        explicit Game(Scene* t_starting_scene = nullptr);
 
+        void update();
 
-	/// <summary>
-	/// This System is the core of the game
-	///	It links all the systems together and connects messaging
-	/// </summary>
+        // Destructor
+        ~Game();
 
-	class Game
-	{
-	public:
-		// Constructor
-		Game();
+        // Game Over Check
+        bool isGameOver();
 
-		void initialize(Scene* starting_scene);
-		void update();
-		void close();
+    private:
+        void handleMessages();
 
-		// Destructor
-		~Game();
+        // Framework References
+        const Framework::Core f_core;
+        Framework::Window f_window;
+        const Framework::LoggedGraphics f_graphics;
+        const Framework::Input f_input;
+        const Framework::Physics f_physics;
 
-		// Game Over Check
-		bool isGameOver();
+        // Game System pointers
+        InputSystem m_input;
+        GraphicsSystem m_graphics;
+        PhysicsSystem m_physics;
 
-	private:
-		void handleMessages();
+        // Message Board pointers
+        MessageBoard<GraphicsMessage> m_graphics_message_board;
+        MessageBoard<InputMessage> m_input_message_board;
+        MessageBoard<PhysicsMessage> m_physics_message_board;
+        MessageBoard<GameMessage> m_core_message_board;
 
-		// Framework pointers
-		Framework::Graphics* f_graphics;
-		Framework::Core* f_core;
-		Framework::Window* f_window;
-		Framework::Input * f_input;
-		Framework::Physics* f_physics;
-		
-		// Game System pointers
-		InputSystem * m_input;
-		GraphicsSystem* m_graphics;
-		PhysicsSystem* m_physics;
+        // Object Manager pointer
+        GameObjectManager m_object_manager;
 
-		// Message Board pointers
-		MessageBoard<GraphicsMessage>* m_graphics_message_board;
-		MessageBoard<InputMessage>* m_input_message_board;
-		MessageBoard<PhysicsMessage>* m_physics_message_board;
-		MessageBoard<GameMessage> * m_core_message_board;
-		
-		// Object Manager pointer
-		GameObjectManager* m_objectManager;
-
-		// --- data ---
-		bool m_game_over;
-		Scene* m_current_scene;
-	};
+        // --- data ---
+        bool m_game_over;
+        std::unique_ptr<Scene> m_current_scene;
+    };
 }

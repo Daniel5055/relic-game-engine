@@ -4,18 +4,18 @@
 
 namespace Jinny
 {
-	class NullGraphicsComponent : public GraphicsComponent
-	{
-		// Initialization
-		virtual void initialize(GameObject& object)
-		{}
+    class NullGraphicsComponent : public GraphicsComponent
+    {
+        // Initialization
+        virtual void initialize(GameObject& object)
+        {}
 
-		// Updating
-		virtual void update()
-		{}
+        // Updating
+        virtual void update()
+        {}
 
-		// Closing
-		virtual void close()
-		{}
-	};
+        // Closing
+        virtual void close()
+        {}
+    };
 }

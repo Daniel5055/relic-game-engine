@@ -6,20 +6,20 @@
 
 namespace Jinny
 {
-	class PlayerInputComponent : public InputComponent
-	{
-	public:
-		// Initialize
-		void initialize(GameObject& object);
+    class PlayerInputComponent : public InputComponent
+    {
+    public:
+        // Initialize
+        void initialize(GameObject& object);
 
-		// Updating
-		void update();
+        // Updating
+        void update();
 
 
-	private:
-		void handleMessages();
+    private:
+        void handleMessages();
 
-		std::map<char, bool> m_keys_down;
-	};
+        std::map<char, bool> m_keys_down;
+    };
 
 }

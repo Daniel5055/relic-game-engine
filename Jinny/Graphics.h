@@ -7,49 +7,51 @@ struct SDL_Renderer;
 
 namespace Framework
 {
-	// Other Dependencies
-	class Graphic;
-	class Texture;
-	class Window;
-	class Font;
-	struct Color;
-	struct Shape;
+    // Other Dependencies
+    class Graphic;
+    class Texture;
+    class Window;
+    class Font;
+    struct Color;
+    struct Shape;
 
-	class Graphics
-	{
-	public:
-		// Constructor
-		Graphics();
+    /**
+     * Framework class containing all function related to drawing to the window using SDL.
+     */
+    class Graphics
+    {
+    public:
+        // Constructor
+        Graphics();
+        explicit Graphics(const Window& window);
 
-		// Initialization and Closing
-		virtual bool initialize(Window* window);
-		virtual void close();
+        // Destructor
+        ~Graphics();
 
-		// Rendering functions
-		
-		virtual void clear(Color clear_color);
-		virtual void draw(Graphic* graphic);
-		virtual void draw(Graphic* graphic, int x_shift, int y_shift);
-		virtual void display();
+        // Rendering functions
+
+        virtual void clear(Color clear_color) const;
+        virtual void draw(Graphic* graphic) const;
+        virtual void draw(Graphic* graphic, int x_shift, int y_shift) const;
+        virtual void display() const;
 
 
-		// Creation of textures and font
-		virtual Font* createFont(std::string path, int font_size);
-		virtual Texture* createTexture(std::string path);
-		virtual Texture* createTextTexture(std::string text, Font* font, Color color);
-		virtual Texture* createWrappedTextTexture(std::string text, Font* font, Color color, Shape* shape);
+        // Creation of textures and font
+        virtual Font* createFont(std::string path, int font_size) const;
+        virtual Texture* createTexture(std::string path) const;
+        virtual Texture* createTextTexture(std::string text, Font* font, Color color) const;
+        virtual Texture* createWrappedTextTexture(std::string text, Font* font, Color color, Shape* shape) const;
 
-		// Assigning of Textures
-		virtual void assignTexture(Graphic* graphic, Texture* texture);
+        // Assigning of Textures
+        virtual void assignTexture(Graphic* graphic, Texture* texture) const;
 
-	private:
+    private:
 
-		// --- Data ---
+        // --- Data ---
 
-		// Renderer
-		SDL_Renderer* m_renderer_ptr;
-		
-	};
+        // Renderer using pointer due to SDL
+        SDL_Renderer* m_renderer_ptr;
+    };
 }
 
 

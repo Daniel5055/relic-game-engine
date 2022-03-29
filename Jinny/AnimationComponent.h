@@ -6,69 +6,69 @@
 
 namespace Framework
 {
-	class Graphic;
-	struct Point;
+    class Graphic;
+    struct Point;
 }
 
 namespace Jinny
 {
 
-	class GraphicsComponent;
+    class GraphicsComponent;
 
-	class AnimationComponent : public Component
-	{
+    class AnimationComponent : public Component
+    {
 
-	public:
-		// Constructor
-		AnimationComponent(GraphicsComponent* graphics_component, int texture_width, int texture_height);
+    public:
+        // Constructor
+        AnimationComponent(GraphicsComponent* graphics_component, int texture_width, int texture_height);
 
-		// --- pure virtual functions ---
+        // --- pure virtual functions ---
 
-			// Initialization
-		virtual void initialize(GameObject& object);
+            // Initialization
+        virtual void initialize(GameObject& object);
 
-		// Updating
-		virtual void update();
+        // Updating
+        virtual void update();
 
-		// Closing
-		virtual void close();
+        // Closing
+        virtual void close();
 
-		// --- functions ---
-		
-	protected:
-		// --- Inherited functions ---
-		void createClipGrid();
+        // --- functions ---
 
-		// Get current clip
-		void changeCurrentClip(int index);
+    protected:
+        // --- Inherited functions ---
+        void createClipGrid();
 
-		// Get Texture sixe
-		int getTextureWidth() const;
-		int getTextureHeight() const;
+        // Get current clip
+        void changeCurrentClip(int index);
 
-	private:
+        // Get Texture sixe
+        int getTextureWidth() const;
+        int getTextureHeight() const;
 
-		// Event Handling
-		virtual void handleEvents();
+    private:
 
-
-		int m_tick;
-		int m_tick_per_frame;
+        // Event Handling
+        virtual void handleEvents();
 
 
-		Framework::Shape* m_current_clip_ptr;
+        int m_tick;
+        int m_tick_per_frame;
 
-		std::vector<Framework::Shape*> m_clips;
 
-		int m_clip_start;
-		int m_clip_end;
-		int m_clip_index;
+        Framework::Shape* m_current_clip_ptr;
 
-		// Graphics Related
-		GraphicsComponent* m_graphics_component;
+        std::vector<Framework::Shape*> m_clips;
 
-		int m_texture_width;
-		int m_texture_height;
+        int m_clip_start;
+        int m_clip_end;
+        int m_clip_index;
 
-	};
+        // Graphics Related
+        GraphicsComponent* m_graphics_component;
+
+        int m_texture_width;
+        int m_texture_height;
+
+    };
 }

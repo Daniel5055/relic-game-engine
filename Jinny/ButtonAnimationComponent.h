@@ -4,29 +4,29 @@
 
 namespace Jinny
 {
-	class ButtonAnimationComponent : public AnimationComponent
-	{
+    class ButtonAnimationComponent : public AnimationComponent
+    {
 
-	public:
-		// Constructor
-		ButtonAnimationComponent(GraphicsComponent* graphics_component, int texture_width, int texture_height);
+    public:
+        // Constructor
+        ButtonAnimationComponent(GraphicsComponent* graphics_component, int texture_width, int texture_height);
 
-		// --- pure virtual functions ---
+        // --- pure virtual functions ---
 
-			// Initialization
-		void initialize(GameObject& object);
+            // Initialization
+        void initialize(GameObject& object);
 
-		// Updating
-		void update();
+        // Updating
+        void update();
 
-		// Closing
-		void close();
+        // Closing
+        void close();
 
-		// --- functions ---
+        // --- functions ---
 
-	private:
+    private:
 
-		// Event Handling
-		void handleEvents();
-	};
+        // Event Handling
+        void handleEvents();
+    };
 }

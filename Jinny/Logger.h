@@ -4,17 +4,22 @@
 
 namespace Framework
 {
-	class Logger
-	{
-	public:
-		Logger(std::string location);
+    /**
+     * Class used to log information.
+     */
+    class Logger
+    {
+    public:
+        // Constructor
+        explicit Logger(std::string t_location);
 
-		void log(std::string text);
-		void logError(std::string text);
+        // Logging functions
+        void log(std::string t_text) const;
+        void logError(std::string t_text) const;
 
-	private:
-		std::string m_location;
-	};
+    private:
+        std::string m_location;
+    };
 }
 
 

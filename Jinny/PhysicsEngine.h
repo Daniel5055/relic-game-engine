@@ -19,16 +19,10 @@ namespace Jinny
     {
     public:
         // Constructor
-        PhysicsEngine();
-
-        // Initialisation
-        void virtual initialise(const Framework::Physics* physics_ptr);
+        explicit PhysicsEngine(const Framework::Physics& t_physics);
 
         // Upating
         void virtual update() = 0;
-
-        // Closing
-        void virtual close();
 
         // Physics engine specific functions
         void virtual addRigidBody(int object_id, Framework::RigidBody* rigid_body);
@@ -36,7 +30,7 @@ namespace Jinny
     protected:
         
         // Framework data
-        const Framework::Physics* f_physics;
+        const Framework::Physics& f_physics;
 
         // Rigidbody data
         std::map<int, Framework::RigidBody*> m_rigid_bodies;

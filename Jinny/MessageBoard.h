@@ -7,37 +7,37 @@
 
 namespace Jinny
 {
-	// Messages get pushed up
-	// And Messages get popped out
+    // Messages get pushed up
+    // And Messages get popped out
 
-	// Template Messageboard
-	template<typename Message>
-	class MessageBoard
-	{
-	public:
+    // Template Messageboard
+    template<typename Message>
+    class MessageBoard
+    {
+    public:
 
-		void pushMessage(Message msg)
-		{
-			m_message_queue.push(msg);
-		}
+        void pushMessage(Message msg)
+        {
+            m_message_queue.push(msg);
+        }
 
-		Message popMessage()
-		{
+        Message popMessage()
+        {
 
-			// Should not be any error as systems should know how much to pop
-			Message msg = m_message_queue.front();
-			m_message_queue.pop();
-			return msg;
-		}
+            // Should not be any error as systems should know how much to pop
+            Message msg = m_message_queue.front();
+            m_message_queue.pop();
+            return msg;
+        }
 
-		int getQueueSize()
-		{
-			return m_message_queue.size();
-		}
+        int getQueueSize()
+        {
+            return m_message_queue.size();
+        }
 
-	private:
-		// General 
-		std::queue<Message> m_message_queue;
-	};
+    private:
+        // General 
+        std::queue<Message> m_message_queue;
+    };
 
 }

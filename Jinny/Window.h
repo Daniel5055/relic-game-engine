@@ -2,39 +2,48 @@
 
 #include <string>
 
+#include "Shape.h" 
+#include "Point.h"
+
 // SDL Dependencies
 struct SDL_Window;
+
 namespace Framework
 {
-	struct Shape;
-	struct Point;
 
-	class Window
-	{
-	public:
-		friend class Graphics;
+    /**
+     * Framework class relating to the main window of the program.
+     */
+    class Window
+    {
+    public:
+        friend class Graphics;
 
-		// Initialization and Closing
-		void initialize(std::string name, int width, int height, bool show);
-		void close();
+        // Initialization and Closing
+        explicit Window(std::string t_name, int t_width, int t_height, bool t_show);
+        ~Window();
 
-		// Size accessors
-		unsigned int getWindowWidth() const;
-		unsigned int getWindowHeight() const;
 
-		// Camera Accessors
-		void setCamera(Shape* camera);
-		Shape* getCamera();
+        // Size accessors
+        unsigned int getWindowWidth() const;
+        unsigned int getWindowHeight() const;
 
-		Point getStaticMousePosition();
-		Point getCameraMousePosition();
+        // Camera Accessors
+        void setCamera(const Shape camera);
+        Shape getCamera() const;
 
-	private:
-		SDL_Window* m_window_ptr;
+        Point getStaticMousePosition() const;
+        Point getCameraMousePosition() const;
 
-		Shape* m_camera;
-		Shape* m_null_camera;
-	};
+    private:
+
+        // Using pointer due to SDL 
+        SDL_Window* m_window_ptr;
+
+        // Cameras
+        Shape m_camera;
+        const Shape m_null_camera;
+    };
 }
 
 

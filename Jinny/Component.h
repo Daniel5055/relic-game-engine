@@ -7,36 +7,36 @@
 
 namespace Jinny
 {
-	// Base class for components
-	class Component
-	{
-	public:
+    // Base class for components
+    class Component
+    {
+    public:
 
-		// constructor
-		Component();
+        // constructor
+        Component();
 
-		// Should usually set game object here
-		virtual void initialize(GameObject& object) = 0;
+        // Should usually set game object here
+        virtual void initialize(GameObject& object) = 0;
 
-		// Updating
-		virtual void update() = 0;
-		
-		// Closing
-		virtual void close() = 0;
+        // Updating
+        virtual void update() = 0;
 
-	protected:
+        // Closing
+        virtual void close() = 0;
 
-		// Event Handling
-		virtual void handleEvents() = 0;
+    protected:
 
-		// Accessor for object
-		void setObject(GameObject* object);
-		GameObject* getObject();
+        // Event Handling
+        virtual void handleEvents() = 0;
 
-	private:
-		// Instance of game object
-		GameObject* m_object;
-	};
+        // Accessor for object
+        void setObject(GameObject* object);
+        GameObject* getObject();
+
+    private:
+        // Instance of game object
+        GameObject* m_object;
+    };
 }
 
 

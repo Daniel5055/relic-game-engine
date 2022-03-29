@@ -7,19 +7,19 @@ struct SDL_Color;
 
 namespace Framework
 {
-	struct Color
-	{
-		
-		Color(Uint8 r = 0x00, Uint8 g = 0x00, Uint8 b = 0x00, Uint8 a = 0xFF);
-		Color(SDL_Color color);
+    struct Color
+    {
 
-		Uint8 r;
-		Uint8 g;
-		Uint8 b;
-		Uint8 a;
+        Color(Uint8 r = 0x00, Uint8 g = 0x00, Uint8 b = 0x00, Uint8 a = 0xFF);
+        Color(SDL_Color color);
 
-		operator SDL_Color() const;
-		
-		
-	};
+        Uint8 r;
+        Uint8 g;
+        Uint8 b;
+        Uint8 a;
+
+        operator SDL_Color() const;
+
+
+    };
 }

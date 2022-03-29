@@ -7,7 +7,7 @@
 
 bool Framework::NullGraphics::initialize(Window* window)
 {
-	return false;
+    return false;
 }
 
 void Framework::NullGraphics::close()
@@ -30,15 +30,15 @@ void Framework::NullGraphics::display()
 
 Framework::Font* Framework::NullGraphics::createFont(std::string path, int font_size)
 {
-	return nullptr;
+    return nullptr;
 }
 
 Framework::Texture* Framework::NullGraphics::createTexture(std::string path)
 {
-	return nullptr;
+    return nullptr;
 }
 
 Framework::Texture* Framework::NullGraphics::createTextTexture(std::string text, Font* font, Color color)
 {
-	return nullptr;
+    return nullptr;
 }

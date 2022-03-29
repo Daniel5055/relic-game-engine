@@ -2,14 +2,14 @@
 
 #include <vector>
 
-void Framework::MaterialManager::initialize()
+Framework::MaterialManager::MaterialManager()
 {
-
     int num_of_materials = 7;
+
     // Data for coefficient of restitutions, maybe I should move to text files
     std::vector<double> coeff_of_r_data = {
 
-        //   0	  1    2    3    4    5	   6
+        //   0    1    2    3    4    5    6
             1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, // Nullium = 0
                  0.6, 0.4, 0.7, 0.4, 0.9, 0.2, // Metal = 1
                       0.3, 0.4, 0.3, 0.8, 0.1, // Brick = 2
@@ -34,7 +34,7 @@ void Framework::MaterialManager::initialize()
     // Data for static friction, maybe I should move to text files
     std::vector<double> static_friction_data = {
 
-        //   0	  1    2    3    4    5	   6
+        //   0    1    2    3    4    5    6
             0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, // Nullium = 0
                  0.4, 0.5, 0.5, 0.2, 0.4, 0.9, // Metal = 1
                       0.5, 0.6, 0.3, 0.5, 0.9, // Brick = 2
@@ -59,7 +59,7 @@ void Framework::MaterialManager::initialize()
     // Data for static friction, maybe I should move to text files
     std::vector<double> dynamic_friction_data = {
 
-        //   0	  1    2    3    4    5	   6
+        //   0    1    2    3    4    5    6
             0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, // Nullium = 0
                  0.3, 0.4, 0.4, 0.1, 0.3, 0.7, // Metal = 1
                       0.4, 0.5, 0.2, 0.4, 0.8, // Brick = 2
@@ -82,38 +82,38 @@ void Framework::MaterialManager::initialize()
     }
 }
 
-double Framework::MaterialManager::getCoefficientOfRestitution(Framework::Material material_1, Framework::Material material_2)
+double Framework::MaterialManager::getCoefficientOfRestitution(Framework::Material material_1, Framework::Material material_2) const
 {
     if ((int)material_1 >= (int)material_2)
     {
-        return m_materials[{material_2, material_1}];
+        return m_materials.at({ material_2, material_1 });
     }
     else
     {
-        return m_materials[{material_1, material_2}];
+        return m_materials.at({ material_1, material_2 });
     }
 }
 
-double Framework::MaterialManager::getStaticFrictionCoefficient(Material material_1, Material material_2)
+double Framework::MaterialManager::getStaticFrictionCoefficient(Material material_1, Material material_2) const
 {
     if ((int)material_1 >= (int)material_2)
     {
-        return m_static_friction_coefficients[{material_2, material_1}];
+        return m_static_friction_coefficients.at({ material_2, material_1 });
     }
     else
     {
-        return m_static_friction_coefficients[{material_1, material_2}];
+        return m_static_friction_coefficients.at({ material_1, material_2 });
     }
 }
 
-double Framework::MaterialManager::getDynamicFrictionCoefficient(Material material_1, Material material_2)
+double Framework::MaterialManager::getDynamicFrictionCoefficient(Material material_1, Material material_2) const
 {
     if ((int)material_1 >= (int)material_2)
     {
-        return m_dynamic_friction_coefficients[{material_2, material_1}];
+        return m_dynamic_friction_coefficients.at({ material_2, material_1 });
     }
     else
     {
-        return m_dynamic_friction_coefficients[{material_1, material_2}];
+        return m_dynamic_friction_coefficients.at({ material_1, material_2 });
     }
 }

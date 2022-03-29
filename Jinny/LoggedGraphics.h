@@ -1,31 +1,33 @@
 #pragma once
-#include "Graphics.h"
 
+#include "Graphics.h"
+#include "Logger.h"
 
 
 namespace Framework
 {
-	class Logger;
+    /**
+     * Logged version of graphics framework class.
+     */
+    class LoggedGraphics : public Graphics
+    {
+    public:
 
-	class LoggedGraphics : public Graphics
-	{
-	public:
+        // Constructor
+        explicit LoggedGraphics(Window& t_window);
 
-		// Logged Initialization
-		bool initialize(Window* window) override;
-		void close() override;
+        // Destructor
+        ~LoggedGraphics();
 
+        // Logged creation of textures and font
+        Font* createFont(std::string path, int font_size) const override;
+        Texture* createTexture(std::string path) const override;
+        Texture* createTextTexture(std::string text, Font* font, Color color) const override;
 
-		// Logged creation of textures and font
-		Font* createFont(std::string path, int font_size) override;
-		Texture* createTexture(std::string path) override;
-		Texture* createTextTexture(std::string text, Font* font, Color color);
+    private:
 
-	private:
-		Logger* m_logger_ptr;
-	};
-
-
+        // Logger
+        const Logger m_logger;
+    };
 }
-
 

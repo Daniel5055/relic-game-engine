@@ -5,15 +5,15 @@
 
 void Jinny::CameraCoreComponent::initialize(GameObject& object)
 {
-	setObject(&object);
+    setObject(&object);
 
-	auto event_ptr = object.getQueueIterator();
+    auto event_ptr = object.getQueueIterator();
 
-	GameMessage msg;
-	msg.type = GameMessageType::SET_CAMERA;
-	msg.shape_ptr = event_ptr->shape;
+    GameMessage msg;
+    msg.type = GameMessageType::SET_CAMERA;
+    msg.shape_ptr = event_ptr->shape;
 
-	pushMessage(msg);
+    pushMessage(msg);
 
 
 }

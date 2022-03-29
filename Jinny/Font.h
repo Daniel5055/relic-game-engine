@@ -5,19 +5,19 @@
 
 namespace Framework
 {
-	class Font
-	{
-	public:
-		// Friend to graphics as only graphics can create font
-		friend class Graphics;
+    class Font
+    {
+    public:
+        // Friend to graphics as only graphics can create font
+        friend class Graphics;
 
-		// Constructor
-		Font();
-		~Font();
+        // Constructor
+        Font();
+        ~Font();
 
-	private:
-		TTF_Font* m_font_ptr;
-	};
+    private:
+        TTF_Font* m_font_ptr;
+    };
 }
 
 

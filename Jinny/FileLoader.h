@@ -2,14 +2,14 @@
 
 namespace Framework
 {
-	class FileLoader
-	{
-		
+    class FileLoader
+    {
 
 
-	private:
 
-		// Current File 
+    private:
 
-	};
+        // Current File 
+
+    };
 }

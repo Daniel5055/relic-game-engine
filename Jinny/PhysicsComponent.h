@@ -9,58 +9,58 @@
 namespace Jinny
 {
 
-	struct PhysicsMessage;
+    struct PhysicsMessage;
 
-	class PhysicsComponent : public Component
-	{
-	public:
+    class PhysicsComponent : public Component
+    {
+    public:
 
-		// --- pure virtual functions ---
+        // --- pure virtual functions ---
 
-		// Initialization
-		virtual void initialize(GameObject& object);
+        // Initialization
+        virtual void initialize(GameObject& object);
 
-		// Updating
-		virtual void update();
+        // Updating
+        virtual void update();
 
-		// Closing
-		virtual void close();
+        // Closing
+        virtual void close();
 
-		// --- functions ---
-		void recieveMessage(PhysicsMessage p_msg);
+        // --- functions ---
+        void recieveMessage(PhysicsMessage p_msg);
 
-		// To set messageBoard
-		static void setMessageBoard(MessageBoard<PhysicsMessage>* message_board);
+        // To set messageBoard
+        static void setMessageBoard(MessageBoard<PhysicsMessage>* message_board);
 
-	protected:
-		// --- inherited functions ---
+    protected:
+        // --- inherited functions ---
 
-		// Pops Message from queue
-		PhysicsMessage popMessage();
+        // Pops Message from queue
+        PhysicsMessage popMessage();
 
-		// --- inherited virtual functions ---
+        // --- inherited virtual functions ---
 
-		// Event Handling
-		virtual void handleEvents();
+        // Event Handling
+        virtual void handleEvents();
 
-		// Message Handling
-		virtual void handleMessages();
+        // Message Handling
+        virtual void handleMessages();
 
-		// Message Pushing
-		void pushMessage(PhysicsMessage p_msg);
+        // Message Pushing
+        void pushMessage(PhysicsMessage p_msg);
 
-	private:
-		// --- Data ---
+    private:
+        // --- Data ---
 
-		// Message Queue
-		std::queue<PhysicsMessage> m_message_queue;
+        // Message Queue
+        std::queue<PhysicsMessage> m_message_queue;
 
-		bool is_static;
+        bool is_static;
 
-		// Access to message board
-		static MessageBoard<PhysicsMessage>* m_message_board;
-		
-	};
+        // Access to message board
+        static MessageBoard<PhysicsMessage>* m_message_board;
+
+    };
 
 }
 

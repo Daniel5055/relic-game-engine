@@ -5,27 +5,27 @@
 
 namespace Jinny
 {
-	class Scene;
+    class Scene;
 
-	class EventChangeCoreComponent : public CoreComponent
-	{
-	public:
+    class EventChangeCoreComponent : public CoreComponent
+    {
+    public:
 
-		// Constructor
-		EventChangeCoreComponent(ObjectInput trigger_input, Scene* new_scene);
+        // Constructor
+        EventChangeCoreComponent(ObjectInput trigger_input, Scene* new_scene);
 
-		// Updating
-		virtual void update();
-	private:
+        // Updating
+        virtual void update();
+    private:
 
-		// Event Handling
-		virtual void handleEvents();
+        // Event Handling
+        virtual void handleEvents();
 
-		// --- Data ---
+        // --- Data ---
 
-		// Scene to change to
-		Scene* m_next_scene;
-		const ObjectInput m_trigger_input;
+        // Scene to change to
+        Scene* m_next_scene;
+        const ObjectInput m_trigger_input;
 
-	};
+    };
 }

@@ -19,22 +19,16 @@ namespace Jinny
     public:
 
         // Constructor
-        GridPhysicsEngine();
-
-        // Initialisation
-        void initalise(const Framework::Physics* physics_ptr);
+        explicit GridPhysicsEngine(const Framework::Physics& t_physics);
 
         // Updating
         void update();
-
-        // Closing
-        void close();
 
         void  addRigidBody(int object_id, Framework::RigidBody* rigid_body);
 
     private:
 
-        double m_acceleration_due_to_gravity;
+        const double m_acceleration_due_to_gravity;
 
         // For applying damping on objects with damping
         void applyDamping();

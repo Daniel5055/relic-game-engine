@@ -3,31 +3,22 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+#include <assert.h>
 
-bool Framework::Core::initialize()
+Framework::Core::Core()
 {
-	// Initialize SDL Versions
-	if (SDL_Init(SDL_Init(SDL_INIT_VIDEO)) < 0)
-	{
-		return false;
-	}
+    // Initialize SDL Versions
+    assert(SDL_Init(SDL_Init(SDL_INIT_VIDEO)) >= 0);
 
-	int png_ID = IMG_INIT_PNG;
-	if (!(IMG_Init(png_ID) & png_ID))
-	{
-		return false;
-	}
+    int png_ID = IMG_INIT_PNG;
+    assert((IMG_Init(png_ID) & png_ID));
 
-	if (TTF_Init() == -1)
-	{
-		return false;
-	}
-    return true;
+    assert(TTF_Init() != -1);
 }
 
-void Framework::Core::close()
+Framework::Core::~Core()
 {
-	SDL_Quit();
-	IMG_Quit();
-	TTF_Quit();
+    SDL_Quit();
+    IMG_Quit();
+    TTF_Quit();
 }

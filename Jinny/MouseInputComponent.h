@@ -4,27 +4,27 @@
 
 namespace Jinny
 {
-	class MouseInputComponent : public InputComponent
-	{
-	public:
-		MouseInputComponent();
+    class MouseInputComponent : public InputComponent
+    {
+    public:
+        MouseInputComponent();
 
-		// Initialization
-		void initialize(GameObject& object);
+        // Initialization
+        void initialize(GameObject& object);
 
-		// Updating
-		void update();
+        // Updating
+        void update();
 
-		// Closing
-		void close();
+        // Closing
+        void close();
 
-	private:
-		// Message Handling from input
-		virtual void handleMessages();
+    private:
+        // Message Handling from input
+        virtual void handleMessages();
 
-		// --- Data ---
-		bool m_mouse_button_down;
-	};
+        // --- Data ---
+        bool m_mouse_button_down;
+    };
 
 
 }

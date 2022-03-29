@@ -6,60 +6,60 @@
 #include "InputMessage.h"
 #include "MessageBoard.h"
 
-
-
 namespace Jinny
 {
+    /**
+     * Parent class of all input components.
+     */
+    class InputComponent : public Component
+    {
+    public:
 
-	class InputComponent : public Component
-	{
-	public:
+        // --- pure virtual functions ---
 
-		// --- pure virtual functions ---
+        // Initialization
+        virtual void initialize(GameObject& object);
 
-		// Initialization
-		virtual void initialize(GameObject& object);
+        // Updating
+        virtual void update();
 
-		// Updating
-		virtual void update();
+        // Closing
+        virtual void close();
 
-		// Closing
-		virtual void close();
+        // --- functions ---
 
-		// --- functions ---
+        // For Object to relay message to input
+        void recieveMessage(InputMessage i_msg);
 
-		// For Object to relay message to input
-		void recieveMessage(InputMessage i_msg);
+        // To set messageBoard
+        static void setMessageBoard(MessageBoard<InputMessage>* message_board);
 
-		// To set messageBoard
-		static void setMessageBoard(MessageBoard<InputMessage>* message_board);
+    protected:
+        // --- inherited functions ---
 
-	protected:
-		// --- inherited functions ---
+        // Pops Message from queue
+        InputMessage popMessage();
 
-		// Pops Message from queue
-		InputMessage popMessage();
+        // --- inherited virtual functions ---
 
-		// --- inherited virtual functions ---
+        // Event Handling
+        virtual void handleEvents();
 
-		// Event Handling
-		virtual void handleEvents();
+        // Message Handling
+        virtual void handleMessages();
 
-		// Message Handling
-		virtual void handleMessages();
+        // Message Pushing
+        void pushMessage(InputMessage i_msg);
+    private:
 
-		// Message Pushing
-		void pushMessage(InputMessage i_msg);
-	private:
+        // --- Data ---
 
-		// --- Data ---
+        // Message Queue
+        std::queue<InputMessage> m_message_queue;
 
-		// Message Queue
-		std::queue<InputMessage> m_message_queue;
-
-		// Access to message board
-		static MessageBoard<InputMessage>* m_message_board;
-	};
+        // Access to message board
+        static MessageBoard<InputMessage>* m_message_board;
+    };
 }
 
 

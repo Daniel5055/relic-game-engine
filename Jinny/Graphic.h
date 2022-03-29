@@ -2,46 +2,46 @@
 
 namespace Framework
 {
-	struct Shape;
-	struct Point;
+    struct Shape;
+    struct Point;
 
-	class Texture;
+    class Texture;
 
-	// Contains all the data needed to render image
-	class Graphic
-	{
-	public:
+    // Contains all the data needed to render image
+    class Graphic
+    {
+    public:
 
-		// Graphics is friend class to access variables personally
-		friend class Graphics;
+        // Graphics is friend class to access variables personally
+        friend class Graphics;
 
-		// Constructor
-		Graphic(Shape* shape_ptr = nullptr);
+        // Constructor
+        Graphic(Shape* shape_ptr = nullptr);
 
-		// Accessors
-		Shape* getShape();
-		void setShape(Shape* shape);
+        // Accessors
+        Shape* getShape();
+        void setShape(Shape* shape);
 
-		void setSize(int w, int h);
+        void setSize(int w, int h);
 
-		Shape* getClip();
-		void setClip(Shape* clip);
+        Shape* getClip();
+        void setClip(Shape* clip);
 
-		Texture* getTexture();
+        Texture* getTexture();
 
-	private:
-		
-		// --- Functions for Graphics ---
+    private:
 
-		// only accessible by graphics class
-		void setTexture(Texture* texture);
+        // --- Functions for Graphics ---
 
-		// --- Data --- 
-		Shape* m_shape_ptr;
-		Shape* m_clip_ptr;
+        // only accessible by graphics class
+        void setTexture(Texture* texture);
 
-		Texture* m_texture_ptr;
-	};
+        // --- Data --- 
+        Shape* m_shape_ptr;
+        Shape* m_clip_ptr;
+
+        Texture* m_texture_ptr;
+    };
 }
 
 

@@ -4,32 +4,32 @@
 
 namespace Framework
 {
-	class Logger;
+    class Logger;
 }
 
 namespace Jinny
 {
 
 
-	class LoggingComponent : public Component
-	{
-	public:
+    class LoggingComponent : public Component
+    {
+    public:
 
-		// Initialization
-		void initialize(GameObject& object);
+        // Initialization
+        void initialize(GameObject& object);
 
-		void update();
+        void update();
 
-		void close();
+        void close();
 
-		// Destructor
-		~LoggingComponent();
+        // Destructor
+        ~LoggingComponent();
 
-	private:
-		// Event Handling
-		void handleEvents();
+    private:
+        // Event Handling
+        void handleEvents();
 
-		// --- Data ---
-		Framework::Logger* m_logger;
-	};
+        // --- Data ---
+        Framework::Logger* m_logger;
+    };
 }

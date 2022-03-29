@@ -4,21 +4,21 @@
 
 namespace Framework
 {
-	struct Point;
+    struct Point;
 }
 
 namespace Jinny
 {
-	class CameraCoreComponent : public CoreComponent
-	{
-	public:
+    class CameraCoreComponent : public CoreComponent
+    {
+    public:
 
-		// Initialize
-		void initialize(GameObject& object);
+        // Initialize
+        void initialize(GameObject& object);
 
 
 
-	private:
+    private:
 
-	};
+    };
 }

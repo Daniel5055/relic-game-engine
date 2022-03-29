@@ -4,12 +4,12 @@
 
 namespace Jinny
 {
-	namespace Pong
-	{
-		class PongGameScene : public Scene
-		{
-		public:
-			void initialize();
-		};
-	}
+    namespace Pong
+    {
+        class PongGameScene : public Scene
+        {
+        public:
+            void initialize();
+        };
+    }
 }

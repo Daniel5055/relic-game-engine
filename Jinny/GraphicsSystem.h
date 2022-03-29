@@ -7,72 +7,53 @@
 #include "MessageBoard.h"
 #include "GraphicsMessage.h"
 
+#include "AssetManager.h"
+
 // Framework Dependencies
 namespace Framework
 {
-	class Graphics;
-	class Graphic;
-	class Window;
+    class Graphics;
+    class Graphic;
+    class Window;
 }
 
 namespace Jinny
 {
-	// Exclusively for GraphicSystem
-	// GraphicSystem can store textures and fonts and assign texures
-	class AssetManager;
+    struct GraphicsMessage;
 
-	struct GraphicsMessage;
+    /**
+     * System relating to graphics.
+     * Uses the asset manager and graphics framework to load and store textures, retrieve textures and assign graphics,
+     * and render the graphics.
+     */
+    class GraphicsSystem : public GameSystem
+    {
+    public:
+        // constructor
+        GraphicsSystem(const Framework::Window& t_window, const Framework::Graphics& t_graphics, MessageBoard<GraphicsMessage>& t_message_board);
 
-	/// <summary>
-	/// Graphics System	
-	/// 
-	/// Dependencies
-	/// - Asset Manager
-	/// - Graphics Framework
-	///
-	/// Purpose
-	/// - Load Textures and store to Asset Manager
-	/// - Retrieve textures and assign to graphic
-	/// - Render Graphic 
-	///
-	/// </summary>
-	class GraphicsSystem : public GameSystem
-	{
-	public:
-		// constructor
-		GraphicsSystem();
+        // Update
+        void update();
 
-		// ---  Main Functions ---
-		// Initialization
-		void initialize(Framework::Window* window, Framework::Graphics* graphics, MessageBoard<GraphicsMessage>* message_board);
+    private:
+        // --- Internal Functions ---
 
-		// Update
-		void update();
+        // Message Handling
+        void handleMessages();
 
-		// Close
-		void close();
+        // --- Framework ---
+        const Framework::Graphics& f_graphics;
+        const Framework::Window& f_window;
 
-		// destructor
-		~GraphicsSystem();
-	private:
+        // --- Data ---
 
-		// --- Internal Functions ---
-		// Message Handling
-		void handleMessages();
+        // Jinny Dependencies
+        AssetManager m_asset_manager;
+        MessageBoard<GraphicsMessage>& m_message_board;
 
-		// --- Framework ---
-		Framework::Graphics* f_graphics;
-		Framework::Window* f_window;
+        // Render list
+        std::vector<Framework::Graphic*> m_graphic_ptrs;
+        std::vector<Framework::Graphic*> m_gui_graphic_ptrs;
 
-		// --- Data ---
-
-		// Jinny Dependencies
-		AssetManager* m_asset_manager;
-		MessageBoard<GraphicsMessage>* m_message_board;
-
-		// Render list
-		std::vector<Framework::Graphic*> m_graphic_ptrs;
-		std::vector<Framework::Graphic*> m_gui_graphic_ptrs;
-
-	};
+    };
 }

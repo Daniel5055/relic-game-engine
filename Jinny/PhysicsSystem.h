@@ -5,6 +5,7 @@
 #include "MessageBoard.h"
 #include "PhysicsMessage.h"
 #include "PhysicsEngine.h"
+#include <memory>
 
 namespace Framework
 {
@@ -13,28 +14,30 @@ namespace Framework
 
 namespace Jinny
 {
+    /**
+     * System for handling physics between objects.
+     */
     class PhysicsSystem : public GameSystem
     {
     public:
         // Constructor
-        PhysicsSystem();
-        // Initialize
-        void intialize(Framework::Physics* physics, MessageBoard<PhysicsMessage>* message_board);
+        PhysicsSystem(PhysicsEngine* t_engine, MessageBoard<PhysicsMessage>& t_message_board);
 
         // Updating
         void update();
 
-        // Closing
-        void close();
     private:
-        void handleMessages();
-
         // --- Internal Functions ---
 
+        // Message handling
+        void handleMessages();
+
+        // --- Data ---
+
         // Message Board
-        MessageBoard<PhysicsMessage>* m_message_board;
+        MessageBoard<PhysicsMessage>& m_message_board;
 
         // Physics Engine
-        PhysicsEngine* m_engine;
+        std::unique_ptr<PhysicsEngine> m_engine_ptr;
     };
 }

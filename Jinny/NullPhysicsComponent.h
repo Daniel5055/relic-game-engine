@@ -4,18 +4,18 @@
 
 namespace Jinny
 {
-	class NullPhysicsComponent : public PhysicsComponent
-	{
-		// Initialization
-		virtual void initialize(GameObject& object)
-		{}
+    class NullPhysicsComponent : public PhysicsComponent
+    {
+        // Initialization
+        virtual void initialize(GameObject& object)
+        {}
 
-		// Updating
-		virtual void update()
-		{}
+        // Updating
+        virtual void update()
+        {}
 
-		// Closing
-		virtual void close()
-		{}
-	};
+        // Closing
+        virtual void close()
+        {}
+    };
 }

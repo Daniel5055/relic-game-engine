@@ -5,33 +5,33 @@
 
 namespace Framework
 {
-	class RigidBody;
-	class RigidBody;
+    class RigidBody;
+    class RigidBody;
 }
 namespace Jinny
 {
-	enum class PMessageType
-	{
-		NULL_MESSAGE = 0,
-		SET_RIGID_BODY,
-	};
+    enum class PMessageType
+    {
+        NULL_MESSAGE = 0,
+        SET_RIGID_BODY,
+    };
 
-	struct PhysicsMessage
-	{
-		PhysicsMessage()
-		{
-			type = PMessageType::NULL_MESSAGE;
-			object_ID = -1;
-		}
+    struct PhysicsMessage
+    {
+        PhysicsMessage()
+        {
+            type = PMessageType::NULL_MESSAGE;
+            object_ID = -1;
+        }
 
-		PMessageType type;
-		int object_ID;
+        PMessageType type;
+        int object_ID;
 
-		// Save memory
-		union
-		{
-			Framework::RigidBody* rigid_body;
-			Framework::Vector vector;
-		};
-	};
+        // Save memory
+        union
+        {
+            Framework::RigidBody* rigid_body;
+            Framework::Vector vector;
+        };
+    };
 }

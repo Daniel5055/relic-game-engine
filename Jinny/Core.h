@@ -2,15 +2,17 @@
 
 namespace Framework
 {
-	class Core
-	{
-	public:
-		// Initialize SDL and its components, returns false if failed
-		bool initialize();
+    /**
+     * Framework class for initialising core SDL components.
+     */
+    class Core
+    {
+    public:
+        // Constructor
+        Core();
 
-		void close();
-
-	};
+        // Destructor
+        ~Core();
+    };
 }
-
 

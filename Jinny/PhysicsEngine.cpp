@@ -1,15 +1,7 @@
 #include "PhysicsEngine.h"
 
-Jinny::PhysicsEngine::PhysicsEngine()
-{
-}
-
-void Jinny::PhysicsEngine::initialise(const Framework::Physics* physics_ptr)
-{
-    f_physics = physics_ptr;
-}
-
-void Jinny::PhysicsEngine::close()
+Jinny::PhysicsEngine::PhysicsEngine(const Framework::Physics& t_physics)
+    :f_physics(t_physics)
 {
 }
 

@@ -5,16 +5,9 @@
 #include "Shape.h"
 #include "GridPhysicsEngine.h"
 
-Jinny::PhysicsSystem::PhysicsSystem()
+Jinny::PhysicsSystem::PhysicsSystem(PhysicsEngine* t_engine_ptr, MessageBoard<PhysicsMessage>& t_message_board)
+    :m_engine_ptr(t_engine_ptr), m_message_board(t_message_board)
 {
-    m_engine = new GridPhysicsEngine();
-}
-
-void Jinny::PhysicsSystem::intialize(Framework::Physics* physics, MessageBoard<PhysicsMessage>* message_board)
-{
-    m_message_board = message_board;
-
-    m_engine->initialise(physics);
 }
 
 void Jinny::PhysicsSystem::update()
@@ -23,12 +16,7 @@ void Jinny::PhysicsSystem::update()
     handleMessages();
 
     // Update physics engine
-    m_engine->update();
-}
-
-void Jinny::PhysicsSystem::close()
-{
-    m_engine->close();
+    m_engine_ptr->update();
 }
 
 void Jinny::PhysicsSystem::handleMessages()
@@ -36,15 +24,15 @@ void Jinny::PhysicsSystem::handleMessages()
     // NOTE: for simplicity, physics based objects cannot be gui objects 
 
     // Pop all messages from message board
-    int size = m_message_board->getQueueSize();
+    int size = m_message_board.getQueueSize();
     for (int it = 0; it < size; it++)
     {
-        PhysicsMessage msg = m_message_board->popMessage();
+        PhysicsMessage msg = m_message_board.popMessage();
 
         switch (msg.type)
         {
         case PMessageType::SET_RIGID_BODY:
-            m_engine->addRigidBody(msg.object_ID, msg.rigid_body);
+            m_engine_ptr->addRigidBody(msg.object_ID, msg.rigid_body);
             break;
         }
     }

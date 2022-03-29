@@ -1,23 +1,13 @@
 #include "Physics.h"
 
 #include "RigidBody.h"
-#include "MaterialManager.h"
 
 #include <cmath>
 
 
 Framework::Physics::Physics(double time_step, double ppm)
-    :TIME_STEP(time_step), PIXELS_PER_METER(ppm)
+    :TIME_STEP(time_step), PIXELS_PER_METER(ppm), m_material_manager()
 {
-    m_material_manager = nullptr;
-    m_material_manager = new MaterialManager();
-    m_material_manager->initialize();
-}
-
-Framework::Physics::~Physics()
-{
-    delete m_material_manager;
-    m_material_manager = nullptr;
 }
 
 double Framework::Physics::getTimeStep() const
@@ -429,16 +419,16 @@ double Framework::Physics::calculateStaticCollisionForces(double axis_velocity, 
 
 double Framework::Physics::getCoefficientOfRestitution(RigidBody* rigid_body_1, RigidBody* rigid_body_2) const
 {
-    return m_material_manager->getCoefficientOfRestitution(rigid_body_1->getMaterial(), rigid_body_2->getMaterial());
+    return m_material_manager.getCoefficientOfRestitution(rigid_body_1->getMaterial(), rigid_body_2->getMaterial());
 }
 
 
 double Framework::Physics::getStaticFrictionCoefficient(RigidBody* rigid_body_1, RigidBody* rigid_body_2) const
 {
-    return m_material_manager->getStaticFrictionCoefficient(rigid_body_1->getMaterial(), rigid_body_2->getMaterial());
+    return m_material_manager.getStaticFrictionCoefficient(rigid_body_1->getMaterial(), rigid_body_2->getMaterial());
 }
 
 double Framework::Physics::getDynamicFrictionCoefficient(RigidBody* rigid_body_1, RigidBody* rigid_body_2) const
 {
-    return m_material_manager->getDynamicFrictionCoefficient(rigid_body_1->getMaterial(), rigid_body_2->getMaterial());
+    return m_material_manager.getDynamicFrictionCoefficient(rigid_body_1->getMaterial(), rigid_body_2->getMaterial());
 }
