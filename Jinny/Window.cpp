@@ -6,11 +6,11 @@
 #include <SDL.h>
 #include <assert.h>
 
-Framework::Window::Window(std::string t_name, int t_width, int t_height, bool t_show)
-    : m_null_camera(0, 0, t_width, t_height), m_camera(m_null_camera)
+framework::Window::Window(const std::string name, const int width, const int height, const bool show)
+    : m_null_camera(0, 0, width, height), m_camera(m_null_camera)
 {
     SDL_WindowFlags flag;
-    if (t_show)
+    if (show)
     {
         flag = SDL_WINDOW_SHOWN;
     }
@@ -19,16 +19,16 @@ Framework::Window::Window(std::string t_name, int t_width, int t_height, bool t_
         flag = SDL_WINDOW_HIDDEN;
     }
 
-    m_window_ptr = SDL_CreateWindow(t_name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, t_width, t_height, flag);
+    m_window_ptr = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flag);
     assert(m_window_ptr != nullptr);
 }
 
-Framework::Window::~Window()
+framework::Window::~Window()
 {
     SDL_DestroyWindow(m_window_ptr);
 }
 
-unsigned int Framework::Window::getWindowWidth() const
+unsigned int framework::Window::getWindowWidth() const
 {
     int width;
     int height;
@@ -36,26 +36,25 @@ unsigned int Framework::Window::getWindowWidth() const
     return width;
 }
 
-unsigned int Framework::Window::getWindowHeight() const
+unsigned int framework::Window::getWindowHeight() const
 {
     int width;
     int height;
     SDL_GetWindowSize(m_window_ptr, &width, &height);
     return height;
-    return 0;
 }
 
-void Framework::Window::setCamera(Shape camera)
+void framework::Window::setCamera(const Shape camera)
 {
     m_camera = camera;
 }
 
-Framework::Shape Framework::Window::getCamera() const
+framework::Shape framework::Window::getCamera() const
 {
     return m_camera;
 }
 
-Framework::Point Framework::Window::getStaticMousePosition() const
+framework::Point framework::Window::getStaticMousePosition() const
 {
     Point point;
     SDL_GetMouseState(&point.x, &point.y);
@@ -63,7 +62,7 @@ Framework::Point Framework::Window::getStaticMousePosition() const
     return point;
 }
 
-Framework::Point Framework::Window::getCameraMousePosition() const
+framework::Point framework::Window::getCameraMousePosition() const
 {
     // For now, return x, y + mouse position
     // Does not account for zoom

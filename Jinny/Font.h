@@ -3,7 +3,7 @@
 // SDL Dependencies
 #include <SDL_ttf.h>
 
-namespace Framework
+namespace framework
 {
     class Font
     {

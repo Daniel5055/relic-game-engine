@@ -1,16 +1,16 @@
 #pragma once
 
-namespace Framework
+namespace framework
 {
     // Materials
     enum class Material
     {
-        NULLIUM = 0,
-        METAL,
-        BRICK,
-        WOOD,
-        ICE,
-        TRAMPOLINE,
-        ENTITY,
+        nullium = 0,
+        metal,
+        brick,
+        wood,
+        ice,
+        trampoline,
+        entity,
     };
 }

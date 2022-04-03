@@ -2,17 +2,22 @@
 
 #include <iostream>
 
-Framework::Logger::Logger(std::string t_location)
-    :m_location(t_location)
+framework::Logger::Logger(const std::string location)
+    :m_location(location)
 {
 }
 
-void Framework::Logger::log(std::string text) const
+void framework::Logger::log(const std::string text) const
 {
     std::cout << m_location << ": " << text << std::endl;
 }
 
-void Framework::Logger::logError(std::string text) const
+void framework::Logger::logError(const std::string text) const
 {
     std::cout << m_location << " Error : " << text << std::endl;
+}
+
+void framework::Logger::setLocation(const std::string location)
+{
+    m_location = location;
 }

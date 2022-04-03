@@ -4,22 +4,19 @@
 
 #include "InputComponent.h"
 
-namespace Jinny
+namespace jinny
 {
+    /**
+     * \brief Component that subscribes to wasd keys
+     */
     class PlayerInputComponent : public InputComponent
     {
     public:
-        // Initialize
-        void initialize(GameObject& object);
-
-        // Updating
-        void update();
-
-
+        PlayerInputComponent();
     private:
-        void handleMessages();
+        void doUpdates() override;
+        void handleMessage(InputMessage msg) override;
 
         std::map<char, bool> m_keys_down;
     };
-
 }

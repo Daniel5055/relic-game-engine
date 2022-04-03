@@ -4,31 +4,24 @@
 
 #include "Vector.h"
 #include "Material.h"
-namespace Framework
-{
-    class RigidBody;
-    class RigidBody;
-}
+#include "RigidBody.h"
 
-namespace Jinny
+namespace jinny
 {
+    //TODO: Make rigidbodies inherit from abstract rigid body class
+    /**
+     * \brief Component that represents a dynamic rigidBody
+     */
     class DynamicRigidBodyPhysicsComponent : public PhysicsComponent
     {
     public:
         // Constructor
-        DynamicRigidBodyPhysicsComponent(double mass, double max_x_speed, double max_y_speed, Framework::Material material = Framework::Material::NULLIUM, Framework::Vector applied_force = { 0, 0 });
-
-        // Initialize
-        void initialize(GameObject& object);
-
-        // Update
-        void update();
-
-        // Destructor
-        ~DynamicRigidBodyPhysicsComponent();
-
+        DynamicRigidBodyPhysicsComponent(double mass, double max_x_speed, double max_y_speed, framework::Shape shape, 
+            framework::Material material = framework::Material::nullium, framework::Vector applied_force = { 0, 0 });
     private:
-        // --- data
-        Framework::RigidBody* m_rigid_body;
+        void doUpdates() override;
+        // --- data ---
+        framework::RigidBody m_rigid_body;
+        framework::Point m_last_position;
     };
 }

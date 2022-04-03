@@ -1,7 +1,7 @@
 #pragma once
 #include "Graphics.h"
 
-namespace Framework
+namespace framework
 {
     // Graphics Framework which does nothing, to disable graphics
     class NullGraphics : public Graphics

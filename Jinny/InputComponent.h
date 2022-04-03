@@ -2,64 +2,46 @@
 
 
 #include "Component.h"
-
+#include "MessageReceiver.h"
+#include "LazyMessageSender.h"
 #include "InputMessage.h"
-#include "MessageBoard.h"
 
-namespace Jinny
+namespace jinny
 {
     /**
-     * Parent class of all input components.
+     * \brief Base abstract class for components relating to input
      */
-    class InputComponent : public Component
+    class InputComponent
+        : public Component
+        , public MessageReceiver<InputMessage>
+        , public LazyMessageSender<InputMessage>
     {
     public:
+        // Prevent ambiguity 
+        using LazyMessageSender<InputMessage>::addReceiver;
+        using LazyMessageSender<InputMessage>::sendMessage;
+        using MessageReceiver<InputMessage>::pushMessage;
 
-        // --- pure virtual functions ---
+        ~InputComponent() override = default;
 
-        // Initialization
-        virtual void initialize(GameObject& object);
 
-        // Updating
-        virtual void update();
-
-        // Closing
-        virtual void close();
-
-        // --- functions ---
-
-        // For Object to relay message to input
-        void recieveMessage(InputMessage i_msg);
-
-        // To set messageBoard
-        static void setMessageBoard(MessageBoard<InputMessage>* message_board);
-
-    protected:
-        // --- inherited functions ---
-
-        // Pops Message from queue
-        InputMessage popMessage();
-
-        // --- inherited virtual functions ---
-
-        // Event Handling
-        virtual void handleEvents();
-
-        // Message Handling
-        virtual void handleMessages();
-
-        // Message Pushing
-        void pushMessage(InputMessage i_msg);
     private:
+        void handleMessage(InputMessage msg) override {}
 
-        // --- Data ---
+        // Define as input component
+        Message::Type defineMessageType() final { return Message::Type::input; }
 
-        // Message Queue
-        std::queue<InputMessage> m_message_queue;
-
-        // Access to message board
-        static MessageBoard<InputMessage>* m_message_board;
+        // Prep initial messages within queue 
+        void prepareMessage(InputMessage& msg) override;
     };
+
+    inline void InputComponent::prepareMessage(InputMessage& msg)
+    {
+        if (msg.object_id == k_unset_id)
+        {
+            msg.object_id = getObjectId();
+        }
+    }
 }
 
 

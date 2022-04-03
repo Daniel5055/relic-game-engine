@@ -5,16 +5,14 @@
 #include <utility>
 
 #include "GameSystem.h"
-
-#include "MessageBoard.h"
+#include "MessageReceiver.h"
+#include "MessageSender.h"
 #include "InputMessage.h"
-
-
 
 // Framework Dependencies
 #include "Shape.h"
 
-namespace Framework
+namespace framework
 {
     class Input;
     enum class MouseEvent;
@@ -22,38 +20,36 @@ namespace Framework
     class Window;
 }
 
-namespace Jinny
+namespace jinny
 {
-    class InputSystem : public GameSystem
+    /**
+     * \brief System responsible for handling inputs and subscribing objects to inputs
+     */
+    class InputSystem final : 
+        public GameSystem,
+        public MessageReceiver<InputMessage>,
+        public MessageSender<InputMessage>
     {
     public:
-        typedef std::pair<int, Framework::Shape*> InputData;
+        typedef std::pair<int, framework::Shape*> input_data;
 
         // Constructor
-        InputSystem(const Framework::Window& t_window, const Framework::Input& t_input, MessageBoard<InputMessage>& t_message_board);
-
-        // Update
-        void update();
-
+        InputSystem(const framework::Window& window, const framework::Input& input);
     private:
-        // Virtual Overides for update function
-        void handleMessages();
+
+        void doUpdates() override;
+        void handleMessage(InputMessage msg) override;
 
         // --- Framework ---
-        const Framework::Input& f_input;
-        const Framework::Window& f_window;
+        const framework::Input& f_input;
+        const framework::Window& f_window;
 
         // --- Data ---
 
-        // Message Board
-        MessageBoard<InputMessage>& m_message_board;
-
         // Input Subscriptions
-        std::map<Framework::MouseEvent, std::vector<InputData>> m_mouse_button_subscriptions;
-
-        std::map<InputData, bool> m_mouse_over_subscribtions;
-
-        std::map<char, std::vector<int>> m_key_supscriptions;
+        std::map<framework::MouseEvent, std::vector<input_data>> m_mouse_button_subscriptions;
+        std::map<input_data, bool> m_mouse_over_subscriptions;
+        std::map<char, std::vector<int>> m_key_subscription;
     };
 }
 

@@ -1,19 +1,13 @@
 #include "CameraCoreComponent.h"
 
 #include "Shape.h"
-#include "Point.h"
 
-void Jinny::CameraCoreComponent::initialize(GameObject& object)
+jinny::CameraCoreComponent::CameraCoreComponent(framework::Shape* new_camera_shape)
 {
-    setObject(&object);
-
-    auto event_ptr = object.getQueueIterator();
-
+    // Sends a message to the game to change the camera
     GameMessage msg;
-    msg.type = GameMessageType::SET_CAMERA;
-    msg.shape_ptr = event_ptr->shape;
+    msg.type = GameMessageType::set_camera;
+    msg.shape_ptr = new_camera_shape;
 
-    pushMessage(msg);
-
-
+    sendMessage(msg);
 }

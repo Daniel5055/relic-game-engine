@@ -2,59 +2,41 @@
 
 #include "Logger.h"
 
-
-#include <string>
-
-
-void Jinny::LoggingComponent::initialize(GameObject& object)
+jinny::LoggingComponent::LoggingComponent()
+    :m_logger("Object")
 {
-    // Set Object
-    setObject(&object);
-
-    m_logger = new Framework::Logger(object.getObjectName());
-    m_logger->log("Initialized");
+    m_logger.log("Initialised");
 }
 
-void Jinny::LoggingComponent::update()
+jinny::LoggingComponent::~LoggingComponent()
 {
-    handleEvents();
+    m_logger.log("Destructed");
 }
 
-void Jinny::LoggingComponent::close()
+void jinny::LoggingComponent::handleEvent(const ObjectEvent msg)
 {
-}
-
-Jinny::LoggingComponent::~LoggingComponent()
-{
-    delete m_logger;
-    m_logger = nullptr;
-}
-
-void Jinny::LoggingComponent::handleEvents()
-{
-    for (auto it = getObject()->getQueueIterator(); it != getObject()->getQueueEnd(); it++)
+    // Todo: Room for improvement
+    switch (msg.type)
     {
-        switch (it->type)
+    case ObjectEvent::Type::input_triggered:
+        switch (msg.input.type)
         {
-        case EventType::INPUT_TRIGGERED:
-            switch (it->input.type)
-            {
-            case ObjectInputType::LEFT_MOUSE_DOWN:
-                m_logger->log("Left Mouse Button Down Input");
-                break;
+        case ObjectInputType::left_mouse_down:
+            m_logger.log("Left Mouse Button Down Input");
+            break;
 
-            case ObjectInputType::LEFT_MOUSE_UP:
-                m_logger->log("Left Mouse Button UP Input");
-                break;
-            case ObjectInputType::KEY_DOWN:
-                m_logger->log(std::string(1, it->input.key) + " pressed down");
-                break;
-            case ObjectInputType::KEY_UP:
-                m_logger->log(std::string(1, it->input.key) + " pressed up");
-                break;
-            }
-
+        case ObjectInputType::left_mouse_up:
+            m_logger.log("Left Mouse Button UP Input");
+            break;
+        case ObjectInputType::key_down:
+            m_logger.log(std::string(1, msg.input.key) + " pressed down");
+            break;
+        case ObjectInputType::key_up:
+            m_logger.log(std::string(1, msg.input.key) + " pressed up");
+            break;
         }
-
+    case ObjectEvent::Type::component_incorporated:
+        m_logger.setLocation(getObjectName());
+        break;
     }
 }

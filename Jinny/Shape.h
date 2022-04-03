@@ -4,7 +4,7 @@
 
 // SDL Dependencies
 struct SDL_Rect;
-namespace Framework
+namespace framework
 {
     struct Point;
 

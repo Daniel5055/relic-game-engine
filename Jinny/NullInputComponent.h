@@ -2,20 +2,10 @@
 
 #include "InputComponent.h"
 
-namespace Jinny
+namespace jinny
 {
-    class NullInputComponent : public InputComponent
+    // Useless?
+    class NullInputComponent final : public InputComponent
     {
-        // Initialization
-        virtual void initialize(GameObject& object)
-        {}
-
-        // Updating
-        virtual void update()
-        {}
-
-        // Closing
-        virtual void close()
-        {}
     };
 }

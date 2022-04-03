@@ -1,79 +1,41 @@
 #pragma once
 
 #include "Component.h"
+#include "LazyMessageSender.h"
 #include "GraphicsMessage.h"
-#include "MessageBoard.h"
 
 // Framework Dependencies
 #include "Graphic.h"
 
 
-namespace Jinny
+namespace jinny
 {
-
-    class GraphicsComponent : public Component
+    /**
+     * \brief Base abstract class for components relating to graphics
+     */
+    class GraphicsComponent : 
+        public Component,
+        public LazyMessageSender<GraphicsMessage>
     {
     public:
-        // Constructor
-        GraphicsComponent();
+        // Prevent ambiguity
+        using LazyMessageSender<GraphicsMessage>::addReceiver;
+        using LazyMessageSender<GraphicsMessage>::sendMessage;
 
-        // --- pure virtual functions ---
-        // Initialization
-        virtual void initialize(GameObject& object);
-
-        // Updating
-        virtual void update();
-
-        // Closing
-        virtual void close();
-
-        // Destructor
-        ~GraphicsComponent();
-
-        // --- functions ---
-
-        // Functions to be used by object
-        void recieveMessage(GraphicsMessage g_msg);
-
-        // To set messageBoard
-        static void setMessageBoard(MessageBoard<GraphicsMessage>* message_board);
-
-        // For Animation
-        void setClipPtr(Framework::Shape* clip);
-        Framework::Graphic* getGraphic();
-
+        // Accessors
+        void setClipPtr(const framework::Shape* clip);
+        framework::Graphic& getGraphic();
     protected:
-        // --- inherited functions ---
-
         // Graphic Accessor
-        void setGraphic(Framework::Graphic* graphic_ptr);
-
-        // --- inherited virtual functions ---
-
-        // Event Handling
-        virtual void handleEvents();
-
-        // Message Handling
-        virtual void handleMessages();
-
-        // Message Pushing
-        void pushMessage(GraphicsMessage g_msg);
-
-        // Message Popping
-        GraphicsMessage popMessage();
-
-
+        void setGraphic(framework::Graphic* graphic_ptr);
     private:
+        // Defining as graphics type 
+        Message::Type defineMessageType() final { return Message::Type::graphics; }
 
-        // --- Data ---
+        // Defining message prepping
+        void prepareMessage(GraphicsMessage& msg) override;
 
-        // Message Queue
-        std::queue<GraphicsMessage> m_message_queue;
-
-        // Graphicis Data
-        Framework::Graphic* m_graphic_ptr;
-
-        // Access to message board
-        static MessageBoard<GraphicsMessage>* m_message_board;
+        // Graphic Data
+        std::unique_ptr<framework::Graphic> m_graphic_ptr;
     };
 }

@@ -2,28 +2,27 @@
 
 #include "InputComponent.h"
 
-namespace Jinny
+#include "Shape.h"
+
+namespace jinny
 {
+    
+    /**
+     * \brief Component that subscribes to left mouse button pressing and hovering
+     */
     class MouseInputComponent : public InputComponent
     {
     public:
-        MouseInputComponent();
-
-        // Initialization
-        void initialize(GameObject& object);
-
-        // Updating
-        void update();
-
-        // Closing
-        void close();
+        explicit MouseInputComponent(framework::Shape mouse_area);
 
     private:
-        // Message Handling from input
-        virtual void handleMessages();
+        void handleMessage(InputMessage msg) override;
+        void handleEvent(ObjectEvent e) override;
+        void doUpdates() override;
 
-        // --- Data ---
-        bool m_mouse_button_down;
+        bool m_mouse_button_down{false};
+
+        framework::Shape m_mouse_area;
     };
 
 

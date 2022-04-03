@@ -1,85 +1,24 @@
 #include "GraphicsComponent.h"
 
-#include "GraphicsMessage.h"
-
-Jinny::MessageBoard<Jinny::GraphicsMessage>* Jinny::GraphicsComponent::m_message_board = nullptr;
-
-Jinny::GraphicsComponent::GraphicsComponent()
+void jinny::GraphicsComponent::setClipPtr(const framework::Shape* clip)
 {
-    m_graphic_ptr = nullptr;
+    m_graphic_ptr->setClip(*clip);
 }
 
-void Jinny::GraphicsComponent::initialize(GameObject& object)
+void jinny::GraphicsComponent::setGraphic(framework::Graphic* graphic_ptr)
 {
+    m_graphic_ptr = std::unique_ptr<framework::Graphic>(graphic_ptr);
 }
 
-void Jinny::GraphicsComponent::update()
+void jinny::GraphicsComponent::prepareMessage(GraphicsMessage& msg)
 {
-}
-
-void Jinny::GraphicsComponent::close()
-{
-
-}
-
-Jinny::GraphicsComponent::~GraphicsComponent()
-{
-    delete m_graphic_ptr;
-    m_graphic_ptr = nullptr;
-}
-
-void Jinny::GraphicsComponent::recieveMessage(GraphicsMessage g_msg)
-{
-    m_message_queue.push(g_msg);
-}
-
-void Jinny::GraphicsComponent::setMessageBoard(MessageBoard<GraphicsMessage>* message_board)
-{
-    m_message_board = message_board;
-}
-
-void Jinny::GraphicsComponent::setClipPtr(Framework::Shape* clip)
-{
-    m_graphic_ptr->setClip(clip);
-}
-
-Jinny::GraphicsMessage Jinny::GraphicsComponent::popMessage()
-{
-    GraphicsMessage msg;
-
-    if (m_message_queue.size() > 0)
+    if (msg.object_id == k_unset_id)
     {
-        msg = m_message_queue.front();
-        m_message_queue.pop();
-
+        msg.object_id = getObjectId();
     }
-    else
-    {
-        msg.type = GMessageType::NULL_MESSAGE;
-    }
-
-    return msg;
 }
 
-Framework::Graphic* Jinny::GraphicsComponent::getGraphic()
+framework::Graphic& jinny::GraphicsComponent::getGraphic()
 {
-    return m_graphic_ptr;
-}
-
-void Jinny::GraphicsComponent::setGraphic(Framework::Graphic* graphic_ptr)
-{
-    m_graphic_ptr = graphic_ptr;
-}
-
-void Jinny::GraphicsComponent::handleEvents()
-{
-}
-
-void Jinny::GraphicsComponent::handleMessages()
-{
-}
-
-void Jinny::GraphicsComponent::pushMessage(GraphicsMessage g_msg)
-{
-    m_message_board->pushMessage(g_msg);
+    return *m_graphic_ptr;
 }

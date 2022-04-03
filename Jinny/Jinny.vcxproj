@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -89,6 +89,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\dbrat\Documents\Coding\Libraries\SDL2\SDL2-2.0.12\include;C:\Users\dbrat\Documents\Coding\Libraries\SDL2\SDL2_image-2.0.5\include;C:\Users\dbrat\Documents\Coding\Libraries\SDL2\SDL2_ttf-2.0.15\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -146,16 +147,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AnimationComponent.cpp" />
+    <ClCompile Include="AssetLoaderGraphicsComponent.cpp" />
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="ButtonAnimationComponent.cpp" />
     <ClCompile Include="CameraCoreComponent.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Core.cpp" />
-    <ClCompile Include="CoreComponent.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="DynamicRigidBodyPhysicsComponent.cpp" />
-    <ClCompile Include="EventChangeCoreComponent.cpp" />
+    <ClCompile Include="SceneChangeCoreComponent.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="Graphics.cpp" />
@@ -163,20 +164,15 @@
     <ClCompile Include="GridPhysicsEngine.cpp" />
     <ClCompile Include="ImageGraphicsComponent.cpp" />
     <ClCompile Include="Input.cpp" />
-    <ClCompile Include="InputComponent.cpp" />
     <ClCompile Include="LoggedGraphics.cpp" />
     <ClCompile Include="Logger.cpp" />
-    <ClCompile Include="GameSystem.cpp" />
     <ClCompile Include="GraphicsSystem.cpp" />
     <ClCompile Include="InputSystem.cpp" />
     <ClCompile Include="LoggingComponent.cpp" />
     <ClCompile Include="MaterialManager.cpp" />
     <ClCompile Include="MouseInputComponent.cpp" />
     <ClCompile Include="NullGraphics.cpp" />
-    <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="ObjectEvent.cpp" />
     <ClCompile Include="Physics.cpp" />
-    <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="PhysicsEngine.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
@@ -204,10 +200,12 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="CoreComponent.h" />
+    <ClInclude Include="Deliverable.h" />
     <ClInclude Include="GameMessage.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="DynamicRigidBodyPhysicsComponent.h" />
-    <ClInclude Include="EventChangeCoreComponent.h" />
+    <ClInclude Include="LazyMessageSender.h" />
+    <ClInclude Include="SceneChangeCoreComponent.h" />
     <ClInclude Include="FileLoader.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="Graphics.h" />
@@ -221,17 +219,19 @@
     <ClInclude Include="LoggingComponent.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MaterialManager.h" />
-    <ClInclude Include="MessageBoard.h" />
+    <ClInclude Include="Message.h" />
     <ClInclude Include="InputComponent.h" />
     <ClInclude Include="LoggedGraphics.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="GameSystem.h" />
     <ClInclude Include="GraphicsSystem.h" />
     <ClInclude Include="InputSystem.h" />
+    <ClInclude Include="MessageReceiver.h" />
+    <ClInclude Include="MessageSender.h" />
     <ClInclude Include="MouseInputComponent.h" />
+    <ClInclude Include="MultiMessageReceiver.h" />
     <ClInclude Include="NullCoreComponent.h" />
     <ClInclude Include="NullGraphics.h" />
-    <ClInclude Include="GameObject.h" />
     <ClInclude Include="NullGraphicsComponent.h" />
     <ClInclude Include="NullInputComponent.h" />
     <ClInclude Include="NullPhysicsComponent.h" />

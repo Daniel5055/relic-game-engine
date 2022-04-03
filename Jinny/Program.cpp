@@ -9,7 +9,7 @@
 int main(int argc, char* args[])
 {
     // Initialisation of game
-    Jinny::Game game{ new Jinny::StartScene() };
+    jinny::Game game{ new jinny::StartScene() };
 
     // Game loop
     while (!(game.isGameOver()))

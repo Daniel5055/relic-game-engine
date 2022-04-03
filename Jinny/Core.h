@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Framework
+namespace framework
 {
     /**
      * Framework class for initialising core SDL components.

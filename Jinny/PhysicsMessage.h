@@ -1,37 +1,36 @@
 #pragma once
 
+#include "Message.h"
 #include "Vector.h"
-#include "Point.h"
 
-namespace Framework
+#include "Message.h"
+
+namespace framework
 {
     class RigidBody;
-    class RigidBody;
 }
-namespace Jinny
+namespace jinny
 {
     enum class PMessageType
     {
-        NULL_MESSAGE = 0,
-        SET_RIGID_BODY,
+        null_message = 0,
+        set_rigid_body,
     };
 
-    struct PhysicsMessage
+    /**
+     * \brief Messages to be sent by physics systems and components
+     */
+    struct PhysicsMessage : Message
     {
-        PhysicsMessage()
-        {
-            type = PMessageType::NULL_MESSAGE;
-            object_ID = -1;
-        }
+        PhysicsMessage() : Message(Type::physics) {}
 
-        PMessageType type;
-        int object_ID;
+        PMessageType type{ PMessageType::null_message };
 
         // Save memory
         union
         {
-            Framework::RigidBody* rigid_body;
-            Framework::Vector vector;
+            framework::RigidBody* rigid_body{nullptr};
+            framework::Vector vector;
         };
     };
 }

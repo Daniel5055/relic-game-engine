@@ -5,34 +5,34 @@
 #include <cmath>
 
 
-Framework::Physics::Physics(double time_step, double ppm)
-    :TIME_STEP(time_step), PIXELS_PER_METER(ppm), m_material_manager()
+framework::Physics::Physics(double time_step, double ppm)
+    :m_time_step(time_step), m_pixels_per_meter(ppm), m_material_manager()
 {
 }
 
-double Framework::Physics::getTimeStep() const
+double framework::Physics::getTimeStep() const
 {
-    return TIME_STEP;
+    return m_time_step;
 }
 
-double Framework::Physics::getPPM() const
+double framework::Physics::getPPM() const
 {
-    return PIXELS_PER_METER;
+    return m_pixels_per_meter;
 }
 
-double Framework::Physics::getDisplacementAtTime(double time, double axis_velocity, double axis_acceleration) const
+double framework::Physics::getDisplacementAtTime(double time, double axis_velocity, double axis_acceleration) const
 {
     // Classic s = ut + 0.5at^2
-    return (axis_velocity * time + 0.5 * axis_acceleration * pow(time, 2)) * PIXELS_PER_METER;
+    return (axis_velocity * time + 0.5 * axis_acceleration * pow(time, 2)) * m_pixels_per_meter;
 }
 
-Framework::Vector Framework::Physics::getDisplacementAtTime(double time, Vector velocity, Vector acceleration) const
+framework::Vector framework::Physics::getDisplacementAtTime(double time, Vector velocity, Vector acceleration) const
 {
     // Classic s = ut + 0.5at^2, but in vector form
-    return ((velocity * time) + (acceleration * (0.5 * pow(time, 2)))) * PIXELS_PER_METER;
+    return ((velocity * time) + (acceleration * (0.5 * pow(time, 2)))) * m_pixels_per_meter;
 }
 
-double Framework::Physics::getCollisionTime(double distance, double velocity_1, double velocity_2, double acceleration_1, double acceleration_2, double max_time) const
+double framework::Physics::getCollisionTime(double distance, double velocity_1, double velocity_2, double acceleration_1, double acceleration_2, double max_time) const
 {
     // variable useful for some stuff here
     double time = -1;
@@ -41,7 +41,7 @@ double Framework::Physics::getCollisionTime(double distance, double velocity_1, 
     if ((acceleration_1 == acceleration_2))
     {
         // Physics formula for time which two colliding objects will hit using suvat and two objects
-        time = (distance / PIXELS_PER_METER) / (velocity_1 - velocity_2);
+        time = (distance / m_pixels_per_meter) / (velocity_1 - velocity_2);
 
         if (time > 0)
         {
@@ -51,7 +51,7 @@ double Framework::Physics::getCollisionTime(double distance, double velocity_1, 
                 if (acceleration_1 != 0)
                 {
                     // Then redo calculations with max_time
-                    double max_distance = double(velocity_2 * max_time + 0.5 * acceleration_2 * pow(max_time, 2) + distance / PIXELS_PER_METER);
+                    double max_distance = double(velocity_2 * max_time + 0.5 * acceleration_2 * pow(max_time, 2) + distance / m_pixels_per_meter);
 
                     double discriminant = pow(velocity_1, 2) + 2 * (max_distance) * (acceleration_1);
 
@@ -92,7 +92,7 @@ double Framework::Physics::getCollisionTime(double distance, double velocity_1, 
                 else
                 {
                     // what?
-                    return ((distance / PIXELS_PER_METER + velocity_2 * max_time) / (velocity_1));
+                    return ((distance / m_pixels_per_meter + velocity_2 * max_time) / (velocity_1));
                 }
 
             }
@@ -120,7 +120,7 @@ double Framework::Physics::getCollisionTime(double distance, double velocity_1, 
             if (acceleration_1 != 0)
             {
                 // Then redo calculations with max_time
-                double max_distance = double(velocity_2 * max_time + 0.5 * acceleration_2 * pow(max_time, 2) + distance / PIXELS_PER_METER);
+                double max_distance = double(velocity_2 * max_time + 0.5 * acceleration_2 * pow(max_time, 2) + distance / m_pixels_per_meter);
 
                 double discriminant = pow(velocity_1, 2) + 2 * (max_distance) * (acceleration_1);
 
@@ -155,7 +155,7 @@ double Framework::Physics::getCollisionTime(double distance, double velocity_1, 
             }
             else
             {
-                return ((distance / PIXELS_PER_METER + velocity_2 * max_time) / (velocity_1));
+                return ((distance / m_pixels_per_meter + velocity_2 * max_time) / (velocity_1));
             }
         }
 
@@ -221,12 +221,12 @@ double Framework::Physics::getCollisionTime(double distance, double velocity_1, 
 
     // Advanced suvat equation using quadratic formula
 
-    double discriminant = pow(velocity_1 - velocity_2, 2) + 2 * (distance / PIXELS_PER_METER) * (acceleration_1 - acceleration_2);
+    double discriminant = pow(velocity_1 - velocity_2, 2) + 2 * (distance / m_pixels_per_meter) * (acceleration_1 - acceleration_2);
 
     if (discriminant < 0)
     {
         double max_distance = double(velocity_2 * max_time + 0.5 * acceleration_2 * pow(max_time, 2));
-        discriminant = pow(velocity_1, 2) + 2 * (distance / PIXELS_PER_METER + max_distance) * acceleration_1;
+        discriminant = pow(velocity_1, 2) + 2 * (distance / m_pixels_per_meter + max_distance) * acceleration_1;
 
         if (discriminant < 0)
         {
@@ -271,7 +271,7 @@ double Framework::Physics::getCollisionTime(double distance, double velocity_1, 
             if (time > max_time)
             {
                 double max_distance = double(velocity_2 * max_time + 0.5 * acceleration_2 * pow(max_time, 2));
-                discriminant = pow(velocity_1, 2) + 2 * (distance / PIXELS_PER_METER + max_distance) * acceleration_1;
+                discriminant = pow(velocity_1, 2) + 2 * (distance / m_pixels_per_meter + max_distance) * acceleration_1;
 
                 // Is this check neccessary? AAAAAAAAAAAAAAAAAAAA
                 if (discriminant < 0)
@@ -311,7 +311,7 @@ double Framework::Physics::getCollisionTime(double distance, double velocity_1, 
         if (time > max_time)
         {
             double max_distance = double(velocity_2 * max_time + 0.5 * acceleration_2 * pow(max_time, 2));
-            discriminant = pow(velocity_1, 2) + 2 * (distance / PIXELS_PER_METER + max_distance) * acceleration_1;
+            discriminant = pow(velocity_1, 2) + 2 * (distance / m_pixels_per_meter + max_distance) * acceleration_1;
 
             // Is this check neccessary? AAAAAAAAAAAAAAAAAAAA
             if (discriminant < 0)
@@ -353,7 +353,7 @@ double Framework::Physics::getCollisionTime(double distance, double velocity_1, 
         if (time > max_time)
         {
             double max_distance = double(velocity_2 * max_time + 0.5 * acceleration_2 * pow(max_time, 2));
-            discriminant = pow(velocity_1, 2) + 2 * (distance / PIXELS_PER_METER + max_distance) * acceleration_1;
+            discriminant = pow(velocity_1, 2) + 2 * (distance / m_pixels_per_meter + max_distance) * acceleration_1;
 
             // Is this check neccessary? AAAAAAAAAAAAAAAAAAAA
             if (discriminant < 0)
@@ -391,7 +391,7 @@ double Framework::Physics::getCollisionTime(double distance, double velocity_1, 
     // With regards to checking, I am not sure how many of the possibilities I have created are possible
 }
 
-std::pair<double, double> Framework::Physics::calculateDynamicCollisionForces(double a_velocity, double a_mass, double t_velocity, double t_mass, double coeff_restitution, double time_left) const
+std::pair<double, double> framework::Physics::calculateDynamicCollisionForces(double a_velocity, double a_mass, double t_velocity, double t_mass, double coeff_restitution, double time_left) const
 {
     std::pair<double, double> out;
 
@@ -406,7 +406,7 @@ std::pair<double, double> Framework::Physics::calculateDynamicCollisionForces(do
     return out;
 }
 
-double Framework::Physics::calculateStaticCollisionForces(double axis_velocity, double axis_force, double mass, double coeff_restitution, double time_left) const
+double framework::Physics::calculateStaticCollisionForces(double axis_velocity, double axis_force, double mass, double coeff_restitution, double time_left) const
 {
     // To stop infinite bouncing (but also let them go naturally in no gravity)
     if (axis_velocity * axis_force > 0 && abs(axis_velocity) < 0.5 * coeff_restitution)
@@ -417,18 +417,18 @@ double Framework::Physics::calculateStaticCollisionForces(double axis_velocity, 
     return (-axis_velocity * coeff_restitution - axis_velocity) * mass / time_left;
 }
 
-double Framework::Physics::getCoefficientOfRestitution(RigidBody* rigid_body_1, RigidBody* rigid_body_2) const
+double framework::Physics::getCoefficientOfRestitution(RigidBody* rigid_body_1, RigidBody* rigid_body_2) const
 {
     return m_material_manager.getCoefficientOfRestitution(rigid_body_1->getMaterial(), rigid_body_2->getMaterial());
 }
 
 
-double Framework::Physics::getStaticFrictionCoefficient(RigidBody* rigid_body_1, RigidBody* rigid_body_2) const
+double framework::Physics::getStaticFrictionCoefficient(RigidBody* rigid_body_1, RigidBody* rigid_body_2) const
 {
     return m_material_manager.getStaticFrictionCoefficient(rigid_body_1->getMaterial(), rigid_body_2->getMaterial());
 }
 
-double Framework::Physics::getDynamicFrictionCoefficient(RigidBody* rigid_body_1, RigidBody* rigid_body_2) const
+double framework::Physics::getDynamicFrictionCoefficient(RigidBody* rigid_body_1, RigidBody* rigid_body_2) const
 {
     return m_material_manager.getDynamicFrictionCoefficient(rigid_body_1->getMaterial(), rigid_body_2->getMaterial());
 }

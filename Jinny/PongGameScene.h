@@ -2,9 +2,9 @@
 
 #include "Scene.h"
 
-namespace Jinny
+namespace jinny
 {
-    namespace Pong
+    namespace pong
     {
         class PongGameScene : public Scene
         {

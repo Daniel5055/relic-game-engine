@@ -5,7 +5,7 @@
 // SDL Dependencies
 struct SDL_Renderer;
 
-namespace Framework
+namespace framework
 {
     // Other Dependencies
     class Graphic;
@@ -22,15 +22,13 @@ namespace Framework
     {
     public:
         // Constructor
-        Graphics();
         explicit Graphics(const Window& window);
 
-        // Destructor
-        ~Graphics();
+        virtual ~Graphics();
 
         // Rendering functions
 
-        virtual void clear(Color clear_color) const;
+        virtual void clear(Color clear_colour) const;
         virtual void draw(Graphic* graphic) const;
         virtual void draw(Graphic* graphic, int x_shift, int y_shift) const;
         virtual void display() const;

@@ -1,46 +1,31 @@
 #pragma once
 
 #include "ObjectInput.h"
+#include "Point.h"
 
-// Framework Dependencies
-namespace Framework
-{
-    struct Shape;
-}
-
-namespace Jinny
+namespace jinny
 {
 
-    enum class EventType
-    {
-        OBJECT_INITIALIZATION_SHAPE,
-        INPUT_TRIGGERED,
-    };
-
+    /**
+     * \brief Messages sent between components in an object
+     */
     struct ObjectEvent
     {
-        ObjectEvent(EventType t)
+        enum class Type
         {
-            type = t;
-        }
+            null_event,
+            component_incorporated,
+            input_triggered,
+            move,
+        };
 
-        ObjectEvent(EventType t, Framework::Shape* s)
-        {
-            type = t;
-            shape = s;
-
-        }
-
-        EventType type;
+        Type type{ Type::null_event };
 
         union
         {
-            Framework::Shape* shape;
             ObjectInput input;
+            framework::Point movement;
         };
-
-
-        // More?
     };
 }
 

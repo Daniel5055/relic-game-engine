@@ -1,47 +1,43 @@
 #include "ImageGraphicsComponent.h"
 
-Jinny::ImageGraphicsComponent::ImageGraphicsComponent(std::string texture_name, std::string texture_path)
+jinny::ImageGraphicsComponent::ImageGraphicsComponent(framework::Shape shape, const std::string& texture_name, const std::string& texture_path)
 {
     // Create Graphic
-    setGraphic(new Framework::Graphic());
+    setGraphic(new framework::Graphic(shape));
 
-    // If texture path not provided then send a message to load the texutre from the path
-    if (texture_path != "")
+    // If texture path not provided then send a message to load the from the path
+    GraphicsMessage msg;
+
+    if (!texture_path.empty())
     {
-        GraphicsMessage g_msg_1;
-        g_msg_1.type = GMessageType::LOAD_TEXTURE;
-        g_msg_1.string_1 = texture_name;
-        g_msg_1.string_2 = texture_path;
-        pushMessage(g_msg_1);
+        msg.type = GMessageType::load_texture;
+        msg.string_1 = texture_name;
+        msg.string_2 = texture_path;
+        sendMessage(msg);
     }
 
     // Then send a message to assign the texture to the graphic
-    GraphicsMessage g_msg_2;
-    g_msg_2.type = GMessageType::ASSIGN_TEXTURE;
-    g_msg_2.string_1 = texture_name;
-    g_msg_2.graphic = getGraphic();
-    pushMessage(g_msg_2);
+    msg = GraphicsMessage();
+    msg.type = GMessageType::assign_texture;
+    msg.string_1 = texture_name;
+    msg.graphic = &getGraphic();
+
+    sendMessage(msg);
+
+    // And meanwhile, draw the graphic using the graphics system
+    msg = GraphicsMessage();
+    msg.type = GMessageType::show_graphic;
+    msg.object_id = getObjectId();
+    msg.graphic = &getGraphic();
+    sendMessage(msg);
 }
 
-void Jinny::ImageGraphicsComponent::initialize(GameObject& object)
+void jinny::ImageGraphicsComponent::handleEvent(ObjectEvent e)
 {
-    // Set Object
-    setObject(&object);
-    Framework::Graphic* g = getGraphic();
-
-    // Recieve Object shape
-    for (auto it = object.getQueueIterator(); it != object.getQueueEnd(); it++)
+    switch (e.type)
     {
-        switch (it->type)
-        {
-        case EventType::OBJECT_INITIALIZATION_SHAPE:
-            getGraphic()->setShape(it->shape);
-        }
+    case ObjectEvent::Type::move:
+        getGraphic().getShape().x += e.movement.x;
+        getGraphic().getShape().y += e.movement.y;
     }
-
-    GraphicsMessage g_msg;
-    g_msg.type = GMessageType::SHOW_GRAPHIC;
-    g_msg.object_ID = object.getObjectID();
-    g_msg.graphic = getGraphic();
-    pushMessage(g_msg);
 }

@@ -3,29 +3,22 @@
 #include "PhysicsComponent.h"
 
 #include "Material.h"
+#include "RigidBody.h"
+#include "Shape.h"
 
-namespace Framework
+namespace jinny
 {
-    class RigidBody;
-
-}
-
-namespace Jinny
-{
+    /**
+     * \brief Component that represents a static rigidBody, a body that does not react to collisions
+     */
     class StaticRigidBodyPhysicsComponent : public PhysicsComponent
     {
     public:
         // Constructor
-        StaticRigidBodyPhysicsComponent(Framework::Material material = Framework::Material::NULLIUM);
-
-        // Initialize
-        virtual void initialize(GameObject& object);
-
-        // Destructor
-        ~StaticRigidBodyPhysicsComponent();
+        explicit StaticRigidBodyPhysicsComponent(framework::Shape shape, framework::Material material = framework::Material::nullium);
 
     private:
         // --- Data ---
-        Framework::RigidBody* m_rigid_body;
+        framework::RigidBody m_rigid_body;
     };
 }

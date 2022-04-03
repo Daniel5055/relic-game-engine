@@ -2,11 +2,11 @@
 
 #include "Scene.h"
 
-namespace Jinny
+namespace jinny
 {
     class StartScene : public Scene
     {
-    public:
-        void initialize();
+    private:
+        void doInitialisation() override;
     };
 }

@@ -2,20 +2,10 @@
 
 #include "GraphicsComponent.h"
 
-namespace Jinny
+namespace jinny
 {
-    class NullGraphicsComponent : public GraphicsComponent
+    // Useless?
+    class NullGraphicsComponent final : public GraphicsComponent
     {
-        // Initialization
-        virtual void initialize(GameObject& object)
-        {}
-
-        // Updating
-        virtual void update()
-        {}
-
-        // Closing
-        virtual void close()
-        {}
     };
 }

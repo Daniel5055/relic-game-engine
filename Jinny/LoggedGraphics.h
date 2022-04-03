@@ -4,7 +4,7 @@
 #include "Logger.h"
 
 
-namespace Framework
+namespace framework
 {
     /**
      * Logged version of graphics framework class.
@@ -14,7 +14,7 @@ namespace Framework
     public:
 
         // Constructor
-        explicit LoggedGraphics(Window& t_window);
+        explicit LoggedGraphics(Window& window);
 
         // Destructor
         ~LoggedGraphics();

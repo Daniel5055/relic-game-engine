@@ -2,20 +2,11 @@
 
 #include "CoreComponent.h"
 
-namespace Jinny
+namespace jinny
 {
-    class NullCoreComponent : public CoreComponent
+    // TODO: Not sure if needed
+    class NullCoreComponent final : public CoreComponent
     {
-        // Initialization
-        virtual void initialize(GameObject& object)
-        {}
-
-        // Updating
-        virtual void update()
-        {}
-
-        // Closing
-        virtual void close()
-        {}
+        
     };
 }

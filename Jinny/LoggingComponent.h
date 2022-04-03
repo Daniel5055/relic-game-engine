@@ -2,34 +2,22 @@
 
 #include "Component.h"
 
-namespace Framework
+#include "Logger.h"
+
+namespace jinny
 {
-    class Logger;
-}
-
-namespace Jinny
-{
-
-
-    class LoggingComponent : public Component
+    /**
+     *\brief Component which logs the actions of the object
+     */
+    class LoggingComponent final : public Component
     {
     public:
-
-        // Initialization
-        void initialize(GameObject& object);
-
-        void update();
-
-        void close();
-
-        // Destructor
-        ~LoggingComponent();
-
+        LoggingComponent();
+        ~LoggingComponent() override;
     private:
-        // Event Handling
-        void handleEvents();
+        void handleEvent(ObjectEvent msg) override;
 
         // --- Data ---
-        Framework::Logger* m_logger;
+        framework::Logger m_logger;
     };
 }

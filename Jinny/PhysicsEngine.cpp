@@ -1,11 +1,11 @@
 #include "PhysicsEngine.h"
 
-Jinny::PhysicsEngine::PhysicsEngine(const Framework::Physics& t_physics)
-    :f_physics(t_physics)
+jinny::PhysicsEngine::PhysicsEngine(const framework::Physics& physics)
+    :f_physics(physics)
 {
 }
 
-void Jinny::PhysicsEngine::addRigidBody(int object_id, Framework::RigidBody* rigid_body)
+void jinny::PhysicsEngine::addRigidBody(int object_id, framework::RigidBody* rigid_body)
 {
     m_rigid_bodies.insert({ object_id, rigid_body });
 }

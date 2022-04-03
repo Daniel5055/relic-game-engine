@@ -153,23 +153,11 @@
     <ClCompile Include="Program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameSystem.cpp">
-      <Filter>Game Systems\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="AssetManager.cpp">
       <Filter>System Aids\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GraphicsSystem.cpp">
       <Filter>Game Systems\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Object and Components\Object\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectEvent.cpp">
-      <Filter>Object and Components\Object\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObjectManager.cpp">
-      <Filter>System Aids\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="InputSystem.cpp">
       <Filter>Game Systems\Source Files</Filter>
@@ -213,20 +201,11 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Framework\Graphics\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CoreComponent.cpp">
-      <Filter>Object and Components\Components\Core Components\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ImageGraphicsComponent.cpp">
       <Filter>Object and Components\Components\Graphics Components\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GraphicsComponent.cpp">
       <Filter>Object and Components\Components\Graphics Components\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="InputComponent.cpp">
-      <Filter>Object and Components\Components\Input Components\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsComponent.cpp">
-      <Filter>Object and Components\Components\Physics Components\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AnimationComponent.cpp">
       <Filter>Object and Components\Components\Other Components\Source Files</Filter>
@@ -243,7 +222,7 @@
     <ClCompile Include="TextGraphicsComponent.cpp">
       <Filter>Object and Components\Components\Graphics Components\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EventChangeCoreComponent.cpp">
+    <ClCompile Include="SceneChangeCoreComponent.cpp">
       <Filter>Object and Components\Components\Core Components\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LoggingComponent.cpp">
@@ -297,6 +276,12 @@
     <ClCompile Include="PongGameScene.cpp">
       <Filter>Scene\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GameObjectManager.cpp">
+      <Filter>Object and Components\Object\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetLoaderGraphicsComponent.cpp">
+      <Filter>Object and Components\Components\Graphics Components\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameSystem.h">
@@ -308,14 +293,8 @@
     <ClInclude Include="ObjectInput.h">
       <Filter>Object and Components\Object\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Object and Components\Object\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ObjectEvent.h">
       <Filter>Object and Components\Object\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObjectManager.h">
-      <Filter>System Aids\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsSystem.h">
       <Filter>Game Systems\Header Files</Filter>
@@ -374,9 +353,6 @@
     <ClInclude Include="GraphicsMessage.h">
       <Filter>System Aids\Messaging\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MessageBoard.h">
-      <Filter>System Aids\Messaging\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PhysicsMessage.h">
       <Filter>System Aids\Messaging\Header Files</Filter>
     </ClInclude>
@@ -422,7 +398,7 @@
     <ClInclude Include="TextGraphicsComponent.h">
       <Filter>Object and Components\Components\Graphics Components\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EventChangeCoreComponent.h">
+    <ClInclude Include="SceneChangeCoreComponent.h">
       <Filter>Object and Components\Components\Core Components\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LoggingComponent.h">
@@ -484,6 +460,27 @@
     </ClInclude>
     <ClInclude Include="PhysicsEngine.h">
       <Filter>System Aids\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageReceiver.h">
+      <Filter>System Aids\Messaging\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageSender.h">
+      <Filter>System Aids\Messaging\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Message.h">
+      <Filter>System Aids\Messaging\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectManager.h">
+      <Filter>Object and Components\Object\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deliverable.h">
+      <Filter>System Aids\Messaging\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiMessageReceiver.h">
+      <Filter>System Aids\Messaging\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LazyMessageSender.h">
+      <Filter>System Aids\Messaging\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

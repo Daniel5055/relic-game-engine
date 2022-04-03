@@ -2,35 +2,30 @@
 
 #include "ObjectInput.h"
 
+#include "Message.h"
+
 #include "Shape.h"
 
-namespace Jinny
+namespace jinny
 {
     enum class IMessageType
     {
-        NULL_MESSAGE = 0,
-        SUBSCRIBE_INPUT,
-        UNSUBSCRIBE_INPUT,
-        INPUT_TRIGGERED,
+        null_message = 0,
+        subscribe_input,
+        unsubscribe_input,
+        input_triggered,
 
-        EXIT_BUTTON_PRESSED
+        exit_button_pressed
     };
 
     /**
-     * Messages used by input components and system to communicate.
+     * \brief Messages to be sent by input systems and components
      */
-    struct InputMessage
+    struct InputMessage : Message
     {
-        InputMessage()
-        {
-            type = IMessageType::NULL_MESSAGE;
-            object_ID = -1;
-            object_shape = nullptr;
-        }
-        IMessageType type;
-        int object_ID;
-        Framework::Shape* object_shape;
-        ObjectInput object_input;
+        InputMessage() : Message(Type::input) {}
+        IMessageType type{IMessageType::null_message};
+        framework::Shape* object_shape{nullptr};
+        ObjectInput object_input{ObjectInputType::null_type};
     };
 }
-

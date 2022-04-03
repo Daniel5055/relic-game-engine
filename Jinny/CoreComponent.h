@@ -1,57 +1,41 @@
 #pragma once
 
 #include "Component.h"
+#include "LazyMessageSender.h"
 #include "GameMessage.h"
-#include "MessageBoard.h"
 
-namespace Jinny
+
+namespace jinny
 {
-    class CoreComponent : public Component
+    /**
+     * \brief Base abstract class for components relating to core features of the game engine
+     */
+    class CoreComponent
+        : public Component
+        , public LazyMessageSender<GameMessage>
     {
     public:
-        // --- virtual functions ---
-        // Initialization
-        virtual void initialize(GameObject& object);
-
-        // Updating
-        virtual void update();
-
-        // Closing
-        virtual void close();
-
-        // --- static functions ---
-
-        // Functions to be used by object
-        void recieveMessage(GameMessage c_msg);
-
-        // To set messageBoard
-        static void setMessageBoard(MessageBoard<GameMessage>* message_board);
-
+        // Prevent ambiguity 
+        using LazyMessageSender<GameMessage>::addReceiver;
     protected:
-        // --- inherited functions ---
 
-        // Pops Message from queue
-        GameMessage popMessage();
-
-        // --- inherited virtual functions ---
-
-        // Event Handling
-        virtual void handleEvents();
-
-        // Message Handling
-        virtual void handleMessages();
-
-        // Message Pushing
-        void pushMessage(GameMessage g_msg);
+        // Prevent ambiguity
+        using LazyMessageSender<GameMessage>::sendMessage;
 
     private:
+        // Core component type
+        Message::Type defineMessageType() final { return Message::Type::core; }
 
-        // --- Data ---
+        // Overriding message prep to set object id after the fact
+        void prepareMessage(GameMessage& msg) override;
 
-        // Message Queue
-        std::queue<GameMessage> m_message_queue;
-
-        // Access to message board
-        static MessageBoard<GameMessage>* m_message_board;
     };
+
+    inline void CoreComponent::prepareMessage(GameMessage& msg)
+    {
+        if (msg.object_id == k_unset_id)
+        {
+            msg.object_id = getObjectId();
+        }
+    }
 }

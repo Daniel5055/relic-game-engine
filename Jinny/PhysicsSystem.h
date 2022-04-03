@@ -1,41 +1,38 @@
 #pragma once
 
-#include "GameSystem.h"
-
-#include "MessageBoard.h"
-#include "PhysicsMessage.h"
-#include "PhysicsEngine.h"
 #include <memory>
 
-namespace Framework
+#include "GameSystem.h"
+#include "MessageReceiver.h"
+#include "PhysicsMessage.h"
+
+#include "PhysicsEngine.h"
+
+namespace framework
 {
     class Physics;
 }
 
-namespace Jinny
+namespace jinny
 {
     /**
-     * System for handling physics between objects.
+     * \brief System for handling physics between objects.
      */
-    class PhysicsSystem : public GameSystem
+    class PhysicsSystem final : 
+        public GameSystem,
+        public MessageReceiver<PhysicsMessage>
     {
     public:
         // Constructor
-        PhysicsSystem(PhysicsEngine* t_engine, MessageBoard<PhysicsMessage>& t_message_board);
-
-        // Updating
-        void update();
+        explicit PhysicsSystem(PhysicsEngine* engine);
 
     private:
         // --- Internal Functions ---
 
-        // Message handling
-        void handleMessages();
+        void doUpdates() override;
+        void handleMessage(PhysicsMessage msg) override;
 
         // --- Data ---
-
-        // Message Board
-        MessageBoard<PhysicsMessage>& m_message_board;
 
         // Physics Engine
         std::unique_ptr<PhysicsEngine> m_engine_ptr;

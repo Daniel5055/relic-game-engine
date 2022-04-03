@@ -6,7 +6,7 @@
 // Local Dependencies
 #include "Point.h"
 
-namespace Framework
+namespace framework
 {
     Shape::Shape(int x, int y, int w, int h)
     {

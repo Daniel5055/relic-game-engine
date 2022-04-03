@@ -1,40 +1,37 @@
 #pragma once
 
 
-namespace Jinny
+namespace jinny
 {
     enum class ObjectInputType
     {
-        NULL_TYPE = 0,
+        null_type = 0,
 
         // Specifically for Input class
-        LEFT_MOUSE_PRESS = 1,
-        RIGHT_MOUSE_PRESS = 2,
-        KEY_PRESS = 3,
+        left_mouse_press = 1,
+        right_mouse_press = 2,
+        key_press = 3,
 
 
-        MOUSE_OVER,
-        MOUSE_OFF,
+        mouse_over,
+        mouse_off,
 
-        LEFT_MOUSE_DOWN = 8,
-        LEFT_MOUSE_UP,
+        left_mouse_down = 8,
+        left_mouse_up,
 
-        RIGHT_MOUSE_DOWN,
-        RIGHT_MOUSE_UP,
+        right_mouse_down,
+        right_mouse_up,
 
         // Specifically for Input Class
-        KEY_DOWN,
-        KEY_UP,
+        key_down,
+        key_up,
 
     };
 
     struct ObjectInput
     {
-
-        ObjectInput(ObjectInputType t = ObjectInputType::NULL_TYPE, char k = ' ')
+        ObjectInput(const ObjectInputType t = ObjectInputType::null_type, const char k = ' ') : type(t), key(k)
         {
-            type = t;
-            key = k;
         }
         ObjectInputType type;
 

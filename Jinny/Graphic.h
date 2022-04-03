@@ -1,13 +1,13 @@
 #pragma once
+#include "Shape.h"
 
-namespace Framework
+namespace framework
 {
-    struct Shape;
-    struct Point;
-
     class Texture;
 
-    // Contains all the data needed to render image
+    /**
+     * \brief Contains all information related for drawing a texture
+     */
     class Graphic
     {
     public:
@@ -16,18 +16,18 @@ namespace Framework
         friend class Graphics;
 
         // Constructor
-        Graphic(Shape* shape_ptr = nullptr);
+        explicit Graphic(Shape shape);
 
         // Accessors
-        Shape* getShape();
-        void setShape(Shape* shape);
+        Shape& getShape();
+        void setShape(Shape shape);
 
         void setSize(int w, int h);
 
-        Shape* getClip();
-        void setClip(Shape* clip);
+        const Shape& getClip() const;
+        void setClip(Shape clip);
 
-        Texture* getTexture();
+        Texture* getTexture() const;
 
     private:
 
@@ -37,10 +37,10 @@ namespace Framework
         void setTexture(Texture* texture);
 
         // --- Data --- 
-        Shape* m_shape_ptr;
-        Shape* m_clip_ptr;
+        Shape m_shape;
+        Shape m_clip;
 
-        Texture* m_texture_ptr;
+        Texture* m_texture_ptr{nullptr};
     };
 }
 

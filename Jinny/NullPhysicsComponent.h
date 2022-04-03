@@ -2,20 +2,10 @@
 
 #include "PhysicsComponent.h"
 
-namespace Jinny
+namespace jinny
 {
+    // Useless?
     class NullPhysicsComponent : public PhysicsComponent
     {
-        // Initialization
-        virtual void initialize(GameObject& object)
-        {}
-
-        // Updating
-        virtual void update()
-        {}
-
-        // Closing
-        virtual void close()
-        {}
     };
 }

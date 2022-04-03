@@ -1,29 +1,29 @@
 #pragma once
 
-namespace Framework
+namespace framework
 {
     enum class InputEventType
     {
-        NULL_EVENT = 0,
+        null_event = 0,
 
-        EXIT_BUTTON_PRESSED,
+        exit_button_pressed,
 
-        MOUSE_EVENT,
-        SCROLL_WHEEL,
+        mouse_event,
+        scroll_wheel,
 
-        KEY_DOWN,
-        KEY_UP,
+        key_down,
+        key_up,
     };
 
     enum class MouseEvent
     {
-        MOUSE_MOTION,
+        mouse_motion,
 
         // ID nums notably ressemble objectInput equivalents
-        LEFT_DOWN = 8,
-        LEFT_UP = 9,
-        RIGHT_DOWN = 10,
-        RIGHT_UP = 11,
+        left_down = 8,
+        left_up = 9,
+        right_down = 10,
+        right_up = 11,
 
     };
 

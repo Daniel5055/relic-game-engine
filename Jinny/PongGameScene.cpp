@@ -1,6 +1,6 @@
 #include "PongGameScene.h"
 
-void Jinny::Pong::PongGameScene::initialize()
+void jinny::pong::PongGameScene::initialize()
 {
 
 

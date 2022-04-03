@@ -3,46 +3,41 @@
 #include <string>
 #include "Color.h"
 
-namespace Framework
+#include "Message.h"
+
+namespace framework
 {
     class Graphic;
 }
-namespace Jinny
+namespace jinny
 {
     enum class GMessageType
     {
-        NULL_MESSAGE = 0,
+        null_message = 0,
 
-        LOAD_TEXTURE,
-        LOAD_FONT,
-        ASSIGN_TEXTURE,
-        ASSIGN_TEXT,
+        load_texture,
+        load_font,
+        assign_texture,
+        assign_text,
 
-        SHOW_GRAPHIC,
-        HIDE_GRAPHIC,
+        show_graphic,
+        hide_graphic,
     };
 
     /**
-     * Messages to be sent between the graphics system and components.
+     * \brief Messages to be sent by graphics systems and components
      */
-    struct GraphicsMessage
+    struct GraphicsMessage : Message
     {
-        GraphicsMessage(GMessageType msg_type = GMessageType::NULL_MESSAGE, int id = -1)
-        {
-            type = msg_type;
-            object_ID = id;
-            num = 0;
-            graphic = nullptr;
-        }
+        GraphicsMessage() : Message(Type::graphics) {}
 
-        GMessageType type;
-        int object_ID;
+        GMessageType type{GMessageType::null_message};
 
-        Framework::Graphic* graphic;
+        framework::Graphic* graphic{nullptr};
 
         std::string string_1;
         std::string string_2;
-        int num;
-        Framework::Color color;
+        int num{};
+        framework::Color color;
     };
 }

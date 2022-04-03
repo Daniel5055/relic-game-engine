@@ -1,27 +1,28 @@
 #pragma once
 
-#include <string>
-
 #include "GraphicsComponent.h"
 
+#include <string>
+
 // Framework Dependencies
-namespace Framework
+namespace framework
 {
     struct Color;
 }
 
-namespace Jinny
+namespace jinny
 {
+    /**
+     * \brief Component used to draw text
+     */
     class TextGraphicsComponent :public GraphicsComponent
     {
     public:
         // Constructor
-        TextGraphicsComponent(std::string text, std::string font_name, Framework::Color font_color = { 0x00, 0x00, 0x00, 0x00 }, std::string font_path = "", int font_size = 12);
-
-        // Initialization
-        void initialize(GameObject& object);
-
-
+        explicit TextGraphicsComponent(framework::Shape shape, const std::string& text, const std::string& font_name, 
+            framework::Color font_colour = { 0x00, 0x00, 0x00, 0x00 },
+            const std::string& font_path = "", int font_size = 12);
     private:
+        void handleEvent(ObjectEvent e) override;
     };
 }

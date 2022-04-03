@@ -2,12 +2,12 @@
 
 #include <SDL_ttf.h>
 
-Framework::Font::Font()
+framework::Font::Font()
 {
     m_font_ptr = nullptr;
 }
 
-Framework::Font::~Font()
+framework::Font::~Font()
 {
     TTF_CloseFont(m_font_ptr);
     m_font_ptr = nullptr;

@@ -2,46 +2,31 @@
 
 #include "RigidBody.h"
 
-Jinny::DynamicRigidBodyPhysicsComponent::DynamicRigidBodyPhysicsComponent(double mass, double max_x_speed, double max_y_speed, Framework::Material material, Framework::Vector force)
+jinny::DynamicRigidBodyPhysicsComponent::DynamicRigidBodyPhysicsComponent(const double mass, double max_x_speed, double max_y_speed, const framework::Shape shape, const framework::Material material, framework::Vector force)
+    :m_rigid_body(mass, 0, { max_x_speed, max_y_speed }, shape, material), m_last_position({shape.x, shape.y})
 {
-    m_rigid_body = nullptr;
-
-
-    // Create Data
-    m_rigid_body = new Framework::RigidBody(mass, 0, { max_x_speed, max_y_speed }, nullptr, material);
-
-    m_rigid_body->applySFForce(force);
-}
-
-void Jinny::DynamicRigidBodyPhysicsComponent::initialize(GameObject& object)
-{
-    setObject(&object);
-
-    // Set Shape
-    ObjectEvent o_event = *object.getQueueIterator();
-    if (o_event.type == EventType::OBJECT_INITIALIZATION_SHAPE)
-    {
-
-        m_rigid_body->setShape(o_event.shape);
-
+    m_rigid_body.applySFForce(force);
         PhysicsMessage msg;
-        msg.type = PMessageType::SET_RIGID_BODY;
-        msg.object_ID = object.getObjectID();
-        msg.rigid_body = m_rigid_body;
+        msg.type = PMessageType::set_rigid_body;
+        msg.object_id = getObjectId();
+        msg.rigid_body = &m_rigid_body;
 
-        pushMessage(msg);
+        sendMessage(msg);
+}
+
+void jinny::DynamicRigidBodyPhysicsComponent::doUpdates()
+{
+    // If moved
+    const int x_diff = m_rigid_body.getRoundedX() - m_last_position.x;
+    const int y_diff = m_rigid_body.getRoundedY() - m_last_position.y;
+    if (x_diff != 0 || y_diff != 0)
+    {
+        // Send move message
+        ObjectEvent e{ ObjectEvent::Type::move };
+        e.movement = { x_diff, y_diff };
+        sendEvent(e);
+
+        m_last_position.x = m_rigid_body.getRoundedX();
+        m_last_position.y = m_rigid_body.getRoundedY();
     }
-}
-
-void Jinny::DynamicRigidBodyPhysicsComponent::update()
-{
-}
-
-Jinny::DynamicRigidBodyPhysicsComponent::~DynamicRigidBodyPhysicsComponent()
-{
-    delete m_rigid_body;
-    m_rigid_body = nullptr;
-
-    delete m_rigid_body;
-    m_rigid_body = nullptr;
 }

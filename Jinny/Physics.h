@@ -5,9 +5,9 @@
 
 #include "MaterialManager.h"
 
-namespace Framework
+namespace framework
 {
-    // Class defintions
+    // Class definitions
     class RigidBody;
 
     /**
@@ -28,10 +28,14 @@ namespace Framework
         Vector getDisplacementAtTime(double time, Vector velocity, Vector acceleration) const;
 
         // For calculating collision time and forces
-        double getCollisionTime(double distance, double velocity_1, double velocity_2, double acceleration_1, double acceleration_2, double max_time) const;
+        double getCollisionTime(double distance, double velocity_1, double velocity_2, double acceleration_1,
+                                double acceleration_2, double max_time) const;
 
-        std::pair<double, double> calculateDynamicCollisionForces(double a_velocity, double a_mass, double t_velocity, double t_mass, double coeff_restitution, double time_left) const;
-        double calculateStaticCollisionForces(double axis_velocity, double axis_force, double mass, double coeff_restitution, double time_left) const;
+        std::pair<double, double> calculateDynamicCollisionForces(double a_velocity, double a_mass, double t_velocity,
+                                                                  double t_mass, double coeff_restitution,
+                                                                  double time_left) const;
+        double calculateStaticCollisionForces(double axis_velocity, double axis_force, double mass,
+                                              double coeff_restitution, double time_left) const;
 
         // For getting the coefficient of restitution
         double getCoefficientOfRestitution(RigidBody* rigid_body_1, RigidBody* rigid_body_2) const;
@@ -46,7 +50,7 @@ namespace Framework
         const MaterialManager m_material_manager;
 
         // --- Const Data ---
-        const double TIME_STEP;
-        const double PIXELS_PER_METER;
+        const double m_time_step;
+        const double m_pixels_per_meter;
     };
 }

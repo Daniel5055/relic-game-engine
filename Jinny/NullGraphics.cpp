@@ -5,40 +5,40 @@
 #include "Graphic.h"
 #include "Font.h"
 
-bool Framework::NullGraphics::initialize(Window* window)
+bool framework::NullGraphics::initialize(Window* window)
 {
     return false;
 }
 
-void Framework::NullGraphics::close()
+void framework::NullGraphics::close()
 {
 }
 
 
-void Framework::NullGraphics::clear(Color clear_color)
+void framework::NullGraphics::clear(Color clear_color)
 {
 }
 
 
-void Framework::NullGraphics::draw(Graphic* graphic)
+void framework::NullGraphics::draw(Graphic* graphic)
 {
 }
 
-void Framework::NullGraphics::display()
+void framework::NullGraphics::display()
 {
 }
 
-Framework::Font* Framework::NullGraphics::createFont(std::string path, int font_size)
-{
-    return nullptr;
-}
-
-Framework::Texture* Framework::NullGraphics::createTexture(std::string path)
+framework::Font* framework::NullGraphics::createFont(std::string path, int font_size)
 {
     return nullptr;
 }
 
-Framework::Texture* Framework::NullGraphics::createTextTexture(std::string text, Font* font, Color color)
+framework::Texture* framework::NullGraphics::createTexture(std::string path)
+{
+    return nullptr;
+}
+
+framework::Texture* framework::NullGraphics::createTextTexture(std::string text, Font* font, Color color)
 {
     return nullptr;
 }

@@ -2,33 +2,24 @@
 
 #include "PhysicsComponent.h"
 
-namespace Framework
+#include "RigidBody.h"
+#include "Shape.h"
+
+namespace jinny
 {
-    class RigidBody;
-    class RigidBody;
-}
-namespace Jinny
-{
-    // Just Creates Border for world;
+    /** \brief Component that defines dynamic rigid body that reacts to input */
     class PlayerPhysicsComponent : public PhysicsComponent
     {
     public:
-
         // Constructor
-        PlayerPhysicsComponent(double mass, double max_x_speed, double max_y_speed);
-
-        void initialize(GameObject& object);
-
-        void update();
-
-        ~PlayerPhysicsComponent();
-
+        PlayerPhysicsComponent(double mass, double max_x_speed, double max_y_speed, framework::Shape shape);
     private:
-        void handleEvents();
-        void handleMessages();
+        void handleEvent(ObjectEvent e) override;
 
-        Framework::RigidBody* m_rigid_body;
-        Framework::RigidBody* m_data;
+        void doUpdates() override;
+
+        framework::RigidBody m_rigid_body;
+        framework::Point m_last_position;
     };
 
 }

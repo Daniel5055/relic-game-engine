@@ -5,19 +5,20 @@
 #include "Point.h"
 #include "Texture.h"
 
-Jinny::AnimationComponent::AnimationComponent(GraphicsComponent* graphics_component, int texture_width, int texture_height)
+jinny::AnimationComponent::AnimationComponent(GraphicsComponent* graphics_component, int texture_width, int texture_height)
     :m_graphics_component(graphics_component), m_texture_width(texture_width), m_texture_height(texture_height)
 {
     // Pre - Initializing + additional inititalization
     m_graphics_component = graphics_component;
-    m_current_clip_ptr = new Framework::Shape();
+    m_current_clip = new framework::Shape();
 
-    graphics_component->setClipPtr(m_current_clip_ptr);
+    graphics_component->setClipPtr(m_current_clip);
 
     m_tick = 0;
 }
 
-void Jinny::AnimationComponent::initialize(GameObject& object)
+/*
+void jinny::AnimationComponent::initialize(GameObject& object)
 {
     // Initialize Objects
     setObject(&object);
@@ -27,14 +28,14 @@ void Jinny::AnimationComponent::initialize(GameObject& object)
     {
         switch (it->type)
         {
-        case EventType::OBJECT_INITIALIZATION_SHAPE:
-            m_current_clip_ptr->w = it->shape->w;
-            m_current_clip_ptr->h = it->shape->h;
+        case EventType::object_initialization_shape:
+            m_current_clip->w = it->shape->w;
+            m_current_clip->h = it->shape->h;
         }
     }
 }
 
-void Jinny::AnimationComponent::update()
+void jinny::AnimationComponent::update()
 {
     m_tick++;
     if (m_tick >= m_tick_per_frame)
@@ -53,23 +54,23 @@ void Jinny::AnimationComponent::update()
 
 }
 
-void Jinny::AnimationComponent::close()
+void jinny::AnimationComponent::close()
 {
-    for (Framework::Shape* shape_ptr : m_clips)
+    for (framework::Shape* shape_ptr : m_clips)
     {
         delete shape_ptr;
     }
     m_clips.clear();
 
-    delete m_current_clip_ptr;
-    m_current_clip_ptr = nullptr;
+    delete m_current_clip;
+    m_current_clip = nullptr;
 
 }
 
-void Jinny::AnimationComponent::createClipGrid()
+void jinny::AnimationComponent::createClipGrid()
 {
-    int width = m_current_clip_ptr->w;
-    int height = m_current_clip_ptr->h;
+    int width = m_current_clip->w;
+    int height = m_current_clip->h;
 
     int w_max = m_texture_width / width;
     int h_max = m_texture_height / height;
@@ -80,28 +81,29 @@ void Jinny::AnimationComponent::createClipGrid()
     {
         for (int x = 0; x < w_max; x++)
         {
-            m_clips.push_back(new Framework::Shape(x * width, y * height, width, height));
+            m_clips.push_back(new framework::Shape(x * width, y * height, width, height));
         }
     }
 }
 
-void Jinny::AnimationComponent::changeCurrentClip(int index)
+void jinny::AnimationComponent::changeCurrentClip(int index)
 {
     // Changes location of current clip pointer based from clips
-    m_current_clip_ptr->x = m_clips[index]->x;
-    m_current_clip_ptr->y = m_clips[index]->y;
+    m_current_clip->x = m_clips[index]->x;
+    m_current_clip->y = m_clips[index]->y;
 }
 
-int Jinny::AnimationComponent::getTextureWidth() const
+int jinny::AnimationComponent::getTextureWidth() const
 {
     return m_texture_width;
 }
 
-int Jinny::AnimationComponent::getTextureHeight() const
+int jinny::AnimationComponent::getTextureHeight() const
 {
     return m_texture_height;
 }
 
-void Jinny::AnimationComponent::handleEvents()
+void jinny::AnimationComponent::handleEvents()
 {
 }
+*/

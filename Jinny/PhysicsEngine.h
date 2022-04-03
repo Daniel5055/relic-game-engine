@@ -3,13 +3,13 @@
 #include <map>
 
 // Declaring used classes
-namespace Framework
+namespace framework
 {
     class Physics;
     class RigidBody;
 }
 
-namespace Jinny
+namespace jinny
 {
     /**
      * Base class for physics engine to be run by the physics system.
@@ -18,21 +18,22 @@ namespace Jinny
     class PhysicsEngine
     {
     public:
+        virtual ~PhysicsEngine() = default;
         // Constructor
-        explicit PhysicsEngine(const Framework::Physics& t_physics);
+        explicit PhysicsEngine(const framework::Physics& physics);
 
-        // Upating
+        // Updating
         void virtual update() = 0;
 
         // Physics engine specific functions
-        void virtual addRigidBody(int object_id, Framework::RigidBody* rigid_body);
+        void virtual addRigidBody(int object_id, framework::RigidBody* rigid_body);
 
     protected:
-        
+
         // Framework data
-        const Framework::Physics& f_physics;
+        const framework::Physics& f_physics;
 
         // Rigidbody data
-        std::map<int, Framework::RigidBody*> m_rigid_bodies;
+        std::map<int, framework::RigidBody*> m_rigid_bodies;
     };
 }

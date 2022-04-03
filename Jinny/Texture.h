@@ -4,7 +4,7 @@
 struct SDL_Texture;
 struct SDL_Point;
 
-namespace Framework
+namespace framework
 {
 
     // Just encapsulates texture;

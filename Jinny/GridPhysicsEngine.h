@@ -1,30 +1,31 @@
 #pragma once
 
+#include <queue>
+
 #include "PhysicsEngine.h"
 
 #include "Vector.h"
 
-#include <queue>
 
-namespace Jinny
+namespace jinny
 {
     /**
      * Physics engine that handles grid collisions with grid rigidbodies.
      * Handles collisions, friction, and damping
      * Bodies cannot rotate in a grid collision system and all bodies are assumed to be rectangular
      */
-    class GridPhysicsEngine :
+    class GridPhysicsEngine final :
         public PhysicsEngine
     {
     public:
 
         // Constructor
-        explicit GridPhysicsEngine(const Framework::Physics& t_physics);
+        explicit GridPhysicsEngine(const framework::Physics& physics);
 
         // Updating
-        void update();
+        void update() override;
 
-        void  addRigidBody(int object_id, Framework::RigidBody* rigid_body);
+        void  addRigidBody(int object_id, framework::RigidBody* rigid_body) override;
 
     private:
 
@@ -38,10 +39,10 @@ namespace Jinny
         struct InfluenceRectangle
         {
             // Position in top left corner
-            Framework::Vector position;
+            framework::Vector position;
 
             // Size 
-            Framework::Vector size;
+            framework::Vector size;
         };
 
         // For calculating the influence rects of each rigidbody
@@ -60,7 +61,7 @@ namespace Jinny
             int axis;
 
             int body_ids[2];
-            Framework::Vector applying_forces;
+            framework::Vector applying_forces;
         };
 
         // For finding collisions using influence rects
@@ -69,8 +70,8 @@ namespace Jinny
         // For calculating and applying forces in a collision
         void calculateCollision(Collision& collision, double time_passed);
 
-        // For calculating friciton caused by a collision
-        void calculateFriction(Collision& collision, std::map<int, Framework::Vector>& friction_applied, double time_passed);
+        // For calculating friction caused by a collision
+        void calculateFriction(Collision& collision, std::map<int, framework::Vector>& friction_applied, double time_passed);
     };
 }
 

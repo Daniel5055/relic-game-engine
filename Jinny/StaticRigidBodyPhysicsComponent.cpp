@@ -2,35 +2,16 @@
 
 #include "RigidBody.h"
 
-Jinny::StaticRigidBodyPhysicsComponent::StaticRigidBodyPhysicsComponent(Framework::Material material)
+jinny::StaticRigidBodyPhysicsComponent::StaticRigidBodyPhysicsComponent(const framework::Shape shape,
+    const framework::Material material)
+    :m_rigid_body(1, 0, { 0, 0 }, shape, material)
 {
-    m_rigid_body = new Framework::RigidBody(1, 0, { 0, 0 }, nullptr, material);
-}
+    m_rigid_body.setStatic(true);
+    PhysicsMessage msg;
+    msg.type = PMessageType::set_rigid_body;
+    msg.object_id = getObjectId();
+    msg.rigid_body = &m_rigid_body;
 
-void Jinny::StaticRigidBodyPhysicsComponent::initialize(GameObject& object)
-{
-    setObject(&object);
+    sendMessage(msg);
 
-    // Set Shape
-    ObjectEvent o_event = *object.getQueueIterator();
-    if (o_event.type == EventType::OBJECT_INITIALIZATION_SHAPE)
-    {
-        m_rigid_body->setShape(o_event.shape);
-        m_rigid_body->setStatic(true);
-
-
-        PhysicsMessage msg;
-        msg.type = PMessageType::SET_RIGID_BODY;
-        msg.object_ID = object.getObjectID();
-        msg.rigid_body = m_rigid_body;
-
-        pushMessage(msg);
-
-    }
-}
-
-Jinny::StaticRigidBodyPhysicsComponent::~StaticRigidBodyPhysicsComponent()
-{
-    delete m_rigid_body;
-    m_rigid_body = nullptr;
 }

@@ -8,7 +8,7 @@
 // SDL Dependencies
 struct SDL_Window;
 
-namespace Framework
+namespace framework
 {
 
     /**
@@ -19,8 +19,8 @@ namespace Framework
     public:
         friend class Graphics;
 
-        // Initialization and Closing
-        explicit Window(std::string t_name, int t_width, int t_height, bool t_show);
+        // Initialisation and Closing
+        explicit Window(std::string name, int width, int height, bool show);
         ~Window();
 
 
@@ -41,8 +41,8 @@ namespace Framework
         SDL_Window* m_window_ptr;
 
         // Cameras
-        Shape m_camera;
         const Shape m_null_camera;
+        Shape m_camera;
     };
 }
 

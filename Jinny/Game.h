@@ -1,13 +1,7 @@
 #pragma once
 
-#include "GameSystem.h"
-
 // Include messaging
-#include "MessageBoard.h"
-#include "GraphicsMessage.h"
-#include "InputMessage.h"
-#include "PhysicsMessage.h"
-#include "GameMessage.h"
+#include "MultiMessageReceiver.h"
 
 // Including framework
 #include "Window.h"
@@ -24,55 +18,69 @@
 
 #include "GameObjectManager.h"
 
-namespace Jinny
+namespace jinny
 {
     class Scene;
 
     /**
-     * The backbone of the game engine, declaring all the framework classes and systems.
+     * \brief The backbone of the game engine, declaring all the framework classes and systems.
      * This class calls all the game loop related methods to the systems
      */
-    class Game
+    class Game final
+        : public MultiMessageReceiver
     {
     public:
         // Constructor
-        Game();
-        explicit Game(Scene* t_starting_scene = nullptr);
+        explicit Game(Scene* starting_scene = nullptr);
 
         void update();
 
-        // Destructor
-        ~Game();
-
         // Game Over Check
-        bool isGameOver();
+        bool isGameOver() const;
 
     private:
-        void handleMessages();
+        // Handling messages sent between systems and components
+        void handleMessage(PhysicsMessage msg) override;
+        void handleMessage(InputMessage msg) override;
+        void handleMessage(GraphicsMessage msg) override;
+
+        // Handling messages sent by components to the game 
+        void handleMessage(GameMessage msg) override;
+
+        template<typename M>
+        void passMessageToObject(M msg);
 
         // Framework References
-        const Framework::Core f_core;
-        Framework::Window f_window;
-        const Framework::LoggedGraphics f_graphics;
-        const Framework::Input f_input;
-        const Framework::Physics f_physics;
+        const framework::Core f_core;
+        framework::Window f_window;
+        const framework::LoggedGraphics f_graphics;
+        const framework::Input f_input;
+        const framework::Physics f_physics;
 
-        // Game System pointers
+        // Game System
         InputSystem m_input;
         GraphicsSystem m_graphics;
         PhysicsSystem m_physics;
 
-        // Message Board pointers
-        MessageBoard<GraphicsMessage> m_graphics_message_board;
-        MessageBoard<InputMessage> m_input_message_board;
-        MessageBoard<PhysicsMessage> m_physics_message_board;
-        MessageBoard<GameMessage> m_core_message_board;
-
-        // Object Manager pointer
+        // Object Manager
         GameObjectManager m_object_manager;
 
         // --- data ---
-        bool m_game_over;
+        bool m_game_over{false};
+
         std::unique_ptr<Scene> m_current_scene;
     };
+
+    template <typename M>
+    void Game::passMessageToObject(M msg)
+    {
+        // Should always pass as true
+        static_assert(std::is_base_of_v<InputMessage, M>);
+
+        // Cast to message to get data
+        auto base_msg = static_cast<InputMessage>(msg);
+
+        // Pass the message, whatever it may be
+        m_object_manager.getObject(base_msg.object_id).pushExternalMessage(msg);
+    }
 }

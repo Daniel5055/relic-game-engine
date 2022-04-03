@@ -2,23 +2,19 @@
 
 #include "CoreComponent.h"
 
-namespace Framework
+namespace framework
 {
-    struct Point;
+    struct Shape;
 }
 
-namespace Jinny
+namespace jinny
 {
-    class CameraCoreComponent : public CoreComponent
+    /**
+     * \brief Component used to change the camera of a scene
+     */
+    class CameraCoreComponent final : public CoreComponent
     {
     public:
-
-        // Initialize
-        void initialize(GameObject& object);
-
-
-
-    private:
-
+        explicit CameraCoreComponent(framework::Shape* new_camera_shape);
     };
 }

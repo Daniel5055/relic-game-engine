@@ -1,28 +1,22 @@
 #pragma once
 
-#include <string>
-
-namespace Jinny
+namespace jinny
 {
     class GameSystem
     {
 
     public:
-        //ctor / dtor
-        GameSystem();
-        ~GameSystem();
+        virtual ~GameSystem() = default;
 
-        // Main Public Functions
-        virtual void init();
-        virtual void update() = 0;
-        virtual void close();
+        // Update method is the only required method for GameSystem
+        void update()
+        {
+            doUpdates();
+        };
 
-
-    protected:
-        // Accessors
     private:
-
-
+        // Encapsulating virtual methods
+        virtual void doUpdates() = 0;
     };
 }
 

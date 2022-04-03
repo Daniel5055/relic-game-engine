@@ -6,21 +6,21 @@
 #include "Point.h"
 #include "Window.h"
 
-Jinny::InputSystem::InputSystem(const Framework::Window& t_window, const Framework::Input& t_input, MessageBoard<InputMessage>& t_message_board)
-    :f_window(t_window), f_input(t_input), m_message_board(t_message_board)
+jinny::InputSystem::InputSystem(const framework::Window& window, const framework::Input& input)
+    :f_input(input), f_window(window)
 {
 }
 
-void Jinny::InputSystem::update()
+void jinny::InputSystem::doUpdates()
 {
     handleMessages();
 
     // Event Polling
     while (true)
     {
-        Framework::InputEvent e = f_input.pollEvent();
+        framework::InputEvent e = f_input.pollEvent();
 
-        if (e.type == Framework::InputEventType::NULL_EVENT)
+        if (e.type == framework::InputEventType::null_event)
         {
             break;
         }
@@ -28,25 +28,26 @@ void Jinny::InputSystem::update()
         // Message Handling, mainly reads messages and pushes it to the input systems
         switch (e.type)
         {
-        case Framework::InputEventType::EXIT_BUTTON_PRESSED:
+        case framework::InputEventType::exit_button_pressed:
         {
             InputMessage msg;
-            msg.type = IMessageType::EXIT_BUTTON_PRESSED;
+            msg.type = IMessageType::exit_button_pressed;
+            msg.is_sent_by_system = true;
 
-            m_message_board.pushMessage(msg);
+            sendMessage(msg);
 
             break;
         }
-        case Framework::InputEventType::MOUSE_EVENT:
+        case framework::InputEventType::mouse_event:
         {
-            Framework::Point static_mouse_pos = f_window.getStaticMousePosition();
-            Framework::Point camera_mouse_pos = f_window.getCameraMousePosition();
+            framework::Point static_mouse_pos = f_window.getStaticMousePosition();
+            framework::Point camera_mouse_pos = f_window.getCameraMousePosition();
 
 
             // Check specifically for mouse motion
-            if (e.mouse_event == Framework::MouseEvent::MOUSE_MOTION)
+            if (e.mouse_event == framework::MouseEvent::mouse_motion)
             {
-                for (auto it = m_mouse_over_subscribtions.begin(); it != m_mouse_over_subscribtions.end(); it++)
+                for (auto it = m_mouse_over_subscriptions.begin(); it != m_mouse_over_subscriptions.end(); ++it)
                 {
                     // If it is HUD Object
                     if (it->first.second->is_screen_bound)
@@ -57,10 +58,11 @@ void Jinny::InputSystem::update()
 
                             // Send message to object
                             InputMessage msg;
-                            msg.object_ID = it->first.first;
-                            msg.type = IMessageType::INPUT_TRIGGERED;
-                            msg.object_input = ObjectInput(ObjectInputType::MOUSE_OVER);
-                            m_message_board.pushMessage(msg);
+                            msg.object_id = it->first.first;
+                            msg.type = IMessageType::input_triggered;
+                            msg.object_input = ObjectInput(ObjectInputType::mouse_over);
+                    msg.is_sent_by_system = true;
+                            sendMessage(msg);
                         }
                         else
                         {
@@ -71,10 +73,11 @@ void Jinny::InputSystem::update()
 
                                 // Send message to object
                                 InputMessage msg;
-                                msg.object_ID = it->first.first;
-                                msg.type = IMessageType::INPUT_TRIGGERED;
-                                msg.object_input = ObjectInput(ObjectInputType::MOUSE_OFF);
-                                m_message_board.pushMessage(msg);
+                                msg.object_id = it->first.first;
+                                msg.type = IMessageType::input_triggered;
+                                msg.object_input = ObjectInput(ObjectInputType::mouse_off);
+                    msg.is_sent_by_system = true;
+                                sendMessage(msg);
                             }
 
                         }
@@ -87,10 +90,11 @@ void Jinny::InputSystem::update()
 
                             // Send message to object
                             InputMessage msg;
-                            msg.object_ID = it->first.first;
-                            msg.type = IMessageType::INPUT_TRIGGERED;
-                            msg.object_input = ObjectInput(ObjectInputType::MOUSE_OVER);
-                            m_message_board.pushMessage(msg);
+                            msg.object_id = it->first.first;
+                            msg.type = IMessageType::input_triggered;
+                            msg.object_input = ObjectInput(ObjectInputType::mouse_over);
+                    msg.is_sent_by_system = true;
+                            sendMessage(msg);
                         }
                         else
                         {
@@ -101,10 +105,11 @@ void Jinny::InputSystem::update()
 
                                 // Send message to object
                                 InputMessage msg;
-                                msg.object_ID = it->first.first;
-                                msg.type = IMessageType::INPUT_TRIGGERED;
-                                msg.object_input = ObjectInput(ObjectInputType::MOUSE_OFF);
-                                m_message_board.pushMessage(msg);
+                                msg.object_id = it->first.first;
+                                msg.type = IMessageType::input_triggered;
+                                msg.object_input = ObjectInput(ObjectInputType::mouse_off);
+                    msg.is_sent_by_system = true;
+                                sendMessage(msg);
                             }
 
                         }
@@ -116,7 +121,7 @@ void Jinny::InputSystem::update()
             else
             {
                 // Then do the rest
-                for (auto it = m_mouse_button_subscriptions[e.mouse_event].begin(); it != m_mouse_button_subscriptions[e.mouse_event].end(); it++)
+                for (auto it = m_mouse_button_subscriptions[e.mouse_event].begin(); it != m_mouse_button_subscriptions[e.mouse_event].end(); ++it)
                 {
                     // Check if HUD Object
                     if (it->second->is_screen_bound)
@@ -125,10 +130,11 @@ void Jinny::InputSystem::update()
                         {
                             // Send message to object
                             InputMessage msg;
-                            msg.object_ID = it->first;
-                            msg.type = IMessageType::INPUT_TRIGGERED;
-                            msg.object_input = ObjectInput((ObjectInputType)(e.mouse_event));
-                            m_message_board.pushMessage(msg);
+                            msg.object_id = it->first;
+                            msg.type = IMessageType::input_triggered;
+                            msg.object_input = ObjectInput(static_cast<ObjectInputType>(e.mouse_event));
+                            msg.is_sent_by_system = true;
+                            sendMessage(msg);
                         }
                     }
                     else
@@ -137,10 +143,11 @@ void Jinny::InputSystem::update()
                         {
                             // Send message to object
                             InputMessage msg;
-                            msg.object_ID = it->first;
-                            msg.type = IMessageType::INPUT_TRIGGERED;
-                            msg.object_input = ObjectInput((ObjectInputType)(e.mouse_event));
-                            m_message_board.pushMessage(msg);
+                            msg.object_id = it->first;
+                            msg.type = IMessageType::input_triggered;
+                            msg.object_input = ObjectInput(static_cast<ObjectInputType>(e.mouse_event));
+                            msg.is_sent_by_system = true;
+                            sendMessage(msg);
                         }
                     }
                 }
@@ -148,105 +155,105 @@ void Jinny::InputSystem::update()
 
             break;
         }
-        case Framework::InputEventType::KEY_DOWN:
+        case framework::InputEventType::key_down:
         {
-            for (auto it = m_key_supscriptions[e.key].begin(); it != m_key_supscriptions[e.key].end(); it++)
+            for (auto it = m_key_subscription[e.key].begin(); it != m_key_subscription[e.key].end(); ++it)
             {
                 InputMessage msg;
-                msg.object_ID = *it;
-                msg.type = IMessageType::INPUT_TRIGGERED;
-                msg.object_input = ObjectInput(ObjectInputType::KEY_DOWN, e.key);
-                m_message_board.pushMessage(msg);
+                msg.object_id = *it;
+                msg.type = IMessageType::input_triggered;
+                msg.object_input = ObjectInput(ObjectInputType::key_down, e.key);
+                    msg.is_sent_by_system = true;
+                sendMessage(msg);
             }
 
             break;
         }
-        case Framework::InputEventType::KEY_UP:
+        case framework::InputEventType::key_up:
         {
-            for (auto it = m_key_supscriptions[e.key].begin(); it != m_key_supscriptions[e.key].end(); it++)
+            for (auto it = m_key_subscription[e.key].begin(); it != m_key_subscription[e.key].end(); ++it)
             {
                 InputMessage msg;
-                msg.object_ID = *it;
-                msg.type = IMessageType::INPUT_TRIGGERED;
-                msg.object_input = ObjectInput(ObjectInputType::KEY_UP, e.key);
-                m_message_board.pushMessage(msg);
+                msg.object_id = *it;
+                msg.type = IMessageType::input_triggered;
+                msg.object_input = ObjectInput(ObjectInputType::key_up, e.key);
+                    msg.is_sent_by_system = true;
+                sendMessage(msg);
             }
 
             break;
         }
+        default:;
         }
     }
 }
 
-void Jinny::InputSystem::handleMessages()
+void jinny::InputSystem::handleMessage(const InputMessage msg)
 {
-    int size = m_message_board.getQueueSize();
-    for (int it = 0; it < size; it++)
+    switch (msg.type)
     {
-        InputMessage msg = m_message_board.popMessage();
-        switch (msg.type)
+    case IMessageType::subscribe_input:
+        switch (msg.object_input.type)
         {
-        case IMessageType::SUBSCRIBE_INPUT:
-            switch (msg.object_input.type)
+        case ObjectInputType::mouse_over:
+            m_mouse_over_subscriptions[{msg.object_id, msg.object_shape}] = false;
+            break;
+        case ObjectInputType::left_mouse_press:
+            if (m_mouse_button_subscriptions.find(framework::MouseEvent::left_down) != m_mouse_button_subscriptions.end())
             {
-            case ObjectInputType::MOUSE_OVER:
-                m_mouse_over_subscribtions[{msg.object_ID, msg.object_shape}] = false;
-                break;
-            case ObjectInputType::LEFT_MOUSE_PRESS:
-                if (m_mouse_button_subscriptions.find(Framework::MouseEvent::LEFT_DOWN) != m_mouse_button_subscriptions.end())
-                {
-                    m_mouse_button_subscriptions[Framework::MouseEvent::LEFT_DOWN].push_back({ msg.object_ID, msg.object_shape });
-                }
-                else
-                {
-                    m_mouse_button_subscriptions[Framework::MouseEvent::LEFT_DOWN] = { { msg.object_ID, msg.object_shape } };
-                }
+                m_mouse_button_subscriptions[framework::MouseEvent::left_down].push_back({ msg.object_id, msg.object_shape });
+            }
+            else
+            {
+                m_mouse_button_subscriptions[framework::MouseEvent::left_down] = { { msg.object_id, msg.object_shape } };
+            }
 
-                if (m_mouse_button_subscriptions.find(Framework::MouseEvent::LEFT_UP) != m_mouse_button_subscriptions.end())
-                {
-                    m_mouse_button_subscriptions[Framework::MouseEvent::LEFT_UP].push_back({ msg.object_ID, msg.object_shape });
-                }
-                else
-                {
-                    m_mouse_button_subscriptions[Framework::MouseEvent::LEFT_UP] = { { msg.object_ID, msg.object_shape } };
-                }
-
-                break;
-            case ObjectInputType::RIGHT_MOUSE_PRESS:
-
-                if (m_mouse_button_subscriptions.find(Framework::MouseEvent::RIGHT_DOWN) != m_mouse_button_subscriptions.end())
-                {
-                    m_mouse_button_subscriptions[Framework::MouseEvent::RIGHT_DOWN].push_back({ msg.object_ID, msg.object_shape });
-                }
-                else
-                {
-                    m_mouse_button_subscriptions[Framework::MouseEvent::RIGHT_DOWN] = { { msg.object_ID, msg.object_shape } };
-                }
-
-                if (m_mouse_button_subscriptions.find(Framework::MouseEvent::RIGHT_UP) != m_mouse_button_subscriptions.end())
-                {
-                    m_mouse_button_subscriptions[Framework::MouseEvent::RIGHT_UP].push_back({ msg.object_ID, msg.object_shape });
-                }
-                else
-                {
-                    m_mouse_button_subscriptions[Framework::MouseEvent::RIGHT_UP] = { { msg.object_ID, msg.object_shape } };
-                }
-                break;
-            case ObjectInputType::KEY_PRESS:
-
-                if (m_key_supscriptions.find(msg.object_input.key) != m_key_supscriptions.end())
-                {
-                    m_key_supscriptions[msg.object_input.key].push_back(msg.object_ID);
-                }
-                else
-                {
-                    m_key_supscriptions[msg.object_input.key] = { msg.object_ID };
-                }
-                break;
+            if (m_mouse_button_subscriptions.find(framework::MouseEvent::left_up) != m_mouse_button_subscriptions.end())
+            {
+                m_mouse_button_subscriptions[framework::MouseEvent::left_up].push_back({ msg.object_id, msg.object_shape });
+            }
+            else
+            {
+                m_mouse_button_subscriptions[framework::MouseEvent::left_up] = { { msg.object_id, msg.object_shape } };
             }
 
             break;
+        case ObjectInputType::right_mouse_press:
+
+            if (m_mouse_button_subscriptions.find(framework::MouseEvent::right_down) != m_mouse_button_subscriptions.end())
+            {
+                m_mouse_button_subscriptions[framework::MouseEvent::right_down].push_back({ msg.object_id, msg.object_shape });
+            }
+            else
+            {
+                m_mouse_button_subscriptions[framework::MouseEvent::right_down] = { { msg.object_id, msg.object_shape } };
+            }
+
+            if (m_mouse_button_subscriptions.find(framework::MouseEvent::right_up) != m_mouse_button_subscriptions.end())
+            {
+                m_mouse_button_subscriptions[framework::MouseEvent::right_up].push_back({ msg.object_id, msg.object_shape });
+            }
+            else
+            {
+                m_mouse_button_subscriptions[framework::MouseEvent::right_up] = { { msg.object_id, msg.object_shape } };
+            }
+            break;
+        case ObjectInputType::key_press:
+
+            if (m_key_subscription.find(msg.object_input.key) != m_key_subscription.end())
+            {
+                m_key_subscription[msg.object_input.key].push_back(msg.object_id);
+            }
+            else
+            {
+                m_key_subscription[msg.object_input.key] = { msg.object_id };
+            }
+            break;
+        default: ;
         }
+
+        break;
+    default:;
     }
 }
 

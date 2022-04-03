@@ -7,7 +7,7 @@
 
 #include <SDL.h>
 
-Framework::InputEvent Framework::Input::pollEvent() const
+framework::InputEvent framework::Input::pollEvent() const
 {
     SDL_Event e;
     InputEvent e_out;
@@ -19,58 +19,58 @@ Framework::InputEvent Framework::Input::pollEvent() const
     switch (e.type)
     {
     case SDL_QUIT:
-        e_out.type = InputEventType::EXIT_BUTTON_PRESSED;
+        e_out.type = InputEventType::exit_button_pressed;
         break;
     
     case SDL_KEYDOWN:
-        e_out.type = InputEventType::KEY_DOWN;
+        e_out.type = InputEventType::key_down;
         e_out.key = e.key.keysym.sym;
         break;
 
     case SDL_KEYUP:
-        e_out.type = InputEventType::KEY_UP;
+        e_out.type = InputEventType::key_up;
         e_out.key = e.key.keysym.sym;
         break;
 
     case SDL_MOUSEMOTION:
-        e_out.type = InputEventType::MOUSE_EVENT;
-        e_out.mouse_event = MouseEvent::MOUSE_MOTION;
+        e_out.type = InputEventType::mouse_event;
+        e_out.mouse_event = MouseEvent::mouse_motion;
         break;
    
     case SDL_MOUSEBUTTONDOWN:
-        e_out.type = InputEventType::MOUSE_EVENT;
+        e_out.type = InputEventType::mouse_event;
 
         if (e.button.button == SDL_BUTTON_LEFT)
         {
-            e_out.mouse_event = MouseEvent::LEFT_DOWN;
+            e_out.mouse_event = MouseEvent::left_down;
         }
         else if (e.button.button == SDL_BUTTON_RIGHT)
         {
-            e_out.mouse_event = MouseEvent::RIGHT_DOWN;
+            e_out.mouse_event = MouseEvent::right_down;
         }
         break;
 
     case SDL_MOUSEBUTTONUP:
-        e_out.type = InputEventType::MOUSE_EVENT;
+        e_out.type = InputEventType::mouse_event;
 
         if (e.button.button == SDL_BUTTON_LEFT)
         {
-            e_out.mouse_event = MouseEvent::LEFT_UP;
+            e_out.mouse_event = MouseEvent::left_up;
         }
         else if (e.button.button == SDL_BUTTON_RIGHT)
         {
-            e_out.mouse_event = MouseEvent::RIGHT_UP;
+            e_out.mouse_event = MouseEvent::right_up;
         }
         break;
     default:
-        e_out.type = InputEventType::NULL_EVENT;
+        e_out.type = InputEventType::null_event;
         break;
     }
 
     return e_out;
 }
 
-bool Framework::Input::isInBoundary(const Point& point, const Shape& shape) const
+bool framework::Input::isInBoundary(const Point& point, const Shape& shape) const
 {
     bool inside = true;
 

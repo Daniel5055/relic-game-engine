@@ -4,44 +4,29 @@
 
 #include <cmath>
 
-Framework::RigidBody::RigidBody(double mass, double damping_force, Framework::Vector max_speed, Framework::Shape* shape_ptr, Framework::Material material)
+framework::RigidBody::RigidBody(const double mass, const double damping_force, const framework::Vector max_speed, const framework::Shape shape, const framework::Material material)
+    : m_mass(mass), m_damping(damping_force), m_shape(shape), m_position(shape.x, shape.y), m_material(material), m_max_speed(max_speed)
 {
-    m_mass = mass;
-    m_max_speed = max_speed;
-    m_shape_ptr = shape_ptr;
-    m_material = material;
-    m_is_static = false;
-    m_damping = damping_force;
-
-    m_current_velocity = { 0, 0 };
-
-    m_mf_force = { 0, 0 };
-    m_sf_force = { 0, 0 };
 }
 
-double Framework::RigidBody::getMass() const
+double framework::RigidBody::getMass() const
 {
     return m_mass;
 }
 
-void Framework::RigidBody::setMass(double mass)
-{
-    m_mass = mass;
-}
-
-Framework::Vector Framework::RigidBody::getVelocity() const
+framework::Vector framework::RigidBody::getVelocity() const
 {
     return m_current_velocity;
 }
 
-void Framework::RigidBody::increaseVelocity(Vector additional_velocity)
+void framework::RigidBody::increaseVelocity(const Vector additional_velocity)
 {
     m_current_velocity += additional_velocity;
 
     // Ensure speed is within limit if specified
-    for (int axis : {0, 1})
+    for (const int axis : {0, 1})
     {
-        if (m_max_speed[axis] != 0 && abs(m_current_velocity[axis]) > m_max_speed[axis])
+        if (0 != m_max_speed[axis] && abs(m_current_velocity[axis]) > m_max_speed[axis])
         {
             if (m_current_velocity[axis] > 0)
             {
@@ -55,7 +40,6 @@ void Framework::RigidBody::increaseVelocity(Vector additional_velocity)
         }
     }
 
-
     // Prevent stupidly small non zero velocities
     if (abs(m_current_velocity[0]) < 0.00000000001)
     {
@@ -67,28 +51,27 @@ void Framework::RigidBody::increaseVelocity(Vector additional_velocity)
     }
 }
 
-Framework::Vector Framework::RigidBody::getAppliedForce()
+framework::Vector framework::RigidBody::getAppliedForce()
 {
-    Vector applied_force = m_mf_force + m_sf_force;
-    return applied_force;
+    return m_mf_force + m_sf_force;
 }
 
-void Framework::RigidBody::clearSFForce()
+void framework::RigidBody::clearSFForce()
 {
     m_sf_force.clear();
 }
 
-void Framework::RigidBody::applyMFForce(Vector force)
+void framework::RigidBody::applyMFForce(const Vector force)
 {
     m_mf_force += force;
 }
 
-void Framework::RigidBody::applySFForce(Vector force)
+void framework::RigidBody::applySFForce(const Vector force)
 {
     m_sf_force += force;
 }
 
-bool Framework::RigidBody::isStationary() const
+bool framework::RigidBody::isStationary() const
 {
     if (m_current_velocity.x == 0 && m_current_velocity.y == 0)
     {
@@ -98,82 +81,76 @@ bool Framework::RigidBody::isStationary() const
     return false;
 }
 
-double Framework::RigidBody::getDamping() const
+double framework::RigidBody::getDamping() const
 {
     return m_damping;
 }
 
-void Framework::RigidBody::move(Vector movement)
+void framework::RigidBody::move(Vector movement)
 {
     m_position += movement;
 
-    int whole_x = (int)round(m_position.x);
-    if (whole_x != m_shape_ptr->x)
+    const int whole_x = static_cast<int>(round(m_position.x));
+    if (whole_x != m_shape.x)
     {
-        m_shape_ptr->x = whole_x;
+        m_shape.x = whole_x;
     }
 
-    int whole_y = (int)round(m_position.y);
-    if (whole_y != m_shape_ptr->y)
+    const int whole_y = static_cast<int>(round(m_position.y));
+    if (whole_y != m_shape.y)
     {
-        m_shape_ptr->y = whole_y;
+        m_shape.y = whole_y;
     }
 }
 
-int Framework::RigidBody::getRoundedX() const
+int framework::RigidBody::getRoundedX() const
 {
-    return m_shape_ptr->x;
+    return m_shape.x;
 }
 
-int Framework::RigidBody::getRoundedY() const
+int framework::RigidBody::getRoundedY() const
 {
-    return m_shape_ptr->y;
+    return m_shape.y;
 }
 
-void Framework::RigidBody::setShape(Framework::Shape* shape_ptr)
+int framework::RigidBody::getWidth() const
 {
-    m_shape_ptr = shape_ptr;
-    m_position = Vector(shape_ptr->x, shape_ptr->y);
+    return m_shape.w;
 }
 
-int Framework::RigidBody::getWidth() const
+int framework::RigidBody::getHeight() const
 {
-    return m_shape_ptr->w;
+    return m_shape.h;
 }
 
-int Framework::RigidBody::getHeight() const
+framework::Vector framework::RigidBody::getSize() const
 {
-    return m_shape_ptr->h;
+    return {static_cast<double>(m_shape.w), static_cast<double>(m_shape.h)};
 }
 
-Framework::Vector Framework::RigidBody::getSize() const
-{
-    return Vector(m_shape_ptr->w, m_shape_ptr->h);
-}
-
-Framework::Vector Framework::RigidBody::getPosition() const
+framework::Vector framework::RigidBody::getPosition() const
 {
     return m_position;
 }
 
-void Framework::RigidBody::setPosition(Vector position)
+void framework::RigidBody::setPosition(Vector position)
 {
     m_position = position;
-    m_shape_ptr->x = (int)round(position.x);
-    m_shape_ptr->y = (int)round(position.y);
+    m_shape.x = static_cast<int>(round(position.x));
+    m_shape.y = static_cast<int>(round(position.y));
 }
 
-bool Framework::RigidBody::isStatic() const
+bool framework::RigidBody::isStatic() const
 {
     return m_is_static;
 }
 
-void Framework::RigidBody::setStatic(bool is_static)
+void framework::RigidBody::setStatic(const bool is_static)
 {
     m_is_static = is_static;
 }
 
-Framework::Material Framework::RigidBody::getMaterial() const
+framework::Material framework::RigidBody::getMaterial() const
 {
     return m_material;
 }

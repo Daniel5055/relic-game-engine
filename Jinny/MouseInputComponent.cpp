@@ -1,119 +1,64 @@
 #include "MouseInputComponent.h"
 
-
-// Framework
-#include "Shape.h"
-
-Jinny::MouseInputComponent::MouseInputComponent()
+jinny::MouseInputComponent::MouseInputComponent(const framework::Shape mouse_area)
+    :m_mouse_area(mouse_area)
 {
-    m_mouse_button_down = false;
-}
-
-void Jinny::MouseInputComponent::initialize(GameObject& object)
-{
-    setObject(&object);
-
-    ObjectEvent o_event = *object.getQueueIterator();
-
-    Framework::Shape* shape = nullptr;
-
-    // Event should be initialization message
-    if (o_event.type == EventType::OBJECT_INITIALIZATION_SHAPE)
-    {
-        shape = o_event.shape;
-    }
-
-    // Send Messages
-
-    // General Message
+    // subscribe to mouse hovering and pressing in mouse area
     InputMessage msg;
-    msg.type = IMessageType::SUBSCRIBE_INPUT;
-    msg.object_ID = object.getObjectID();
-    msg.object_shape = shape;
-
-
-    ObjectInput o_i;
-
-    // Object Input 1
-    o_i.type = ObjectInputType::LEFT_MOUSE_PRESS;
-    msg.object_input = o_i;
-
-    pushMessage(msg);
+    msg.type = IMessageType::subscribe_input;
+    msg.object_id = getObjectId();
+    msg.object_shape = &m_mouse_area;
+    msg.object_input.type = ObjectInputType::left_mouse_press;
+    sendMessage(msg);
 
     // Object Input 2
-    msg.object_input.type = ObjectInputType::MOUSE_OVER;
-    pushMessage(msg);
+    msg.object_input.type = ObjectInputType::mouse_over;
+    sendMessage(msg);
 }
 
-void Jinny::MouseInputComponent::update()
+void jinny::MouseInputComponent::handleMessage(const InputMessage msg)
 {
-    handleMessages();
-}
-
-void Jinny::MouseInputComponent::close()
-{
-}
-
-void Jinny::MouseInputComponent::handleMessages()
-{
-    for (InputMessage msg = popMessage(); msg.type != IMessageType::NULL_MESSAGE; msg = popMessage())
+    switch (msg.type)
     {
-        switch (msg.type)
+    case IMessageType::input_triggered:
+
+        const ObjectEvent e{ObjectEvent::Type::input_triggered, {ObjectInput(msg.object_input.type)}};
+
+        // Mouse Clicking
+        switch(msg.object_input.type)
         {
-        case IMessageType::INPUT_TRIGGERED:
-
-            ObjectEvent o_event(EventType::INPUT_TRIGGERED);
-            ObjectInput o_input;
-
-            // Mouse Clicking
-            switch (msg.object_input.type)
-            {
-            case ObjectInputType::MOUSE_OVER:
-                o_input.type = ObjectInputType::MOUSE_OVER;
-                o_event.input = o_input;
-
-                getObject()->pushEvent(o_event);
-                break;
-
-            case ObjectInputType::MOUSE_OFF:
-                o_input.type = ObjectInputType::MOUSE_OFF;
-                o_event.input = o_input;
-
-                getObject()->pushEvent(o_event);
-
-                m_mouse_button_down = false;
-                break;
-
-            case ObjectInputType::LEFT_MOUSE_DOWN:
-                m_mouse_button_down = true;
-
-                o_input.type = ObjectInputType::LEFT_MOUSE_DOWN;
-                o_event.input = o_input;
-
-                getObject()->pushEvent(o_event);
-
-                break;
-
-            case ObjectInputType::LEFT_MOUSE_UP:
-                if (m_mouse_button_down)
-                {
-                    o_input.type = ObjectInputType::LEFT_MOUSE_UP;
-                    o_event.input = o_input;
-
-                    getObject()->pushEvent(o_event);
-
-                    m_mouse_button_down = false;
-                }
-
-                break;
-            }
-
+        case ObjectInputType::left_mouse_down:
+            m_mouse_button_down = false;
             break;
-
+        case ObjectInputType::left_mouse_up:
+            m_mouse_button_down = false;
+            break;
+        case ObjectInputType::mouse_off: 
+            m_mouse_button_down = false;
+            break;
         }
+        // Send the event
+        sendEvent(e);
 
-
+        break;
     }
 }
 
+void jinny::MouseInputComponent::handleEvent(ObjectEvent e)
+{
+    switch (e.type)
+    {
+    case ObjectEvent::Type::move:
+        m_mouse_area.x += e.movement.x;
+        m_mouse_area.y += e.movement.y;
+        break;
+    default:;
+    }
+}
+
+void jinny::MouseInputComponent::doUpdates()
+{
+    // Have to manually call to handleMessages
+    MessageReceiver<InputMessage>::handleMessages();
+}
 

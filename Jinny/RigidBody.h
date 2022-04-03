@@ -1,9 +1,10 @@
 #pragma once
 
+#include "Material.h"
 #include "Vector.h"
 #include "Shape.h"
 
-namespace Framework
+namespace framework
 {
     enum class Material;
 
@@ -14,11 +15,10 @@ namespace Framework
     {
     public:
         // Constructor
-        RigidBody(double mass, double damping_force, Vector max_speed, Shape* shape_ptr, Material material);
+        RigidBody(double mass, double damping_force, Vector max_speed, Shape shape, Material material);
 
         // Mass Accessors
         double getMass() const;
-        void setMass(double mass);
 
         // Velocity Accessors
         Vector getVelocity() const;
@@ -33,9 +33,6 @@ namespace Framework
 
         // Dampening Accessor
         double getDamping() const;
-
-        // Shape Accessors
-        void setShape(Framework::Shape* shape_ptr);
 
         int getWidth() const;
         int getHeight() const;
@@ -56,30 +53,30 @@ namespace Framework
     private:
 
         // Mass in kg
-        double m_mass;
+        const double m_mass{ 1 };
 
         // Current Velocity in meters per second
-        Vector m_current_velocity;
+        Vector m_current_velocity{ 0, 0 };
 
         // multi and single frame forces
-        Vector m_mf_force;
-        Vector m_sf_force;
+        Vector m_mf_force{ 0, 0 };
+        Vector m_sf_force{ 0, 0 };
 
         // Dampening force
-        double m_damping;
+        double m_damping{ 0 };
 
         // Shape (position and size as integers)
-        Shape* m_shape_ptr;
+        Shape m_shape;
 
         // Position in double form
-        Vector m_position;
+        Vector m_position{ 0, 0 };
 
         // Staticness (if reacts when collided with)
-        bool m_is_static;
+        bool m_is_static{ false };
 
         // Material (for friction
-        Material m_material;
+        Material m_material{ Material::nullium };
 
-        Vector m_max_speed;
+        Vector m_max_speed{ 0, 0 };
     };
 }

@@ -3,7 +3,7 @@
 #include <SDL.h>
 
 
-Framework::Color::Color(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+framework::Color::Color(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
     this->r = r;
     this->g = g;
@@ -11,7 +11,7 @@ Framework::Color::Color(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
     this->a = a;
 }
 
-Framework::Color::Color(SDL_Color color)
+framework::Color::Color(SDL_Color color)
 {
     r = color.r;
     g = color.g;
@@ -19,7 +19,7 @@ Framework::Color::Color(SDL_Color color)
     a = color.a;
 }
 
-Framework::Color::operator SDL_Color() const
+framework::Color::operator SDL_Color() const
 {
     return { r, g, b, a };
 }

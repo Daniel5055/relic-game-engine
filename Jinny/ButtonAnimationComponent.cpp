@@ -1,12 +1,13 @@
 #include "ButtonAnimationComponent.h"
 
-Jinny::ButtonAnimationComponent::ButtonAnimationComponent(GraphicsComponent* graphics_component, int texture_width, int texture_height)
+jinny::ButtonAnimationComponent::ButtonAnimationComponent(GraphicsComponent* graphics_component, int texture_width, int texture_height)
     :AnimationComponent(graphics_component, texture_width, texture_height)
 {
 
 }
 
-void Jinny::ButtonAnimationComponent::initialize(GameObject& object)
+/*
+void jinny::ButtonAnimationComponent::initialize(GameObject& object)
 {
     AnimationComponent::initialize(object);
 
@@ -19,43 +20,44 @@ void Jinny::ButtonAnimationComponent::initialize(GameObject& object)
 
 }
 
-void Jinny::ButtonAnimationComponent::update()
+void jinny::ButtonAnimationComponent::update()
 {
     handleEvents();
 }
 
-void Jinny::ButtonAnimationComponent::close()
+void jinny::ButtonAnimationComponent::close()
 {
     AnimationComponent::close();
 }
 
-void Jinny::ButtonAnimationComponent::handleEvents()
+void jinny::ButtonAnimationComponent::handleEvents()
 {
     for (auto it = getObject()->getQueueIterator(); it != getObject()->getQueueEnd(); it++)
     {
         switch (it->type)
         {
-        case EventType::INPUT_TRIGGERED:
+        case EventType::input_triggered:
 
             // Check for mouse input
             switch (it->input.type)
             {
-            case ObjectInputType::MOUSE_OVER:
+            case ObjectInputType::mouse_over:
                 changeCurrentClip(1);
                 break;
 
-            case ObjectInputType::MOUSE_OFF:
+            case ObjectInputType::mouse_off:
                 changeCurrentClip(0);
                 break;
 
-            case ObjectInputType::LEFT_MOUSE_DOWN:
+            case ObjectInputType::left_mouse_down:
                 changeCurrentClip(2);
                 break;
 
-            case ObjectInputType::LEFT_MOUSE_UP:
+            case ObjectInputType::left_mouse_up:
                 changeCurrentClip(1);
                 break;
             }
         }
     }
 }
+*/

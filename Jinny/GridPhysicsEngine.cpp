@@ -4,12 +4,12 @@
 #include "Physics.h"
 
 
-Jinny::GridPhysicsEngine::GridPhysicsEngine(const Framework::Physics& t_physics)
-    :m_acceleration_due_to_gravity(9.81), PhysicsEngine(t_physics)
+jinny::GridPhysicsEngine::GridPhysicsEngine(const framework::Physics& physics)
+    : PhysicsEngine(physics), m_acceleration_due_to_gravity(9.81)
 {
 }
 
-void Jinny::GridPhysicsEngine::update()
+void jinny::GridPhysicsEngine::update()
 {
     double time_passed = 0;
 
@@ -18,7 +18,7 @@ void Jinny::GridPhysicsEngine::update()
     while (true)
     {
         // Define map containing force applied in friction
-        std::map<int, Framework::Vector> friction_applied;
+        std::map<int, framework::Vector> friction_applied;
 
         // Find influence rects
         std::map<int, InfluenceRectangle> influence_rects = calculateInfluenceRects(time_passed);
@@ -49,7 +49,7 @@ void Jinny::GridPhysicsEngine::update()
         }
 
         // Iterate through friction forces applied and apply the forces finally
-        for (auto it = friction_applied.begin(); it != friction_applied.end(); it++)
+        for (auto it = friction_applied.begin(); it != friction_applied.end(); ++it)
         {
             m_rigid_bodies[it->first]->applySFForce(it->second);
         }
@@ -59,13 +59,13 @@ void Jinny::GridPhysicsEngine::update()
     moveBodies(f_physics.getTimeStep() - time_passed);
 
     // clear single tick forces
-    for (auto it = m_rigid_bodies.begin(); it != m_rigid_bodies.end(); it++)
+    for (auto it = m_rigid_bodies.begin(); it != m_rigid_bodies.end(); ++it)
     {
         it->second->clearSFForce();
     }
 }
 
-void Jinny::GridPhysicsEngine::addRigidBody(int object_id, Framework::RigidBody* rigid_body)
+void jinny::GridPhysicsEngine::addRigidBody(int object_id, framework::RigidBody* rigid_body)
 {
     // Apply gravity
     if (!rigid_body->isStatic())
@@ -75,32 +75,32 @@ void Jinny::GridPhysicsEngine::addRigidBody(int object_id, Framework::RigidBody*
     PhysicsEngine::addRigidBody(object_id, rigid_body);
 }
 
-void Jinny::GridPhysicsEngine::applyDamping()
+void jinny::GridPhysicsEngine::applyDamping()
 {
     // Iterate through rigid bodies
-    for (const auto body : m_rigid_bodies)
+    for (const auto& body : m_rigid_bodies)
     {
         if (body.second->getDamping() > 0)
         {
-            for (int axis : {0, 1})
+            for (const int axis : {0, 1})
             {
                 // Max force to reduce velocity to zero
-                double max_force = abs(body.second->getVelocity()[axis]) * body.second->getMass() / (f_physics.getTimeStep());
+                const double max_force = abs(body.second->getVelocity()[axis]) * body.second->getMass() / (f_physics.getTimeStep());
 
                 // Make sure velocity is greater than zero
                 if (max_force > 0)
                 {
-                    Framework::Vector damping_force = { 0, 0 };
+                    framework::Vector damping_force = { 0, 0 };
 
                     damping_force[axis] = body.second->getDamping() * body.second->getMass() / (f_physics.getTimeStep());
 
-                    // Make sure damping foce is not bigger than max force
+                    // Make sure damping force is not bigger than max force
                     if (max_force < damping_force[axis])
                     {
                         damping_force[axis] = max_force;
                     }
 
-                    // Apply damping forec in right direction
+                    // Apply damping force in right direction
                     if (body.second->getVelocity()[axis] > 0)
                     {
                         body.second->applySFForce(damping_force * -1);
@@ -115,7 +115,7 @@ void Jinny::GridPhysicsEngine::applyDamping()
     }
 }
 
-void Jinny::GridPhysicsEngine::moveBodies(double time)
+void jinny::GridPhysicsEngine::moveBodies(double time)
 {
     // Move objects to new positon in duration of time
     for (auto it = m_rigid_bodies.begin(); it != m_rigid_bodies.end(); it++)
@@ -126,7 +126,7 @@ void Jinny::GridPhysicsEngine::moveBodies(double time)
     }
 }
 
-bool Jinny::GridPhysicsEngine::correctClippings(int id1, int id2)
+bool jinny::GridPhysicsEngine::correctClippings(const int id1, const int id2)
 {
     // Check if bodies are clipping
 
@@ -162,7 +162,7 @@ bool Jinny::GridPhysicsEngine::correctClippings(int id1, int id2)
         // Lambda functions for what type of clipping correction occurs
         auto moveOne = [&](int moved_body_id, int still_body_id, int moved_rel_id)
         {
-            Framework::Vector new_position = m_rigid_bodies[moved_body_id]->getPosition();
+            framework::Vector new_position = m_rigid_bodies[moved_body_id]->getPosition();
 
             if (moved_rel_id == left_most)
             {
@@ -181,7 +181,7 @@ bool Jinny::GridPhysicsEngine::correctClippings(int id1, int id2)
         auto moveBoth = [&](int body_id_1, int body_id_2)
         {
             // Calculate the movement of the bodies
-            Framework::Vector movement = { 0, 0 };
+            framework::Vector movement = { 0, 0 };
             movement[closest_axis] = smallest_distance / 2;
             if (left_most == 0)
             {
@@ -241,7 +241,7 @@ bool Jinny::GridPhysicsEngine::correctClippings(int id1, int id2)
     return true;
 }
 
-std::map<int, Jinny::GridPhysicsEngine::InfluenceRectangle> Jinny::GridPhysicsEngine::calculateInfluenceRects(double time_passed)
+std::map<int, jinny::GridPhysicsEngine::InfluenceRectangle> jinny::GridPhysicsEngine::calculateInfluenceRects(double time_passed)
 {
     // Create output map
     std::map<int, InfluenceRectangle> influence_rects = std::map<int, InfluenceRectangle>();
@@ -250,8 +250,8 @@ std::map<int, Jinny::GridPhysicsEngine::InfluenceRectangle> Jinny::GridPhysicsEn
     for (const auto body : m_rigid_bodies)
     {
         // Initialise default position and size
-        Framework::Vector size = Framework::Vector(body.second->getWidth(), body.second->getHeight());
-        Framework::Vector position = body.second->getPosition();
+        framework::Vector size = framework::Vector(body.second->getWidth(), body.second->getHeight());
+        framework::Vector position = body.second->getPosition();
 
         // For each axis
         for (int axis : {0, 1})
@@ -276,7 +276,7 @@ std::map<int, Jinny::GridPhysicsEngine::InfluenceRectangle> Jinny::GridPhysicsEn
     return influence_rects;
 }
 
-bool Jinny::GridPhysicsEngine::doesIntersect(const InfluenceRectangle& r1, const InfluenceRectangle& r2)
+bool jinny::GridPhysicsEngine::doesIntersect(const InfluenceRectangle& r1, const InfluenceRectangle& r2)
 {
     // Check if intersects 
     for (int axis : {0, 1})
@@ -290,7 +290,7 @@ bool Jinny::GridPhysicsEngine::doesIntersect(const InfluenceRectangle& r1, const
     return true;
 }
 
-std::queue<Jinny::GridPhysicsEngine::Collision> Jinny::GridPhysicsEngine::findCollisions(const std::map<int, InfluenceRectangle>& influence_rects, double time_passed)
+std::queue<jinny::GridPhysicsEngine::Collision> jinny::GridPhysicsEngine::findCollisions(const std::map<int, InfluenceRectangle>& influence_rects, double time_passed)
 {
     // Create output queue of collisions
     std::queue<Collision> collisions;
@@ -417,12 +417,12 @@ std::queue<Jinny::GridPhysicsEngine::Collision> Jinny::GridPhysicsEngine::findCo
     return collisions;
 }
 
-void Jinny::GridPhysicsEngine::calculateCollision(Collision& collision, double time_passed)
+void jinny::GridPhysicsEngine::calculateCollision(Collision& collision, double time_passed)
 {
     // Calculate velocities of most recent collision
     if (m_rigid_bodies[collision.body_ids[0]]->isStatic() || m_rigid_bodies[collision.body_ids[1]]->isStatic())
     {
-        Framework::RigidBody* dynamic_body = m_rigid_bodies[collision.body_ids[0]];
+        framework::RigidBody* dynamic_body = m_rigid_bodies[collision.body_ids[0]];
         int dynamic_id = 0;
         if (m_rigid_bodies[collision.body_ids[0]]->isStatic())
         {
@@ -431,7 +431,7 @@ void Jinny::GridPhysicsEngine::calculateCollision(Collision& collision, double t
         }
 
         // Technically should be newton's third law but objects often absorb some of the force (not quite sure what to do here but -1 works)
-        Framework::Vector normal = dynamic_body->getAppliedForce() * -1; //-(1 + f_physics->getCoefficientOfRestitution(m_rigid_bodies[collision.body_ids[0], m_rigid_bodies[collision.body_ids[1]));
+        framework::Vector normal = dynamic_body->getAppliedForce() * -1; //-(1 + f_physics->getCoefficientOfRestitution(m_rigid_bodies[collision.body_ids[0], m_rigid_bodies[collision.body_ids[1]));
 
         collision.applying_forces = { 0, 0 };
         collision.applying_forces[dynamic_id] = normal[collision.axis];
@@ -439,7 +439,7 @@ void Jinny::GridPhysicsEngine::calculateCollision(Collision& collision, double t
         normal[1 - collision.axis] = 0;
 
         // Calculate collision force
-        Framework::Vector collision_force = { 0, 0 };
+        framework::Vector collision_force = { 0, 0 };
         collision_force[collision.axis] = f_physics.calculateStaticCollisionForces(dynamic_body->getVelocity()[collision.axis],
             dynamic_body->getAppliedForce()[collision.axis], dynamic_body->getMass(),
             f_physics.getCoefficientOfRestitution(m_rigid_bodies[collision.body_ids[0]], m_rigid_bodies[collision.body_ids[1]]), f_physics.getTimeStep() - time_passed);
@@ -454,9 +454,9 @@ void Jinny::GridPhysicsEngine::calculateCollision(Collision& collision, double t
     else
     {
         // Might have to apply cooef on normal?
-        Framework::Vector normal1 = m_rigid_bodies[collision.body_ids[0]]->getAppliedForce() * -1;
+        framework::Vector normal1 = m_rigid_bodies[collision.body_ids[0]]->getAppliedForce() * -1;
         normal1[1 - collision.axis] = 0;
-        Framework::Vector normal2 = m_rigid_bodies[collision.body_ids[1]]->getAppliedForce() * -1;
+        framework::Vector normal2 = m_rigid_bodies[collision.body_ids[1]]->getAppliedForce() * -1;
         normal2[1 - collision.axis] = 0;
 
         // Calculate collision force
@@ -470,9 +470,9 @@ void Jinny::GridPhysicsEngine::calculateCollision(Collision& collision, double t
             f_physics.getCoefficientOfRestitution(m_rigid_bodies[collision.body_ids[0]], m_rigid_bodies[collision.body_ids[1]]),
             f_physics.getTimeStep() - time_passed);
 
-        Framework::Vector collision_force1 = Framework::Vector();
+        framework::Vector collision_force1 = framework::Vector();
         collision_force1[collision.axis] = collision_forces.first;
-        Framework::Vector collision_force2 = Framework::Vector();
+        framework::Vector collision_force2 = framework::Vector();
         collision_force2[collision.axis] = collision_forces.second;
 
         collision.applying_forces[0] += collision_forces.first;
@@ -486,7 +486,7 @@ void Jinny::GridPhysicsEngine::calculateCollision(Collision& collision, double t
     }
 }
 
-void Jinny::GridPhysicsEngine::calculateFriction(Collision& collision, std::map<int, Framework::Vector>& friction_applied, double time_passed)
+void jinny::GridPhysicsEngine::calculateFriction(Collision& collision, std::map<int, framework::Vector>& friction_applied, double time_passed)
 {
 
     // Calculate friction
@@ -498,13 +498,13 @@ void Jinny::GridPhysicsEngine::calculateFriction(Collision& collision, std::map<
             friction_applied.insert({ collision.body_ids[r], {0, 0} });
         }
 
-        Framework::Vector friction = { 0, 0 };
+        framework::Vector friction = { 0, 0 };
 
         // Check for static friction
         if (m_rigid_bodies[collision.body_ids[0]]->getVelocity()[1 - collision.axis] == m_rigid_bodies[collision.body_ids[1]]->getVelocity()[1 - collision.axis])
         {
 
-            Framework::Vector friction = { 0, 0 };
+            framework::Vector friction = { 0, 0 };
             friction[1 - collision.axis] = abs(collision.applying_forces[r]) *
                 f_physics.getStaticFrictionCoefficient(m_rigid_bodies[collision.body_ids[0]], m_rigid_bodies[collision.body_ids[1]]);
 
@@ -534,7 +534,7 @@ void Jinny::GridPhysicsEngine::calculateFriction(Collision& collision, std::map<
 
             double velocity_diff = m_rigid_bodies[collision.body_ids[r]]->getVelocity()[1 - collision.axis] - m_rigid_bodies[collision.body_ids[1 - r]]->getVelocity()[1 - collision.axis];
 
-            Framework::Vector max_friction = { 0, 0 };
+            framework::Vector max_friction = { 0, 0 };
 
             // For balancing out forces in the same directon (- * - = + and + * + = +)
             if (m_rigid_bodies[collision.body_ids[r]]->getAppliedForce()[1 - collision.axis] * velocity_diff >= 0)

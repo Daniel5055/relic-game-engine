@@ -5,7 +5,7 @@
 
 #include "Material.h"
 
-namespace Framework
+namespace framework
 {
     /**
      * Class for managing materials and how they interact with each other.

@@ -1,42 +1,41 @@
 #include "Vector.h"
 
-#include <cmath>
-Framework::Vector::Vector(double x, double y)
+framework::Vector::Vector(const double x, const double y)
     :x(x), y(y)
 {
 }
 
-Framework::Vector::Vector()
+framework::Vector::Vector()
     :Vector(0, 0)
 {
 }
-Framework::Vector& Framework::Vector::operator+=(const Vector& vector)
+framework::Vector& framework::Vector::operator+=(const Vector& vector)
 {
     x += vector.x;
     y += vector.y;
     return *this;
 }
 
-Framework::Vector Framework::Vector::operator+(const Vector& vector)
+framework::Vector framework::Vector::operator+(const Vector& vector)
 {
     Vector out(*this);
     return out += vector;
 }
 
-Framework::Vector& Framework::Vector::operator-=(const Vector& vector)
+framework::Vector& framework::Vector::operator-=(const Vector& vector)
 {
     x -= vector.x;
     y -= vector.y;
     return *this;
 }
 
-Framework::Vector Framework::Vector::operator-(const Vector& vector)
+framework::Vector framework::Vector::operator-(const Vector& vector)
 {
     Vector out(*this);
     return out -= vector;
 }
 
-Framework::Vector& Framework::Vector::operator/=(double num)
+framework::Vector& framework::Vector::operator/=(double num)
 {
     x /= num;
     y /= num;
@@ -44,26 +43,26 @@ Framework::Vector& Framework::Vector::operator/=(double num)
     return *this;
 }
 
-Framework::Vector Framework::Vector::operator/(double num)
+framework::Vector framework::Vector::operator/(double num)
 {
     Vector out(*this);
     return out /= num;
 }
 
-Framework::Vector& Framework::Vector::operator*=(double num)
+framework::Vector& framework::Vector::operator*=(double num)
 {
     x *= num;
     y *= num;
     return *this;
 }
 
-Framework::Vector Framework::Vector::operator*(double num)
+framework::Vector framework::Vector::operator*(double num)
 {
     Vector out(*this);
     return out *= num;
 }
 
-double& Framework::Vector::operator[](int i)
+double& framework::Vector::operator[](int i)
 {
     switch (i)
     {
@@ -79,7 +78,7 @@ double& Framework::Vector::operator[](int i)
     }
 }
 
-double Framework::Vector::operator[](int i) const
+double framework::Vector::operator[](int i) const
 {
     switch (i)
     {
@@ -95,7 +94,7 @@ double Framework::Vector::operator[](int i) const
     }
 }
 
-void Framework::Vector::clear()
+void framework::Vector::clear()
 {
     x = 0;
     y = 0;

@@ -10,19 +10,19 @@
 #include "Font.h"
 #include "Color.h"
 
-Framework::LoggedGraphics::LoggedGraphics(Window& t_window)
-    :Graphics(t_window), m_logger("Graphics Framework")
+framework::LoggedGraphics::LoggedGraphics(Window& window)
+    :Graphics(window), m_logger("Graphics Framework")
 {
     m_logger.log("Successful Initialisation");
 }
 
-Framework::LoggedGraphics::~LoggedGraphics()
+framework::LoggedGraphics::~LoggedGraphics()
 {
 
     m_logger.log("deinitialisation");
 }
 
-Framework::Font* Framework::LoggedGraphics::createFont(std::string path, int font_size) const
+framework::Font* framework::LoggedGraphics::createFont(std::string path, int font_size) const
 {
     Font* font_ptr = Graphics::createFont(path, font_size);
 
@@ -38,7 +38,7 @@ Framework::Font* Framework::LoggedGraphics::createFont(std::string path, int fon
     return font_ptr;
 }
 
-Framework::Texture* Framework::LoggedGraphics::createTexture(std::string path)  const
+framework::Texture* framework::LoggedGraphics::createTexture(std::string path)  const
 {
     Texture* texture_ptr = Graphics::createTexture(path);
 
@@ -55,7 +55,7 @@ Framework::Texture* Framework::LoggedGraphics::createTexture(std::string path)  
 }
 
 
-Framework::Texture* Framework::LoggedGraphics::createTextTexture(std::string text, Font* font, Color color) const
+framework::Texture* framework::LoggedGraphics::createTextTexture(std::string text, Font* font, Color color) const
 {
     Texture* texture_ptr = Graphics::createTextTexture(text, font, color);
 

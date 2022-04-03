@@ -4,42 +4,42 @@
 
 #include "Point.h"
 
-Framework::Texture::Texture()
+framework::Texture::Texture()
 {
     m_texture_ptr = nullptr;
     m_width = 0;
     m_height = 0;
 }
 
-Framework::Texture::~Texture()
+framework::Texture::~Texture()
 {
     SDL_DestroyTexture(m_texture_ptr);
 }
 
 
 
-SDL_Point Framework::Texture::getSize()
+SDL_Point framework::Texture::getSize()
 {
     return { m_width, m_height };
 }
 
-int Framework::Texture::getWidth()
+int framework::Texture::getWidth()
 {
     return m_width;
 }
 
-int Framework::Texture::getHeight()
+int framework::Texture::getHeight()
 {
     return m_height;
 }
 
-void Framework::Texture::setTexture(SDL_Texture* texture_ptr)
+void framework::Texture::setTexture(SDL_Texture* texture_ptr)
 {
     m_texture_ptr = texture_ptr;
     SDL_QueryTexture(m_texture_ptr, nullptr, nullptr, &m_width, &m_height);
 }
 
-SDL_Texture* Framework::Texture::getTexture()
+SDL_Texture* framework::Texture::getTexture()
 {
     return m_texture_ptr;
 }

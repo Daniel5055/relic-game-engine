@@ -1,48 +1,45 @@
 #include "Graphic.h"
 
-#include "Shape.h"
 #include "Texture.h"
-#include "Point.h"
 
-Framework::Graphic::Graphic(Shape* shape_ptr)
+framework::Graphic::Graphic(const Shape shape)
+    :m_shape(shape), m_clip({0, 0, 0, 0})
 {
-    m_shape_ptr = shape_ptr;
-    m_clip_ptr = nullptr;
-    m_texture_ptr = nullptr;
+
 }
 
-Framework::Shape* Framework::Graphic::getShape()
+framework::Shape& framework::Graphic::getShape()
 {
-    return m_shape_ptr;
+    return m_shape;
 }
 
-void Framework::Graphic::setShape(Shape* shape)
+void framework::Graphic::setShape(const Shape shape)
 {
-    m_shape_ptr = shape;
+    m_shape = shape;
 }
 
-void Framework::Graphic::setSize(int w, int h)
+void framework::Graphic::setSize(const int w, const int h)
 {
-    m_shape_ptr->w = w;
-    m_shape_ptr->h = h;
+    m_shape.w = w;
+    m_shape.h = h;
 }
 
-Framework::Shape* Framework::Graphic::getClip()
+const framework::Shape& framework::Graphic::getClip() const
 {
-    return m_clip_ptr;
+    return m_clip;
 }
 
-void Framework::Graphic::setClip(Shape* clip)
+void framework::Graphic::setClip(const Shape clip)
 {
-    m_clip_ptr = clip;
+    m_clip = clip;
 }
 
-void Framework::Graphic::setTexture(Texture* texture)
+void framework::Graphic::setTexture(Texture* texture)
 {
     m_texture_ptr = texture;
 }
 
-Framework::Texture* Framework::Graphic::getTexture()
+framework::Texture* framework::Graphic::getTexture() const
 {
     return m_texture_ptr;
 }

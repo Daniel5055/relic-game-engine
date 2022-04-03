@@ -2,7 +2,7 @@
 
 #include <vector>
 
-Framework::MaterialManager::MaterialManager()
+framework::MaterialManager::MaterialManager()
 {
     int num_of_materials = 7;
 
@@ -82,7 +82,7 @@ Framework::MaterialManager::MaterialManager()
     }
 }
 
-double Framework::MaterialManager::getCoefficientOfRestitution(Framework::Material material_1, Framework::Material material_2) const
+double framework::MaterialManager::getCoefficientOfRestitution(framework::Material material_1, framework::Material material_2) const
 {
     if ((int)material_1 >= (int)material_2)
     {
@@ -94,7 +94,7 @@ double Framework::MaterialManager::getCoefficientOfRestitution(Framework::Materi
     }
 }
 
-double Framework::MaterialManager::getStaticFrictionCoefficient(Material material_1, Material material_2) const
+double framework::MaterialManager::getStaticFrictionCoefficient(Material material_1, Material material_2) const
 {
     if ((int)material_1 >= (int)material_2)
     {
@@ -106,7 +106,7 @@ double Framework::MaterialManager::getStaticFrictionCoefficient(Material materia
     }
 }
 
-double Framework::MaterialManager::getDynamicFrictionCoefficient(Material material_1, Material material_2) const
+double framework::MaterialManager::getDynamicFrictionCoefficient(Material material_1, Material material_2) const
 {
     if ((int)material_1 >= (int)material_2)
     {

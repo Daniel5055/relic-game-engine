@@ -1,77 +1,56 @@
 #include "PlayerInputComponent.h"
 
-void Jinny::PlayerInputComponent::initialize(GameObject& object)
+jinny::PlayerInputComponent::PlayerInputComponent()
 {
-    setObject(&object);
-
+    // Subscribe to player movement keys
     InputMessage msg;
-    msg.type = IMessageType::SUBSCRIBE_INPUT;
-    msg.object_ID = object.getObjectID();
-
-    ObjectInput input;
-    input.type = ObjectInputType::KEY_PRESS;
-
-    input.key = 'a';
-    msg.object_input = input;
-    pushMessage(msg);
+    msg.type = IMessageType::subscribe_input;
+    msg.object_id = getObjectId();
+    msg.object_input = {ObjectInputType::key_press, 'a'};
 
     m_keys_down['a'] = false;
+    sendMessage(msg);
 
-    input.key = 'd';
-    msg.object_input = input;
-    pushMessage(msg);
-
+    msg.object_input.key = 'd';
     m_keys_down['d'] = false;
+    sendMessage(msg);
 
-    input.key = 'w';
-    msg.object_input = input;
-    pushMessage(msg);
-
+    msg.object_input.key = 'w';
     m_keys_down['w'] = false;
+    sendMessage(msg);
 
-    input.key = 's';
-    msg.object_input = input;
-    pushMessage(msg);
-
+    msg.object_input.key = 's';
     m_keys_down['s'] = false;
-
+    sendMessage(msg);
 }
 
-void Jinny::PlayerInputComponent::update()
+void jinny::PlayerInputComponent::doUpdates()
 {
-    handleMessages();
+    MessageReceiver<InputMessage>::handleMessages();
 }
 
-void Jinny::PlayerInputComponent::handleMessages()
+void jinny::PlayerInputComponent::handleMessage(const InputMessage msg)
 {
-    for (InputMessage msg = popMessage(); msg.type != IMessageType::NULL_MESSAGE; msg = popMessage())
+    switch (msg.type)
     {
-        switch (msg.type)
+    case IMessageType::input_triggered:
+        if (msg.object_input.type == ObjectInputType::key_down)
         {
-        case IMessageType::INPUT_TRIGGERED:
-            if (msg.object_input.type == ObjectInputType::KEY_DOWN)
+            if (m_keys_down[msg.object_input.key] == false)
             {
-                if (m_keys_down[msg.object_input.key] == false)
-                {
-                    m_keys_down[msg.object_input.key] = true;
+                m_keys_down[msg.object_input.key] = true;
 
-                    ObjectEvent o_event = { EventType::INPUT_TRIGGERED };
-                    o_event.input = msg.object_input;
-                    getObject()->pushEvent(o_event);
-
-                }
+                const ObjectEvent e = {ObjectEvent::Type::input_triggered, {msg.object_input}};
+                sendEvent(e);
             }
-            else
-            {
-                m_keys_down[msg.object_input.key] = false;
-
-                ObjectEvent o_event = { EventType::INPUT_TRIGGERED };
-                o_event.input = msg.object_input;
-                getObject()->pushEvent(o_event);
-            }
-
-
-            break;
         }
+        else
+        {
+            m_keys_down[msg.object_input.key] = false;
+
+            const ObjectEvent e = {ObjectEvent::Type::input_triggered, {msg.object_input}};
+            sendEvent(e);
+        }
+        break;
     }
 }

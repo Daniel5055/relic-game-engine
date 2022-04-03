@@ -5,7 +5,7 @@ struct SDL_Color;
 
 #include <SDL.h>
 
-namespace Framework
+namespace framework
 {
     struct Color
     {

@@ -1,41 +1,76 @@
 #pragma once
 
-#include <queue>
+#include <string>
 
-#include "GameObject.h"
+#include "MessageReceiver.h"
+#include "LazyMessageSender.h"
 #include "ObjectEvent.h"
 
-namespace Jinny
+namespace jinny
 {
     // Base class for components
     class Component
+        : public MessageReceiver<ObjectEvent>
+        , public LazyMessageSender<ObjectEvent>
     {
+
+
     public:
 
-        // constructor
-        Component();
+        // Prevent ambiguity 
+        using LazyMessageSender<ObjectEvent>::addReceiver;
 
-        // Should usually set game object here
-        virtual void initialize(GameObject& object) = 0;
+        // Aliasing of pushMessage method for events to help with clarity and ambiguity with pushing events to systems
+        auto pushEvent(ObjectEvent e)->decltype(pushMessage(std::forward<ObjectEvent>(e)))
+        {
+            return pushMessage(std::forward<ObjectEvent>(e));
+        }
+
+        // Virtual destructor because component pointers would likely be deleted
+        virtual ~Component() = default;
 
         // Updating
-        virtual void update() = 0;
+        void update();
 
-        // Closing
-        virtual void close() = 0;
+        Message::Type getMessageType();
+        void setObjectId(int id);
+        void setObjectName(const std::string& name);
+
 
     protected:
+        int getObjectId() const;
+        std::string getObjectName() const;
+        
 
-        // Event Handling
-        virtual void handleEvents() = 0;
+        // Aliasing of sendMessage method for events to help with clarity and ambiguity with sending messages to systems
+        auto sendEvent(ObjectEvent e)->decltype(sendMessage(std::forward<ObjectEvent>(e)))
+        {
+            return sendMessage(std::forward<ObjectEvent>(e));
+        }
 
-        // Accessor for object
-        void setObject(GameObject* object);
-        GameObject* getObject();
 
+        // Constant
+        static const int k_unset_id;
+        static const std::string k_unset_string;
     private:
-        // Instance of game object
-        GameObject* m_object;
+
+        // Private virtual methods
+        virtual void doUpdates() {}
+
+        void handleMessage(ObjectEvent msg) final;
+
+        // Renaming of handleMessage to handleEvent to improve clarity
+        virtual void handleEvent(ObjectEvent e) {}
+
+        // For prepping messages if they were sent before object id set
+        void prepareMessage(ObjectEvent& e) final;
+
+        // Defining of message types
+        virtual Message::Type defineMessageType();
+
+        // Object identification
+        int m_object_id{ k_unset_id };
+        std::string m_object_name;
     };
 }
 

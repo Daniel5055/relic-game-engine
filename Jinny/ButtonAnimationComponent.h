@@ -2,7 +2,7 @@
 
 #include "AnimationComponent.h"
 
-namespace Jinny
+namespace jinny
 {
     class ButtonAnimationComponent : public AnimationComponent
     {
@@ -10,23 +10,5 @@ namespace Jinny
     public:
         // Constructor
         ButtonAnimationComponent(GraphicsComponent* graphics_component, int texture_width, int texture_height);
-
-        // --- pure virtual functions ---
-
-            // Initialization
-        void initialize(GameObject& object);
-
-        // Updating
-        void update();
-
-        // Closing
-        void close();
-
-        // --- functions ---
-
-    private:
-
-        // Event Handling
-        void handleEvents();
     };
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Framework
+namespace framework
 {
     class FileLoader
     {

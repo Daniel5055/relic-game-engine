@@ -1,40 +1,38 @@
 #pragma once
 
-namespace Framework
+#include "Message.h"
+
+namespace framework
 {
     struct Shape;
 }
 
-namespace Jinny
+namespace jinny
 {
     class Scene;
 
     enum class GameMessageType
     {
-        NULL_MESSAGE = 0,
-        CHANGE_SCENE,
-        SET_CAMERA,
+        null_message = 0,
+        change_scene,
+        set_camera,
 
-        DELETE_OBJECT,
+        delete_object,
     };
 
-    struct GameMessage
-    {
-        // Constructor
-        GameMessage(GameMessageType msg_type = GameMessageType::NULL_MESSAGE, int id = -1)
-        {
-            type = msg_type;
-            object_ID = id;
-        }
 
-        GameMessageType type;
-        int object_ID;
+    /**
+     * \brief Messages to be sent by core systems and components
+     */
+    struct GameMessage : Message
+    {
+        GameMessage() : Message(Type::core) {}
+
+        GameMessageType type{GameMessageType::null_message};
         union
         {
-            Scene* scene_ptr;
-            Framework::Shape* shape_ptr;
+            Scene* scene_ptr{nullptr};
+            framework::Shape* shape_ptr;
         };
-
-
     };
 }
