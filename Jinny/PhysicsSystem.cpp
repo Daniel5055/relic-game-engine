@@ -1,12 +1,12 @@
 #include "PhysicsSystem.h"
 #include "GridPhysicsEngine.h"
 
-jinny::PhysicsSystem::PhysicsSystem(PhysicsEngine* engine)
+relic::PhysicsSystem::PhysicsSystem(PhysicsEngine* engine)
     :m_engine_ptr(engine)
 {
 }
 
-void jinny::PhysicsSystem::doUpdates()
+void relic::PhysicsSystem::doUpdates()
 {
     // Handle Messages
     handleMessages();
@@ -15,7 +15,7 @@ void jinny::PhysicsSystem::doUpdates()
     m_engine_ptr->update();
 }
 
-void jinny::PhysicsSystem::handleMessage(const PhysicsMessage msg)
+void relic::PhysicsSystem::handleMessage(const PhysicsMessage msg)
 {
     // NOTE: for simplicity, physics based objects cannot be gui objects 
 

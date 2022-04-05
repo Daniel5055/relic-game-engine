@@ -1,6 +1,6 @@
 #include "ImageGraphicsComponent.h"
 
-jinny::ImageGraphicsComponent::ImageGraphicsComponent(framework::Shape shape, const std::string& texture_name, const std::string& texture_path)
+relic::ImageGraphicsComponent::ImageGraphicsComponent(framework::Shape shape, const std::string& texture_name, const std::string& texture_path)
 {
     // Create Graphic
     setGraphic(new framework::Graphic(shape));
@@ -32,7 +32,7 @@ jinny::ImageGraphicsComponent::ImageGraphicsComponent(framework::Shape shape, co
     sendMessage(msg);
 }
 
-void jinny::ImageGraphicsComponent::handleEvent(ObjectEvent e)
+void relic::ImageGraphicsComponent::handleEvent(ObjectEvent e)
 {
     switch (e.type)
     {

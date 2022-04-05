@@ -16,7 +16,7 @@ framework::Vector& framework::Vector::operator+=(const Vector& vector)
     return *this;
 }
 
-framework::Vector framework::Vector::operator+(const Vector& vector)
+framework::Vector framework::Vector::operator+(const Vector& vector) const
 {
     Vector out(*this);
     return out += vector;
@@ -29,13 +29,13 @@ framework::Vector& framework::Vector::operator-=(const Vector& vector)
     return *this;
 }
 
-framework::Vector framework::Vector::operator-(const Vector& vector)
+framework::Vector framework::Vector::operator-(const Vector& vector) const
 {
     Vector out(*this);
     return out -= vector;
 }
 
-framework::Vector& framework::Vector::operator/=(double num)
+framework::Vector& framework::Vector::operator/=(const double num)
 {
     x /= num;
     y /= num;
@@ -43,54 +43,48 @@ framework::Vector& framework::Vector::operator/=(double num)
     return *this;
 }
 
-framework::Vector framework::Vector::operator/(double num)
+framework::Vector framework::Vector::operator/(const double num) const
 {
     Vector out(*this);
     return out /= num;
 }
 
-framework::Vector& framework::Vector::operator*=(double num)
+framework::Vector& framework::Vector::operator*=(const double num)
 {
     x *= num;
     y *= num;
     return *this;
 }
 
-framework::Vector framework::Vector::operator*(double num)
+framework::Vector framework::Vector::operator*(const double num) const
 {
     Vector out(*this);
     return out *= num;
 }
 
-double& framework::Vector::operator[](int i)
+double& framework::Vector::operator[](const int i)
 {
     switch (i)
     {
     case 0:
         return x;
-        break;
     case 1:
         return y;
-        break;
     default:
         throw "Vector struct only accepts index 0 or 1";
-        break;
     }
 }
 
-double framework::Vector::operator[](int i) const
+const double& framework::Vector::operator[](const int i) const
 {
     switch (i)
     {
     case 0:
         return x;
-        break;
     case 1:
         return y;
-        break;
     default:
         throw "Vector struct only accepts index 0 or 1";
-        break;
     }
 }
 

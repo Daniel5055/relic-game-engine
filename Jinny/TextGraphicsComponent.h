@@ -10,7 +10,7 @@ namespace framework
     struct Color;
 }
 
-namespace jinny
+namespace relic
 {
     /**
      * \brief Component used to draw text

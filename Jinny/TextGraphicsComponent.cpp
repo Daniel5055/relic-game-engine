@@ -1,6 +1,6 @@
 #include "TextGraphicsComponent.h"
 
-jinny::TextGraphicsComponent::TextGraphicsComponent(framework::Shape shape, const std::string& text, const std::string&
+relic::TextGraphicsComponent::TextGraphicsComponent(framework::Shape shape, const std::string& text, const std::string&
                                                     font_name, framework::Color font_colour, const std::string& font_path, int font_size)
 {
     // Create Graphic
@@ -32,7 +32,7 @@ jinny::TextGraphicsComponent::TextGraphicsComponent(framework::Shape shape, cons
     sendMessage(msg);
 }
 
-void jinny::TextGraphicsComponent::handleEvent(ObjectEvent e)
+void relic::TextGraphicsComponent::handleEvent(ObjectEvent e)
 {
     switch (e.type)
     {

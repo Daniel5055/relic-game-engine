@@ -5,7 +5,7 @@
 #include "Point.h"
 #include "Texture.h"
 
-jinny::AnimationComponent::AnimationComponent(GraphicsComponent* graphics_component, int texture_width, int texture_height)
+relic::AnimationComponent::AnimationComponent(GraphicsComponent* graphics_component, int texture_width, int texture_height)
     :m_graphics_component(graphics_component), m_texture_width(texture_width), m_texture_height(texture_height)
 {
     // Pre - Initializing + additional inititalization
@@ -18,7 +18,7 @@ jinny::AnimationComponent::AnimationComponent(GraphicsComponent* graphics_compon
 }
 
 /*
-void jinny::AnimationComponent::initialize(GameObject& object)
+void relic::AnimationComponent::initialize(GameObject& object)
 {
     // Initialize Objects
     setObject(&object);
@@ -35,7 +35,7 @@ void jinny::AnimationComponent::initialize(GameObject& object)
     }
 }
 
-void jinny::AnimationComponent::update()
+void relic::AnimationComponent::update()
 {
     m_tick++;
     if (m_tick >= m_tick_per_frame)
@@ -54,7 +54,7 @@ void jinny::AnimationComponent::update()
 
 }
 
-void jinny::AnimationComponent::close()
+void relic::AnimationComponent::close()
 {
     for (framework::Shape* shape_ptr : m_clips)
     {
@@ -67,7 +67,7 @@ void jinny::AnimationComponent::close()
 
 }
 
-void jinny::AnimationComponent::createClipGrid()
+void relic::AnimationComponent::createClipGrid()
 {
     int width = m_current_clip->w;
     int height = m_current_clip->h;
@@ -86,24 +86,24 @@ void jinny::AnimationComponent::createClipGrid()
     }
 }
 
-void jinny::AnimationComponent::changeCurrentClip(int index)
+void relic::AnimationComponent::changeCurrentClip(int index)
 {
     // Changes location of current clip pointer based from clips
     m_current_clip->x = m_clips[index]->x;
     m_current_clip->y = m_clips[index]->y;
 }
 
-int jinny::AnimationComponent::getTextureWidth() const
+int relic::AnimationComponent::getTextureWidth() const
 {
     return m_texture_width;
 }
 
-int jinny::AnimationComponent::getTextureHeight() const
+int relic::AnimationComponent::getTextureHeight() const
 {
     return m_texture_height;
 }
 
-void jinny::AnimationComponent::handleEvents()
+void relic::AnimationComponent::handleEvents()
 {
 }
 */

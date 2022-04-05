@@ -2,7 +2,7 @@
 
 #include "RigidBody.h"
 
-jinny::DynamicRigidBodyPhysicsComponent::DynamicRigidBodyPhysicsComponent(const double mass, double max_x_speed, double max_y_speed, const framework::Shape shape, const framework::Material material, framework::Vector force)
+relic::DynamicRigidBodyPhysicsComponent::DynamicRigidBodyPhysicsComponent(const double mass, double max_x_speed, double max_y_speed, const framework::Shape shape, const framework::Material material, framework::Vector force)
     :m_rigid_body(mass, 0, { max_x_speed, max_y_speed }, shape, material), m_last_position({shape.x, shape.y})
 {
     m_rigid_body.applySFForce(force);
@@ -14,7 +14,7 @@ jinny::DynamicRigidBodyPhysicsComponent::DynamicRigidBodyPhysicsComponent(const 
         sendMessage(msg);
 }
 
-void jinny::DynamicRigidBodyPhysicsComponent::doUpdates()
+void relic::DynamicRigidBodyPhysicsComponent::doUpdates()
 {
     // If moved
     const int x_diff = m_rigid_body.getRoundedX() - m_last_position.x;

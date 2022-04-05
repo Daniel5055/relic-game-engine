@@ -7,7 +7,7 @@ namespace framework
     struct Shape;
 }
 
-namespace jinny
+namespace relic
 {
     /**
      * \brief Component used to change the camera of a scene

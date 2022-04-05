@@ -1,6 +1,6 @@
 #include "PongGameScene.h"
 
-void jinny::pong::PongGameScene::initialize()
+void relic::pong::PongGameScene::initialize()
 {
 
 

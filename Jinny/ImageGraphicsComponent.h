@@ -2,7 +2,7 @@
 
 #include "GraphicsComponent.h"
 
-namespace jinny
+namespace relic
 {
     /**
      * \brief Component which uses image for graphics

@@ -11,7 +11,7 @@ namespace framework
 }
 
 
-namespace jinny
+namespace relic
 {
     class AssetManager
     {

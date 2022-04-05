@@ -3,7 +3,7 @@
 #include "ObjectInput.h"
 #include "Point.h"
 
-namespace jinny
+namespace relic
 {
 
     /**

@@ -5,7 +5,7 @@
 #include "GameMessage.h"
 
 
-namespace jinny
+namespace relic
 {
     /**
      * \brief Base abstract class for components relating to core features of the game engine
@@ -17,6 +17,8 @@ namespace jinny
     public:
         // Prevent ambiguity 
         using LazyMessageSender<GameMessage>::addReceiver;
+        using LazyMessageSender<GameMessage>::deployMessages;
+
     protected:
 
         // Prevent ambiguity

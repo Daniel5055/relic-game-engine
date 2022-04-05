@@ -6,7 +6,7 @@
 
 
 framework::Physics::Physics(double time_step, double ppm)
-    :m_time_step(time_step), m_pixels_per_meter(ppm), m_material_manager()
+    : m_time_step(time_step), m_pixels_per_meter(ppm)
 {
 }
 
@@ -20,19 +20,19 @@ double framework::Physics::getPPM() const
     return m_pixels_per_meter;
 }
 
-double framework::Physics::getDisplacementAtTime(double time, double axis_velocity, double axis_acceleration) const
+double framework::Physics::getDisplacementAtTime(const double time, const double axis_velocity, const double axis_acceleration) const
 {
     // Classic s = ut + 0.5at^2
     return (axis_velocity * time + 0.5 * axis_acceleration * pow(time, 2)) * m_pixels_per_meter;
 }
 
-framework::Vector framework::Physics::getDisplacementAtTime(double time, Vector velocity, Vector acceleration) const
+framework::Vector framework::Physics::getDisplacementAtTime(const double time, const Vector velocity, const Vector acceleration) const
 {
     // Classic s = ut + 0.5at^2, but in vector form
     return ((velocity * time) + (acceleration * (0.5 * pow(time, 2)))) * m_pixels_per_meter;
 }
 
-double framework::Physics::getCollisionTime(double distance, double velocity_1, double velocity_2, double acceleration_1, double acceleration_2, double max_time) const
+double framework::Physics::getCollisionTime(const double distance, const double velocity_1, const double velocity_2, const double acceleration_1, const double acceleration_2, const double max_time) const
 {
     // variable useful for some stuff here
     double time = -1;
@@ -391,44 +391,75 @@ double framework::Physics::getCollisionTime(double distance, double velocity_1, 
     // With regards to checking, I am not sure how many of the possibilities I have created are possible
 }
 
-std::pair<double, double> framework::Physics::calculateDynamicCollisionForces(double a_velocity, double a_mass, double t_velocity, double t_mass, double coeff_restitution, double time_left) const
+std::pair<double, double> framework::Physics::calculateCollisionForces(const RigidBody& r1, const RigidBody& r2, const double time_left, const int axis) const
 {
     std::pair<double, double> out;
 
-    double momentum = a_velocity * a_mass + t_velocity * t_mass;
+    const double momentum = r1.getVelocity()[axis] * r1.getMass() + r2.getVelocity()[axis] * r2.getMass();
 
-    double right_part = coeff_restitution * (a_velocity - t_velocity);
-    double v_a = (momentum - t_mass * right_part) / (t_mass + a_mass);
-    double v_t = (momentum + a_mass * right_part) / (t_mass + a_mass);
+    const double right_part = m_material_manager.getCoefficientOfRestitution(r1.getMaterial(), r2.getMaterial()) * (r1.getVelocity()[axis] - r2.getVelocity()[axis]);
+    const double v_1 = (momentum - r2.getMass() * right_part) / (r2.getMass() + r1.getMass());
+    const double v_2 = (momentum + r1.getMass() * right_part) / (r2.getMass() + r1.getMass());
 
-    out.first = (v_a - a_velocity) * a_mass / time_left;
-    out.second = (v_t - t_velocity) * t_mass / time_left;
+    // TODO: Not gonna lie, this could be done better
+    // Handling static and non static collisions
+    if (r1.isStatic())
+    {
+        out.first = (-r1.getVelocity()[axis]) * r1.getMass() / time_left;
+    }
+    else
+    {
+        if (r2.isStatic())
+        {
+            if (r1.getVelocity()[axis] * r1.getAppliedForce()[axis] > 0 &&
+                abs(r1.getVelocity()[axis]) < 0.5 * m_material_manager.getCoefficientOfRestitution(r1.getMaterial(), r2.getMaterial()))
+            {
+                out.first = (-r1.getVelocity()[axis]) * r1.getMass() / time_left;
+            }
+            else
+            {
+                out.first = (-r1.getVelocity()[axis] * m_material_manager.getCoefficientOfRestitution(r1.getMaterial(), r2.getMaterial()) - r1.getVelocity()[axis]) * r1.getMass() / time_left;
+            }
+        }
+        else
+        {
+            out.first = (v_1 - r1.getVelocity()[axis]) * r1.getMass() / time_left;
+        }
+    }
+
+    if (r2.isStatic())
+    {
+        out.second = (-r2.getVelocity()[axis]) * r2.getMass() / time_left;
+    }
+    else
+    {
+        if (r1.isStatic())
+        {
+            if (r2.getVelocity()[axis] * r2.getAppliedForce()[axis] > 0 &&
+                abs(r2.getVelocity()[axis]) < 0.5 * m_material_manager.getCoefficientOfRestitution(r1.getMaterial(), r2.getMaterial()))
+            {
+                out.second = (-r2.getVelocity()[axis]) * r2.getMass() / time_left;
+            }
+            else
+            {
+                out.second = (-r2.getVelocity()[axis] * m_material_manager.getCoefficientOfRestitution(r1.getMaterial(), r2.getMaterial()) - r2.getVelocity()[axis]) * r2.getMass() / time_left;
+            }
+        }
+        else
+        {
+            out.second = (v_2 - r2.getVelocity()[axis]) * r2.getMass() / time_left;
+        }
+    }
+
     return out;
 }
 
-double framework::Physics::calculateStaticCollisionForces(double axis_velocity, double axis_force, double mass, double coeff_restitution, double time_left) const
-{
-    // To stop infinite bouncing (but also let them go naturally in no gravity)
-    if (axis_velocity * axis_force > 0 && abs(axis_velocity) < 0.5 * coeff_restitution)
-    {
-        return (-axis_velocity * mass / time_left);
-    }
-
-    return (-axis_velocity * coeff_restitution - axis_velocity) * mass / time_left;
-}
-
-double framework::Physics::getCoefficientOfRestitution(RigidBody* rigid_body_1, RigidBody* rigid_body_2) const
-{
-    return m_material_manager.getCoefficientOfRestitution(rigid_body_1->getMaterial(), rigid_body_2->getMaterial());
-}
-
-
-double framework::Physics::getStaticFrictionCoefficient(RigidBody* rigid_body_1, RigidBody* rigid_body_2) const
+double framework::Physics::getStaticFrictionCoefficient(const RigidBody* rigid_body_1, const RigidBody* rigid_body_2) const
 {
     return m_material_manager.getStaticFrictionCoefficient(rigid_body_1->getMaterial(), rigid_body_2->getMaterial());
 }
 
-double framework::Physics::getDynamicFrictionCoefficient(RigidBody* rigid_body_1, RigidBody* rigid_body_2) const
+double framework::Physics::getDynamicFrictionCoefficient(const RigidBody* rigid_body_1, const RigidBody* rigid_body_2) const
 {
     return m_material_manager.getDynamicFrictionCoefficient(rigid_body_1->getMaterial(), rigid_body_2->getMaterial());
 }

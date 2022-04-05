@@ -4,12 +4,12 @@
 
 #include "MultiMessageReceiver.h"
 
-jinny::GameObjectManager::GameObject::GameObject(std::string&& name, const int id, MultiMessageReceiver& receiver)
+relic::GameObjectManager::GameObject::GameObject(std::string&& name, const int id, MultiMessageReceiver& receiver)
     : m_name(std::move(name)), m_id(id), m_receiver(receiver)
 {
 }
 
-void jinny::GameObjectManager::GameObject::addComponent(Component* component)
+void relic::GameObjectManager::GameObject::addComponent(Component* component)
 {
     // Add game object as receiver of event messages (of which it will eventually distribute)
     component->addReceiver(this);
@@ -20,29 +20,50 @@ void jinny::GameObjectManager::GameObject::addComponent(Component* component)
 
     // Notify component that component has been connected to object
     const ObjectEvent e{ ObjectEvent::Type::component_incorporated };
-    component->pushEvent(e);
+    component->receiveImmediateEvent(e);
+    component->deployMessages();
 
     // Determine type of component, then cast and set receiver
     switch (component->getMessageType())
-    { 
+    {
     case Message::Type::graphics:
-        dynamic_cast<GraphicsComponent*>(component)->addReceiver(&m_receiver);
+    {
+
+        const auto graphics_component = dynamic_cast<GraphicsComponent*>(component);
+        graphics_component->addReceiver(&m_receiver);
+        graphics_component->deployMessages();
         break;
+
+    }
     case Message::Type::input:
-        dynamic_cast<InputComponent*>(component)->addReceiver(&m_receiver);
+    {
+        const auto input_component = dynamic_cast<InputComponent*>(component);
+        input_component->addReceiver(&m_receiver);
+        input_component->deployMessages();
         break;
+
+    }
     case Message::Type::physics:
-        dynamic_cast<PhysicsComponent*>(component)->addReceiver(&m_receiver);
+    {
+        const auto physics_component = dynamic_cast<PhysicsComponent*>(component);
+        physics_component->addReceiver(&m_receiver);
+        physics_component->deployMessages();
         break;
+
+    }
     case Message::Type::core:
-        dynamic_cast<CoreComponent*>(component)->addReceiver(&m_receiver);
+    {
+        const auto core_component = dynamic_cast<CoreComponent*>(component);
+        core_component->addReceiver(&m_receiver);
+        core_component->deployMessages();
         break;
-    default: ;
+    }
+    default:;
     }
     m_components.push_back(std::unique_ptr<Component>(component));
 }
 
-void jinny::GameObjectManager::GameObject::update()
+void relic::GameObjectManager::GameObject::update()
 {
     // Distribute events to components
     handleMessages();
@@ -54,31 +75,31 @@ void jinny::GameObjectManager::GameObject::update()
     }
 }
 
-int jinny::GameObjectManager::GameObject::getId() const
+int relic::GameObjectManager::GameObject::getId() const
 {
     return m_id;
 }
 
-std::string jinny::GameObjectManager::GameObject::getObjectName() const
+std::string relic::GameObjectManager::GameObject::getObjectName() const
 {
     return m_name;
 }
 
-void jinny::GameObjectManager::GameObject::handleMessage(const ObjectEvent event)
+void relic::GameObjectManager::GameObject::handleMessage(const ObjectEvent event)
 {
     // Push event to all components
     for (const auto& component : m_components)
     {
-        component->pushMessage(event);
+        component->receiveMessage(event);
     }
 }
 
-jinny::GameObjectManager::GameObjectManager(MultiMessageReceiver& receiver)
+relic::GameObjectManager::GameObjectManager(MultiMessageReceiver& receiver)
     :m_receiver(receiver)
 {
 }
 
-jinny::GameObjectManager::GameObject& jinny::GameObjectManager::createObject(std::string name, const bool is_global)
+relic::GameObjectManager::GameObject& relic::GameObjectManager::createObject(std::string name, const bool is_global)
 {
     // If global or not
     // Returns and increment index simultaneously
@@ -92,7 +113,7 @@ jinny::GameObjectManager::GameObject& jinny::GameObjectManager::createObject(std
     return *m_scene_objects[m_next_index++].get();
 }
 
-void jinny::GameObjectManager::updateObjects()
+void relic::GameObjectManager::updateObjects()
 {
     for (auto it = m_scene_objects.begin(); it != m_scene_objects.end(); ++it)
     {
@@ -110,7 +131,7 @@ void jinny::GameObjectManager::updateObjects()
     }
 }
 
-jinny::GameObjectManager::GameObject& jinny::GameObjectManager::getObject(const int id)
+relic::GameObjectManager::GameObject& relic::GameObjectManager::getObject(const int id)
 {
     // TODO: Error handling
 
@@ -125,7 +146,7 @@ jinny::GameObjectManager::GameObject& jinny::GameObjectManager::getObject(const 
 }
 
 
-void jinny::GameObjectManager::deleteObject(const int id)
+void relic::GameObjectManager::deleteObject(const int id)
 {
     auto it = m_scene_objects.find(id);
     if (it != m_scene_objects.end())
@@ -135,7 +156,7 @@ void jinny::GameObjectManager::deleteObject(const int id)
     }
     else
     {
-        it  = m_global_objects.find(id);
+        it = m_global_objects.find(id);
         if (it != m_global_objects.end())
         {
 
@@ -148,13 +169,13 @@ void jinny::GameObjectManager::deleteObject(const int id)
     // TODO: Maybe log this as warning?
 }
 
-void jinny::GameObjectManager::clearSceneObjects()
+void relic::GameObjectManager::clearSceneObjects()
 {
     // clear vector
     m_scene_objects.clear();
 }
 
-void jinny::GameObjectManager::clearGlobalObjects()
+void relic::GameObjectManager::clearGlobalObjects()
 {
     // clear vector
     m_global_objects.clear();

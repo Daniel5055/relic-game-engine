@@ -2,18 +2,18 @@
 
 #include "Logger.h"
 
-jinny::LoggingComponent::LoggingComponent()
+relic::LoggingComponent::LoggingComponent()
     :m_logger("Object")
 {
     m_logger.log("Initialised");
 }
 
-jinny::LoggingComponent::~LoggingComponent()
+relic::LoggingComponent::~LoggingComponent()
 {
     m_logger.log("Destructed");
 }
 
-void jinny::LoggingComponent::handleEvent(const ObjectEvent msg)
+void relic::LoggingComponent::handleEvent(const ObjectEvent msg)
 {
     // Todo: Room for improvement
     switch (msg.type)

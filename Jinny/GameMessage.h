@@ -7,7 +7,7 @@ namespace framework
     struct Shape;
 }
 
-namespace jinny
+namespace relic
 {
     class Scene;
 

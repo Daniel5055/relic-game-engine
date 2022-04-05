@@ -51,7 +51,7 @@ void framework::RigidBody::increaseVelocity(const Vector additional_velocity)
     }
 }
 
-framework::Vector framework::RigidBody::getAppliedForce()
+framework::Vector framework::RigidBody::getAppliedForce() const
 {
     return m_mf_force + m_sf_force;
 }

@@ -1,51 +1,52 @@
 #include "Component.h"
 
-const std::string jinny::Component::k_unset_string = "$";
-constexpr int jinny::Component::k_unset_id = -2;
+const std::string relic::Component::k_unset_string = "$";
+constexpr int relic::Component::k_unset_id = -2;
 
-void jinny::Component::update()
+void relic::Component::update()
 {
     handleMessages();
 
     doUpdates();
 }
 
-jinny::Message::Type jinny::Component::getMessageType()
+relic::Message::Type relic::Component::getMessageType()
 {
     return defineMessageType();
 }
 
-void jinny::Component::setObjectId(const int id)
+void relic::Component::setObjectId(const int id)
 {
     m_object_id = id;
 }
 
-void jinny::Component::setObjectName(const std::string& name)
+void relic::Component::setObjectName(const std::string& name)
 {
     m_object_name = name;
 }
 
-int jinny::Component::getObjectId() const
+int relic::Component::getObjectId() const
 {
     return m_object_id;
 }
 
-std::string jinny::Component::getObjectName() const
+std::string relic::Component::getObjectName() const
 {
     return m_object_name;
 }
 
-void jinny::Component::handleMessage(const ObjectEvent msg)
+void relic::Component::handleMessage(const ObjectEvent msg)
 {
+    // Deploy messages upon component incorporation
     handleEvent(msg);
 }
 
-void jinny::Component::prepareMessage(ObjectEvent& e)
+void relic::Component::prepareMessage(ObjectEvent& e)
 {
     // Nothing needed to prep so far
 }
 
-jinny::Message::Type jinny::Component::defineMessageType()
+relic::Message::Type relic::Component::defineMessageType()
 {
     return Message::Type::none;
 }

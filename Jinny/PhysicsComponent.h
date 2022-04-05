@@ -4,7 +4,7 @@
 #include "LazyMessageSender.h"
 #include "PhysicsMessage.h"
 
-namespace jinny
+namespace relic
 {
     /**
      * \brief Base abstract class for components relating to physics
@@ -16,6 +16,8 @@ namespace jinny
     public:
         // Prevent ambiguity 
         using LazyMessageSender<PhysicsMessage>::addReceiver;
+        using LazyMessageSender<PhysicsMessage>::deployMessages;
+    protected:
         using LazyMessageSender<PhysicsMessage>::sendMessage;
 
     private:

@@ -2,7 +2,7 @@
 
 #include "Scene.h"
 
-namespace jinny
+namespace relic
 {
     class StartScene : public Scene
     {

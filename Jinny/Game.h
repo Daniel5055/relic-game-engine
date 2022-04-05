@@ -18,7 +18,7 @@
 
 #include "GameObjectManager.h"
 
-namespace jinny
+namespace relic
 {
     class Scene;
 

@@ -1,6 +1,6 @@
 #include "PlayerInputComponent.h"
 
-jinny::PlayerInputComponent::PlayerInputComponent()
+relic::PlayerInputComponent::PlayerInputComponent()
 {
     // Subscribe to player movement keys
     InputMessage msg;
@@ -24,12 +24,12 @@ jinny::PlayerInputComponent::PlayerInputComponent()
     sendMessage(msg);
 }
 
-void jinny::PlayerInputComponent::doUpdates()
+void relic::PlayerInputComponent::doUpdates()
 {
     MessageReceiver<InputMessage>::handleMessages();
 }
 
-void jinny::PlayerInputComponent::handleMessage(const InputMessage msg)
+void relic::PlayerInputComponent::handleMessage(const InputMessage msg)
 {
     switch (msg.type)
     {

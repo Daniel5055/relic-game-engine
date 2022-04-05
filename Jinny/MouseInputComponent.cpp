@@ -1,6 +1,6 @@
 #include "MouseInputComponent.h"
 
-jinny::MouseInputComponent::MouseInputComponent(const framework::Shape mouse_area)
+relic::MouseInputComponent::MouseInputComponent(const framework::Shape mouse_area)
     :m_mouse_area(mouse_area)
 {
     // subscribe to mouse hovering and pressing in mouse area
@@ -16,7 +16,7 @@ jinny::MouseInputComponent::MouseInputComponent(const framework::Shape mouse_are
     sendMessage(msg);
 }
 
-void jinny::MouseInputComponent::handleMessage(const InputMessage msg)
+void relic::MouseInputComponent::handleMessage(const InputMessage msg)
 {
     switch (msg.type)
     {
@@ -44,7 +44,7 @@ void jinny::MouseInputComponent::handleMessage(const InputMessage msg)
     }
 }
 
-void jinny::MouseInputComponent::handleEvent(ObjectEvent e)
+void relic::MouseInputComponent::handleEvent(ObjectEvent e)
 {
     switch (e.type)
     {
@@ -56,7 +56,7 @@ void jinny::MouseInputComponent::handleEvent(ObjectEvent e)
     }
 }
 
-void jinny::MouseInputComponent::doUpdates()
+void relic::MouseInputComponent::doUpdates()
 {
     // Have to manually call to handleMessages
     MessageReceiver<InputMessage>::handleMessages();

@@ -2,7 +2,7 @@
 
 #include "Deliverable.h"
 
-namespace jinny
+namespace relic
 {
     /**
      * \brief The base struct for messages sent between systems and components

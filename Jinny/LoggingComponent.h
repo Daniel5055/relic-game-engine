@@ -4,7 +4,7 @@
 
 #include "Logger.h"
 
-namespace jinny
+namespace relic
 {
     /**
      *\brief Component which logs the actions of the object

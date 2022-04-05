@@ -1,7 +1,7 @@
 #pragma once
 
 
-namespace jinny
+namespace relic
 {
     enum class ObjectInputType
     {

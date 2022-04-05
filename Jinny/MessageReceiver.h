@@ -5,7 +5,7 @@
 #include "Message.h"
 #include "ObjectEvent.h"
 
-namespace jinny
+namespace relic
 {
     /**
      * Abstract class to be inherited by classes that receive and handle messages.
@@ -17,10 +17,15 @@ namespace jinny
         static_assert(std::is_base_of_v<Message, M> || std::is_base_of_v<ObjectEvent, M>, "MessageReceiver not assigned deliverable type");
 
     public:
-        // Pushing messages
-        void pushMessage(M msg)
+        // Receiving messages
+        void receiveMessage(M msg)
         {
             m_message_queue.push(msg);
+        }
+
+        void receiveImmediateMessage(M msg)
+        {
+            handleMessage(msg);
         }
 
     protected:

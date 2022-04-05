@@ -9,7 +9,7 @@ namespace framework
 {
     class Graphic;
 }
-namespace jinny
+namespace relic
 {
     enum class GMessageType
     {

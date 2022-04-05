@@ -8,7 +8,7 @@
 #include "Graphic.h"
 
 
-namespace jinny
+namespace relic
 {
     /**
      * \brief Base abstract class for components relating to graphics
@@ -20,7 +20,7 @@ namespace jinny
     public:
         // Prevent ambiguity
         using LazyMessageSender<GraphicsMessage>::addReceiver;
-        using LazyMessageSender<GraphicsMessage>::sendMessage;
+        using LazyMessageSender<GraphicsMessage>::deployMessages;
 
         // Accessors
         void setClipPtr(const framework::Shape* clip);
@@ -28,6 +28,8 @@ namespace jinny
     protected:
         // Graphic Accessor
         void setGraphic(framework::Graphic* graphic_ptr);
+
+        using LazyMessageSender<GraphicsMessage>::sendMessage;
     private:
         // Defining as graphics type 
         Message::Type defineMessageType() final { return Message::Type::graphics; }

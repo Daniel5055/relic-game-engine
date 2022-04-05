@@ -3,7 +3,7 @@
 #include "CoreComponent.h"
 #include "ObjectInput.h"
 
-namespace jinny
+namespace relic
 {
     class Scene;
 

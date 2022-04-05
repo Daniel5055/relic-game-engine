@@ -6,7 +6,7 @@
 #include "RigidBody.h"
 #include "Shape.h"
 
-namespace jinny
+namespace relic
 {
     /**
      * \brief Component that represents a static rigidBody, a body that does not react to collisions

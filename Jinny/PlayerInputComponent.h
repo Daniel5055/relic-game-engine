@@ -4,7 +4,7 @@
 
 #include "InputComponent.h"
 
-namespace jinny
+namespace relic
 {
     /**
      * \brief Component that subscribes to wasd keys

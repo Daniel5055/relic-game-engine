@@ -1,13 +1,13 @@
 #include "ButtonAnimationComponent.h"
 
-jinny::ButtonAnimationComponent::ButtonAnimationComponent(GraphicsComponent* graphics_component, int texture_width, int texture_height)
+relic::ButtonAnimationComponent::ButtonAnimationComponent(GraphicsComponent* graphics_component, int texture_width, int texture_height)
     :AnimationComponent(graphics_component, texture_width, texture_height)
 {
 
 }
 
 /*
-void jinny::ButtonAnimationComponent::initialize(GameObject& object)
+void relic::ButtonAnimationComponent::initialize(GameObject& object)
 {
     AnimationComponent::initialize(object);
 
@@ -20,17 +20,17 @@ void jinny::ButtonAnimationComponent::initialize(GameObject& object)
 
 }
 
-void jinny::ButtonAnimationComponent::update()
+void relic::ButtonAnimationComponent::update()
 {
     handleEvents();
 }
 
-void jinny::ButtonAnimationComponent::close()
+void relic::ButtonAnimationComponent::close()
 {
     AnimationComponent::close();
 }
 
-void jinny::ButtonAnimationComponent::handleEvents()
+void relic::ButtonAnimationComponent::handleEvents()
 {
     for (auto it = getObject()->getQueueIterator(); it != getObject()->getQueueEnd(); it++)
     {

@@ -2,7 +2,7 @@
 
 #include "PhysicsComponent.h"
 
-namespace jinny
+namespace relic
 {
     // Useless?
     class NullPhysicsComponent : public PhysicsComponent

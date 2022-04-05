@@ -1,6 +1,6 @@
 #pragma once
 
-namespace jinny
+namespace relic
 {
     class GameSystem
     {

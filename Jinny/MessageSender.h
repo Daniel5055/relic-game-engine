@@ -7,7 +7,7 @@
 #include "MessageReceiver.h"
 #include "Message.h"
 
-namespace jinny
+namespace relic
 {
     /**
      * \brief A class used to send messages to designated receivers
@@ -30,9 +30,6 @@ namespace jinny
         virtual void sendMessage(M msg);
     private:
 
-        // To be overrided if functionality wanted after receiver added
-        virtual void uponReceiverAdded();
-
         // Message receivers to send messages to
         std::vector<MessageReceiver<M>*> m_message_receivers{};
     };
@@ -41,7 +38,6 @@ namespace jinny
     void MessageSender<M>::addReceiver(MessageReceiver<M>* receiver)
     {
         m_message_receivers.push_back(receiver);
-        uponReceiverAdded();
     }
 
     template <typename M>
@@ -53,12 +49,7 @@ namespace jinny
         // Iterate through message receivers and push back
         for (const auto& message_receiver : m_message_receivers)
         {
-            message_receiver->pushMessage(msg);
+            message_receiver->receiveMessage(msg);
         }
-    }
-
-    template <typename M>
-    void MessageSender<M>::uponReceiverAdded()
-    {
     }
 }

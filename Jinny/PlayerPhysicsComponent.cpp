@@ -3,7 +3,7 @@
 # include "Material.h"
 #include "RigidBody.h"
 
-jinny::PlayerPhysicsComponent::PlayerPhysicsComponent(const double mass, double max_x_speed, double max_y_speed, const framework::Shape shape)
+relic::PlayerPhysicsComponent::PlayerPhysicsComponent(const double mass, double max_x_speed, double max_y_speed, const framework::Shape shape)
     :m_rigid_body(mass, 0, { max_x_speed, max_y_speed }, shape, framework::Material::entity), m_last_position(shape.x, shape.y)
 {
     // Set rigid body
@@ -14,7 +14,7 @@ jinny::PlayerPhysicsComponent::PlayerPhysicsComponent(const double mass, double 
     sendMessage(msg);
 }
 
-void jinny::PlayerPhysicsComponent::handleEvent(const ObjectEvent e)
+void relic::PlayerPhysicsComponent::handleEvent(const ObjectEvent e)
 {
     if (e.type == ObjectEvent::Type::input_triggered)
     {
@@ -55,7 +55,7 @@ void jinny::PlayerPhysicsComponent::handleEvent(const ObjectEvent e)
     }
 }
 
-void jinny::PlayerPhysicsComponent::doUpdates()
+void relic::PlayerPhysicsComponent::doUpdates()
 {
     // If moved
     const int x_diff = m_rigid_body.getRoundedX() - m_last_position.x;

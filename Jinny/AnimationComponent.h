@@ -10,7 +10,7 @@ namespace framework
     struct Point;
 }
 
-namespace jinny
+namespace relic
 {
 
     class GraphicsComponent;

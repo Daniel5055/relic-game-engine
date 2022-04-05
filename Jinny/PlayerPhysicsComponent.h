@@ -5,7 +5,7 @@
 #include "RigidBody.h"
 #include "Shape.h"
 
-namespace jinny
+namespace relic
 {
     /** \brief Component that defines dynamic rigid body that reacts to input */
     class PlayerPhysicsComponent : public PhysicsComponent

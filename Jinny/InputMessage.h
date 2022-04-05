@@ -6,7 +6,7 @@
 
 #include "Shape.h"
 
-namespace jinny
+namespace relic
 {
     enum class IMessageType
     {

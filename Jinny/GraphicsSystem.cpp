@@ -9,12 +9,12 @@
 #include "Window.h"
 #include "Point.h"
 
-jinny::GraphicsSystem::GraphicsSystem(const framework::Window& window, const framework::Graphics& graphics)
+relic::GraphicsSystem::GraphicsSystem(const framework::Window& window, const framework::Graphics& graphics)
     : f_graphics(graphics), f_window(window)
 {
 }
 
-void jinny::GraphicsSystem::doUpdates()
+void relic::GraphicsSystem::doUpdates()
 {
     handleMessages();
 
@@ -40,7 +40,7 @@ void jinny::GraphicsSystem::doUpdates()
     f_graphics.display();
 }
 
-void jinny::GraphicsSystem::handleMessage(const GraphicsMessage msg)
+void relic::GraphicsSystem::handleMessage(const GraphicsMessage msg)
 {
     switch (msg.type)
     {

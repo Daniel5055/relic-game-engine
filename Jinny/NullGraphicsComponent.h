@@ -2,7 +2,7 @@
 
 #include "GraphicsComponent.h"
 
-namespace jinny
+namespace relic
 {
     // Useless?
     class NullGraphicsComponent final : public GraphicsComponent

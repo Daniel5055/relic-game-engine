@@ -13,7 +13,7 @@ namespace framework
     class Physics;
 }
 
-namespace jinny
+namespace relic
 {
     /**
      * \brief System for handling physics between objects.

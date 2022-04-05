@@ -16,7 +16,7 @@ namespace framework
     class Window;
 }
 
-namespace jinny
+namespace relic
 {
     struct GraphicsMessage;
 

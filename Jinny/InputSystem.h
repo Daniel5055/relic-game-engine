@@ -20,7 +20,7 @@ namespace framework
     class Window;
 }
 
-namespace jinny
+namespace relic
 {
     /**
      * \brief System responsible for handling inputs and subscribing objects to inputs

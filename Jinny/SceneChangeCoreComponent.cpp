@@ -1,11 +1,11 @@
 #include "SceneChangeCoreComponent.h"
 
-jinny::SceneChangeCoreComponent::SceneChangeCoreComponent(const ObjectInput trigger_input, Scene* new_scene)
+relic::SceneChangeCoreComponent::SceneChangeCoreComponent(const ObjectInput trigger_input, Scene* new_scene)
     :m_next_scene(new_scene), m_trigger_input(trigger_input)
 {
 }
 
-void jinny::SceneChangeCoreComponent::handleEvent(const ObjectEvent e)
+void relic::SceneChangeCoreComponent::handleEvent(const ObjectEvent e)
 {
     switch (e.type)
     {

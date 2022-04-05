@@ -1,6 +1,6 @@
 #pragma once
 
-namespace  jinny
+namespace  relic
 {
     /**
      * \brief Base class for all things sent and received by classes

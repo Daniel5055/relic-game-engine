@@ -6,7 +6,7 @@
 #include "PhysicsMessage.h"
 #include "GraphicsMessage.h"
 
-namespace jinny
+namespace relic
 {
     /**
      * \brief Base abstract class of game used for receiving messages, used to hide implementation

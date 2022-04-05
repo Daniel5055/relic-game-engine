@@ -12,7 +12,7 @@
 
 #include "StaticRigidBodyPhysicsComponent.h"
 
-void jinny::StartScene::doInitialisation()
+void relic::StartScene::doInitialisation()
 {
     // Asset loading (second number refers to asset type, 0 = texture
     loadAssets({
@@ -23,13 +23,6 @@ void jinny::StartScene::doInitialisation()
         });
 
     //GameObject button = new GameObject("Button", { 100, 300, 0, 0 }, new TextGraphicsComponent(""))
-
-    //AnimationComponent* animation = new ButtonAnimationComponent(graphics, 100, 150);
-
-    //button->addComponent(animation);
-    //button->addComponent(logging);
-
-    //addStaticObject(button);
 
     // Text
     //addHUDObject(new GameObject("Text", { 100, 300, 0, 0 }, new TextGraphicsComponent("Hello World!", "Fancy", { 0x00, 0x00, 0x00, 0xFF }, ".\\Assets\\Fonts\\Astloch-bold.ttf", 60)));

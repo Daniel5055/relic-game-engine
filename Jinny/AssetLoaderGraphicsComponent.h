@@ -6,7 +6,7 @@
 
 #include "GraphicsComponent.h"
 
-namespace jinny
+namespace relic
 {
     /**
      * \brief Takes all assets and passes them to game system to be assigned

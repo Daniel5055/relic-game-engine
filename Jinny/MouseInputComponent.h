@@ -4,7 +4,7 @@
 
 #include "Shape.h"
 
-namespace jinny
+namespace relic
 {
     
     /**

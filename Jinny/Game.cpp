@@ -13,7 +13,7 @@
 
 #include "GridPhysicsEngine.h"
 
-jinny::Game::Game(Scene* starting_scene)
+relic::Game::Game(Scene* starting_scene)
     : f_window("Relic", 640, 480, true)
     , f_graphics(f_window)
     , f_input()
@@ -35,7 +35,7 @@ jinny::Game::Game(Scene* starting_scene)
     starting_scene->initialise();
 }
 
-void jinny::Game::update()
+void relic::Game::update()
 {
     MessageReceiver<GameMessage>::handleMessages();
     MessageReceiver<GraphicsMessage>::handleMessages();
@@ -58,12 +58,12 @@ void jinny::Game::update()
 
 }
 
-bool jinny::Game::isGameOver() const
+bool relic::Game::isGameOver() const
 {
     return m_game_over;
 }
 
-void jinny::Game::handleMessage(const PhysicsMessage msg)
+void relic::Game::handleMessage(const PhysicsMessage msg)
 {
     if (msg.is_sent_by_system)
     {
@@ -73,11 +73,11 @@ void jinny::Game::handleMessage(const PhysicsMessage msg)
     }
     else
     {
-        m_physics.pushMessage(msg);
+        m_physics.receiveMessage(msg);
     }
 }
 
-void jinny::Game::handleMessage(const InputMessage msg)
+void relic::Game::handleMessage(const InputMessage msg)
 {
     if (msg.is_sent_by_system)
     {
@@ -93,11 +93,11 @@ void jinny::Game::handleMessage(const InputMessage msg)
     }
     else
     {
-        m_input.pushMessage(msg);
+        m_input.receiveMessage(msg);
     }
 }
 
-void jinny::Game::handleMessage(const GraphicsMessage msg)
+void relic::Game::handleMessage(const GraphicsMessage msg)
 {
     if (msg.is_sent_by_system)
     {
@@ -107,11 +107,11 @@ void jinny::Game::handleMessage(const GraphicsMessage msg)
     }
     else
     {
-        m_graphics.pushMessage(msg);
+        m_graphics.receiveMessage(msg);
     }
 }
 
-void jinny::Game::handleMessage(const GameMessage msg)
+void relic::Game::handleMessage(const GameMessage msg)
 {
     // Game handles game messages
     if (!msg.is_sent_by_system)

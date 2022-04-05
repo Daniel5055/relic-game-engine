@@ -15,7 +15,7 @@
 // Pre define State class
 class State;
 
-namespace jinny
+namespace relic
 {
     class MultiMessageReceiver;
 
@@ -24,6 +24,7 @@ namespace jinny
      */
     class GameObjectManager
     {
+    public:
         // Game object Class
         class GameObject final
             : public MessageReceiver<ObjectEvent>
@@ -114,7 +115,7 @@ namespace jinny
                     break;
                 case Message::Type::input: 
                     // So fat only input component accepts messages but I might change this
-                    static_cast<InputComponent*>(component.get())->pushMessage(msg);
+                    static_cast<InputComponent*>(component.get())->receiveMessage(msg);
                     break;
                 case Message::Type::physics: break;
                 case Message::Type::core: break;

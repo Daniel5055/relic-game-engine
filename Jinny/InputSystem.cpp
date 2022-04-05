@@ -6,12 +6,12 @@
 #include "Point.h"
 #include "Window.h"
 
-jinny::InputSystem::InputSystem(const framework::Window& window, const framework::Input& input)
+relic::InputSystem::InputSystem(const framework::Window& window, const framework::Input& input)
     :f_input(input), f_window(window)
 {
 }
 
-void jinny::InputSystem::doUpdates()
+void relic::InputSystem::doUpdates()
 {
     handleMessages();
 
@@ -188,7 +188,7 @@ void jinny::InputSystem::doUpdates()
     }
 }
 
-void jinny::InputSystem::handleMessage(const InputMessage msg)
+void relic::InputSystem::handleMessage(const InputMessage msg)
 {
     switch (msg.type)
     {

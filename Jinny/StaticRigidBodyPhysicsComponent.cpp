@@ -2,7 +2,7 @@
 
 #include "RigidBody.h"
 
-jinny::StaticRigidBodyPhysicsComponent::StaticRigidBodyPhysicsComponent(const framework::Shape shape,
+relic::StaticRigidBodyPhysicsComponent::StaticRigidBodyPhysicsComponent(const framework::Shape shape,
     const framework::Material material)
     :m_rigid_body(1, 0, { 0, 0 }, shape, material)
 {

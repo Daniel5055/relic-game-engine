@@ -9,7 +9,7 @@
 int main(int argc, char* args[])
 {
     // Initialisation of game
-    jinny::Game game{ new jinny::StartScene() };
+    relic::Game game{ new relic::StartScene() };
 
     // Game loop
     while (!(game.isGameOver()))

@@ -2,7 +2,7 @@
 
 #include "AnimationComponent.h"
 
-namespace jinny
+namespace relic
 {
     class ButtonAnimationComponent : public AnimationComponent
     {

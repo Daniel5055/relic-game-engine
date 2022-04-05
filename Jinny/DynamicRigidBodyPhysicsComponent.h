@@ -6,7 +6,7 @@
 #include "Material.h"
 #include "RigidBody.h"
 
-namespace jinny
+namespace relic
 {
     //TODO: Make rigidbodies inherit from abstract rigid body class
     /**

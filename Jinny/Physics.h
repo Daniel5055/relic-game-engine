@@ -31,19 +31,12 @@ namespace framework
         double getCollisionTime(double distance, double velocity_1, double velocity_2, double acceleration_1,
                                 double acceleration_2, double max_time) const;
 
-        std::pair<double, double> calculateDynamicCollisionForces(double a_velocity, double a_mass, double t_velocity,
-                                                                  double t_mass, double coeff_restitution,
-                                                                  double time_left) const;
-        double calculateStaticCollisionForces(double axis_velocity, double axis_force, double mass,
-                                              double coeff_restitution, double time_left) const;
-
-        // For getting the coefficient of restitution
-        double getCoefficientOfRestitution(RigidBody* rigid_body_1, RigidBody* rigid_body_2) const;
+        std::pair<double, double> calculateCollisionForces(const RigidBody& r1, const RigidBody& r2, double time_left, int axis) const;
 
         // Friction
         // TODO: why not just let them access material manager?
-        double getStaticFrictionCoefficient(RigidBody* rigid_body_1, RigidBody* rigid_body_2) const;
-        double getDynamicFrictionCoefficient(RigidBody* rigid_body_1, RigidBody* rigid_body_2) const;
+        double getStaticFrictionCoefficient(const RigidBody* rigid_body_1, const RigidBody* rigid_body_2) const;
+        double getDynamicFrictionCoefficient(const RigidBody* rigid_body_1, const RigidBody* rigid_body_2) const;
 
     private:
         // --- Data ---

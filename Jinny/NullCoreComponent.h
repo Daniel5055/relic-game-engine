@@ -2,7 +2,7 @@
 
 #include "CoreComponent.h"
 
-namespace jinny
+namespace relic
 {
     // TODO: Not sure if needed
     class NullCoreComponent final : public CoreComponent

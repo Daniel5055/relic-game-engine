@@ -9,7 +9,7 @@ namespace framework
     enum class Material;
 
     /**
-     * Class that contains physics-related data on a rigid body.
+     * \brief Class that contains physics-related data on a rigid body.
      */
     class RigidBody
     {
@@ -26,7 +26,7 @@ namespace framework
         bool isStationary() const;
 
         // Force Accessors
-        Vector getAppliedForce();
+        Vector getAppliedForce() const;
         void applyMFForce(Vector force);
         void applySFForce(Vector force);
         void clearSFForce();

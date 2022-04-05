@@ -6,7 +6,7 @@
 #include "LazyMessageSender.h"
 #include "ObjectEvent.h"
 
-namespace jinny
+namespace relic
 {
     // Base class for components
     class Component
@@ -20,10 +20,15 @@ namespace jinny
         // Prevent ambiguity 
         using LazyMessageSender<ObjectEvent>::addReceiver;
 
-        // Aliasing of pushMessage method for events to help with clarity and ambiguity with pushing events to systems
-        auto pushEvent(ObjectEvent e)->decltype(pushMessage(std::forward<ObjectEvent>(e)))
+        // Aliasing of receiveMessage method for events to help with clarity and ambiguity with pushing events to systems
+        auto receiveEvent(ObjectEvent e)->decltype(receiveMessage(std::forward<ObjectEvent>(e)))
         {
-            return pushMessage(std::forward<ObjectEvent>(e));
+            return receiveMessage(std::forward<ObjectEvent>(e));
+        }
+
+        auto receiveImmediateEvent(ObjectEvent e)->decltype(receiveImmediateMessage(std::forward<ObjectEvent>(e)))
+        {
+            return receiveImmediateMessage(std::forward<ObjectEvent>(e));
         }
 
         // Virtual destructor because component pointers would likely be deleted

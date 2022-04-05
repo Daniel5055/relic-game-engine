@@ -6,7 +6,7 @@
 #include "LazyMessageSender.h"
 #include "InputMessage.h"
 
-namespace jinny
+namespace relic
 {
     /**
      * \brief Base abstract class for components relating to input
@@ -19,13 +19,16 @@ namespace jinny
     public:
         // Prevent ambiguity 
         using LazyMessageSender<InputMessage>::addReceiver;
-        using LazyMessageSender<InputMessage>::sendMessage;
-        using MessageReceiver<InputMessage>::pushMessage;
+        using LazyMessageSender<InputMessage>::deployMessages;
+        using MessageReceiver<InputMessage>::receiveMessage;
 
         ~InputComponent() override = default;
 
+    protected:
+        using LazyMessageSender<InputMessage>::sendMessage;
 
     private:
+
         void handleMessage(InputMessage msg) override {}
 
         // Define as input component

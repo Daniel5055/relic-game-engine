@@ -7,7 +7,7 @@
 #include "Vector.h"
 
 
-namespace jinny
+namespace relic
 {
     /**
      * Physics engine that handles grid collisions with grid rigidbodies.

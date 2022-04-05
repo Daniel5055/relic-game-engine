@@ -9,7 +9,7 @@ namespace framework
     class RigidBody;
 }
 
-namespace jinny
+namespace relic
 {
     /**
      * Base class for physics engine to be run by the physics system.

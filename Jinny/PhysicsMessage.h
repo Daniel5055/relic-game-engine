@@ -9,7 +9,7 @@ namespace framework
 {
     class RigidBody;
 }
-namespace jinny
+namespace relic
 {
     enum class PMessageType
     {

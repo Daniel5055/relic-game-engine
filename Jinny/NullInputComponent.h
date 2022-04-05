@@ -2,7 +2,7 @@
 
 #include "InputComponent.h"
 
-namespace jinny
+namespace relic
 {
     // Useless?
     class NullInputComponent final : public InputComponent
