@@ -1,5 +1,6 @@
 #pragma once
 #include "Shape.h"
+#include "Colour.h"
 
 namespace framework
 {
@@ -24,6 +25,9 @@ namespace framework
 
         void setSize(int w, int h);
 
+        void setColour(Colour colour);
+        Colour getColour() const;
+
         const Shape& getClip() const;
         void setClip(Shape clip);
 
@@ -40,7 +44,9 @@ namespace framework
         Shape m_shape;
         Shape m_clip;
 
+        // Either a texture of a colour
         Texture* m_texture_ptr{nullptr};
+        Colour m_colour;
     };
 }
 

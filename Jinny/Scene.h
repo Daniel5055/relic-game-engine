@@ -40,11 +40,12 @@ namespace relic
 
         void createCamera(framework::Shape camera) const;
 
-        static GameObjectManager* m_object_manager;
+        static GameObjectManager::GameObject& createObject(const std::string& name, bool is_global = false);
 
     private:
         static unsigned m_window_width;
         static unsigned m_window_height;
+        static GameObjectManager* m_object_manager;
 
         bool m_is_global_scope{ false };
 

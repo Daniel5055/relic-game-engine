@@ -3,7 +3,7 @@
 #include "Graphics.h"
 #include "Graphic.h"
 
-#include "Color.h"
+#include "Colour.h"
 #include "Shape.h"
 #include "Texture.h"
 #include "Window.h"

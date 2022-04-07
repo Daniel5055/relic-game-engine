@@ -7,7 +7,7 @@
 // Framework Dependencies
 namespace framework
 {
-    struct Color;
+    struct Colour;
 }
 
 namespace relic
@@ -20,7 +20,7 @@ namespace relic
     public:
         // Constructor
         explicit TextGraphicsComponent(framework::Shape shape, const std::string& text, const std::string& font_name, 
-            framework::Color font_colour = { 0x00, 0x00, 0x00, 0x00 },
+            framework::Colour font_colour = { 0x00, 0x00, 0x00, 0x00 },
             const std::string& font_path = "", int font_size = 12);
     private:
         void handleEvent(ObjectEvent e) override;

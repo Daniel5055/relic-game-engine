@@ -8,7 +8,7 @@
 #include "Graphic.h"
 #include "Window.h"
 #include "Font.h"
-#include "Color.h"
+#include "Colour.h"
 
 framework::LoggedGraphics::LoggedGraphics(Window& window)
     :Graphics(window), m_logger("Graphics Framework")
@@ -55,7 +55,7 @@ framework::Texture* framework::LoggedGraphics::createTexture(std::string path)  
 }
 
 
-framework::Texture* framework::LoggedGraphics::createTextTexture(std::string text, Font* font, Color color) const
+framework::Texture* framework::LoggedGraphics::createTextTexture(std::string text, Font* font, Colour color) const
 {
     Texture* texture_ptr = Graphics::createTextTexture(text, font, color);
 

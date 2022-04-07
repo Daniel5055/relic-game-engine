@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <vector>
 
 // Declaring used classes
 namespace framework
@@ -25,6 +26,8 @@ namespace relic
         // Updating
         void virtual update() = 0;
 
+        std::vector<std::pair<int, int>> getTickCollisions();
+
         // Physics engine specific functions
         void virtual addRigidBody(int object_id, framework::RigidBody* rigid_body);
 
@@ -35,5 +38,13 @@ namespace relic
 
         // Rigidbody data
         std::map<int, framework::RigidBody*> m_rigid_bodies;
+
+        void registerCollision(int object_1, int object_2);
+        void restartTick();
+
+    private:
+        std::vector <std::pair<int, int>> m_accumulated_tick_collisions;
+
+
     };
 }

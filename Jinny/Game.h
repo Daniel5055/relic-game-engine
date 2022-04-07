@@ -47,9 +47,6 @@ namespace relic
         // Handling messages sent by components to the game 
         void handleMessage(GameMessage msg) override;
 
-        template<typename M>
-        void passMessageToObject(M msg);
-
         // Framework References
         const framework::Core f_core;
         framework::Window f_window;
@@ -70,17 +67,4 @@ namespace relic
 
         std::unique_ptr<Scene> m_current_scene;
     };
-
-    template <typename M>
-    void Game::passMessageToObject(M msg)
-    {
-        // Should always pass as true
-        static_assert(std::is_base_of_v<InputMessage, M>);
-
-        // Cast to message to get data
-        auto base_msg = static_cast<InputMessage>(msg);
-
-        // Pass the message, whatever it may be
-        m_object_manager.getObject(base_msg.object_id).pushExternalMessage(msg);
-    }
 }

@@ -9,6 +9,7 @@ namespace relic
      */
     struct Message
     {
+        virtual ~Message() = default;
         enum class Type
         {
             none,

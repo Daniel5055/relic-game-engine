@@ -6,10 +6,9 @@ namespace relic
 {
     namespace pong
     {
-        class PongGameScene : public Scene
+        class PongGameScene final : public Scene
         {
-        public:
-            void initialize();
+            void doInitialisation() override;
         };
     }
 }

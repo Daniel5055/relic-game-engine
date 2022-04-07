@@ -1,7 +1,7 @@
 #include "NullGraphics.h"
 
 #include "Window.h"
-#include "Color.h"
+#include "Colour.h"
 #include "Graphic.h"
 #include "Font.h"
 
@@ -15,7 +15,7 @@ void framework::NullGraphics::close()
 }
 
 
-void framework::NullGraphics::clear(Color clear_color)
+void framework::NullGraphics::clear(Colour clear_color)
 {
 }
 
@@ -38,7 +38,7 @@ framework::Texture* framework::NullGraphics::createTexture(std::string path)
     return nullptr;
 }
 
-framework::Texture* framework::NullGraphics::createTextTexture(std::string text, Font* font, Color color)
+framework::Texture* framework::NullGraphics::createTextTexture(std::string text, Font* font, Colour color)
 {
     return nullptr;
 }

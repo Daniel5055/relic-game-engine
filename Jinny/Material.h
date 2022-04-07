@@ -12,5 +12,6 @@ namespace framework
         ice,
         trampoline,
         entity,
+        pong_ball,
     };
 }

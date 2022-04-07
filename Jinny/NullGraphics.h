@@ -11,7 +11,7 @@ namespace framework
         void close();
 
         // Rendering functions
-        void clear(Color clear_color);
+        void clear(Colour clear_color);
         void draw(Graphic* graphic);
         void display();
 
@@ -19,7 +19,7 @@ namespace framework
         // Creation of textures and font
         Font* createFont(std::string path, int font_size);
         Texture* createTexture(std::string path);
-        Texture* createTextTexture(std::string text, Font* font, Color color);
+        Texture* createTextTexture(std::string text, Font* font, Colour color);
 
     };
 }

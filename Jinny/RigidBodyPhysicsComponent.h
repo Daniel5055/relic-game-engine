@@ -12,12 +12,15 @@ namespace relic
     /**
      * \brief Component that represents a dynamic rigidBody
      */
-    class DynamicRigidBodyPhysicsComponent : public PhysicsComponent
+    class RigidBodyPhysicsComponent : public PhysicsComponent
     {
     public:
         // Constructor
-        DynamicRigidBodyPhysicsComponent(double mass, double max_x_speed, double max_y_speed, framework::Shape shape, 
-            framework::Material material = framework::Material::nullium, framework::Vector applied_force = { 0, 0 });
+        RigidBodyPhysicsComponent(double mass, double damping_force, framework::Shape shape, 
+            framework::Material material = framework::Material::nullium,
+            double max_x_speed = 0, double max_y_speed = 0, framework::Vector applied_force = { 0, 0 });
+    protected:
+        framework::RigidBody& getRigidBody();
     private:
         void doUpdates() override;
         // --- data ---

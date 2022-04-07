@@ -27,24 +27,21 @@ namespace relic
     protected:
         using LazyMessageSender<InputMessage>::sendMessage;
 
+        // Useful methods that can be used by derived classes
+        void subscribeInput(ObjectInputType type, char key = ' ');
+
     private:
+
+        void doUpdates() override;
 
         void handleMessage(InputMessage msg) override {}
 
         // Define as input component
         Message::Type defineMessageType() final { return Message::Type::input; }
 
-        // Prep initial messages within queue 
-        void prepareMessage(InputMessage& msg) override;
+        // Prep initial messages within queue
+        void prepareMessage(InputMessage& msg) final;
     };
-
-    inline void InputComponent::prepareMessage(InputMessage& msg)
-    {
-        if (msg.object_id == k_unset_id)
-        {
-            msg.object_id = getObjectId();
-        }
-    }
 }
 
 

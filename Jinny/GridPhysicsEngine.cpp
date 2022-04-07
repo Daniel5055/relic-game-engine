@@ -5,12 +5,13 @@
 
 
 relic::GridPhysicsEngine::GridPhysicsEngine(const framework::Physics& physics)
-    : PhysicsEngine(physics), m_acceleration_due_to_gravity(9.81)
+    : PhysicsEngine(physics), m_acceleration_due_to_gravity(0)
 {
 }
 
 void relic::GridPhysicsEngine::update()
 {
+    restartTick();
     double time_passed = 0;
 
     applyDamping();
@@ -43,6 +44,10 @@ void relic::GridPhysicsEngine::update()
         // Iterate through collisions
         while (!collisions.empty())
         {
+            // For the physics engine data keeping
+            registerCollision(collisions.front().body_ids[0], collisions.front().body_ids[1]);
+
+            // Calculating collisions
             calculateCollision(collisions.front(), time_passed);
             calculateFriction(collisions.front(), friction_applied, time_passed);
             collisions.pop();

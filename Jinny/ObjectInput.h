@@ -34,7 +34,6 @@ namespace relic
         {
         }
         ObjectInputType type;
-
         char key;
 
     };

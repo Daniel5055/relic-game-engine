@@ -4,6 +4,7 @@
 
 #include "GameSystem.h"
 #include "MessageReceiver.h"
+#include "MessageSender.h"
 #include "PhysicsMessage.h"
 
 #include "PhysicsEngine.h"
@@ -20,7 +21,8 @@ namespace relic
      */
     class PhysicsSystem final : 
         public GameSystem,
-        public MessageReceiver<PhysicsMessage>
+        public MessageReceiver<PhysicsMessage>,
+        public MessageSender<PhysicsMessage>
     {
     public:
         // Constructor
@@ -36,5 +38,6 @@ namespace relic
 
         // Physics Engine
         std::unique_ptr<PhysicsEngine> m_engine_ptr;
+        std::map<int, bool> m_subscribed_collision_checking;
     };
 }

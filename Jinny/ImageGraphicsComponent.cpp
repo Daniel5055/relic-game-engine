@@ -32,7 +32,7 @@ relic::ImageGraphicsComponent::ImageGraphicsComponent(framework::Shape shape, co
     sendMessage(msg);
 }
 
-void relic::ImageGraphicsComponent::handleEvent(ObjectEvent e)
+void relic::ImageGraphicsComponent::handleEvent(const ObjectEvent e)
 {
     switch (e.type)
     {

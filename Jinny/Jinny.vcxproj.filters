@@ -148,6 +148,18 @@
     <Filter Include="Framework\Physics\Source Files">
       <UniqueIdentifier>{54a59e41-c1ae-4a5a-9832-39d6b1341928}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Games">
+      <UniqueIdentifier>{c0a92857-e799-4f4a-937a-355ab641133e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Games\Pong">
+      <UniqueIdentifier>{b88abee7-3b59-46db-971a-76530a2a2616}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Games\Pong\Header Files">
+      <UniqueIdentifier>{aa6c1ab7-bdae-4899-a4f2-481a9c4ced8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Games\Pong\Source Files">
+      <UniqueIdentifier>{927d7d90-a779-485e-8b8b-6091e48af42b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Program.cpp">
@@ -180,7 +192,7 @@
     <ClCompile Include="Window.cpp">
       <Filter>Framework\Core\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Color.cpp">
+    <ClCompile Include="Colour.cpp">
       <Filter>Framework\Graphics\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Font.cpp">
@@ -249,7 +261,7 @@
     <ClCompile Include="StaticRigidBodyPhysicsComponent.cpp">
       <Filter>Object and Components\Components\Physics Components\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DynamicRigidBodyPhysicsComponent.cpp">
+    <ClCompile Include="RigidBodyPhysicsComponent.cpp">
       <Filter>Object and Components\Components\Physics Components\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Logger.cpp">
@@ -273,14 +285,29 @@
     <ClCompile Include="GridPhysicsEngine.cpp">
       <Filter>System Aids\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PongGameScene.cpp">
-      <Filter>Scene\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GameObjectManager.cpp">
       <Filter>Object and Components\Object\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AssetLoaderGraphicsComponent.cpp">
       <Filter>Object and Components\Components\Graphics Components\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SolidColourGraphicsComponent.cpp">
+      <Filter>Object and Components\Components\Graphics Components\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PongGameScene.cpp">
+      <Filter>Games\Pong\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PongPaddlePhysicsComponent.cpp">
+      <Filter>Games\Pong\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PongPaddleInputComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputComponent.cpp">
+      <Filter>Object and Components\Components\Input Components\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PongBallPhysicsComponent.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -338,7 +365,7 @@
     <ClInclude Include="Font.h">
       <Filter>Framework\Graphics\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Color.h">
+    <ClInclude Include="Colour.h">
       <Filter>Framework\Graphics\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Input.h">
@@ -425,7 +452,7 @@
     <ClInclude Include="StaticRigidBodyPhysicsComponent.h">
       <Filter>Object and Components\Components\Physics Components\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DynamicRigidBodyPhysicsComponent.h">
+    <ClInclude Include="RigidBodyPhysicsComponent.h">
       <Filter>Object and Components\Components\Physics Components\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Logger.h">
@@ -442,9 +469,6 @@
     </ClInclude>
     <ClInclude Include="MaterialManager.h">
       <Filter>Framework\Physics\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PongGameScene.h">
-      <Filter>Scene\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Game Systems\Header Files</Filter>
@@ -481,6 +505,21 @@
     </ClInclude>
     <ClInclude Include="LazyMessageSender.h">
       <Filter>System Aids\Messaging\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SolidColourGraphicsComponent.h">
+      <Filter>Object and Components\Components\Graphics Components\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PongGameScene.h">
+      <Filter>Games\Pong\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PongPaddlePhysicsComponent.h">
+      <Filter>Games\Pong\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PongPaddleInputComponent.h">
+      <Filter>Games\Pong\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PongBallPhysicsComponent.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

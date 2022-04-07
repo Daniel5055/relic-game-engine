@@ -3,7 +3,7 @@
 #include "Texture.h"
 
 framework::Graphic::Graphic(const Shape shape)
-    :m_shape(shape), m_clip({0, 0, 0, 0})
+    :m_shape(shape)
 {
 
 }
@@ -22,6 +22,16 @@ void framework::Graphic::setSize(const int w, const int h)
 {
     m_shape.w = w;
     m_shape.h = h;
+}
+
+void framework::Graphic::setColour(const Colour colour)
+{
+    m_colour = colour;
+}
+
+framework::Colour framework::Graphic::getColour() const
+{
+    return m_colour;
 }
 
 const framework::Shape& framework::Graphic::getClip() const

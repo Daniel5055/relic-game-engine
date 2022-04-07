@@ -15,6 +15,8 @@ namespace relic
     {
         null_message = 0,
         set_rigid_body,
+        register_collision_checking,
+        collision_occurred,
     };
 
     /**
@@ -31,6 +33,7 @@ namespace relic
         {
             framework::RigidBody* rigid_body{nullptr};
             framework::Vector vector;
+            int colliding_object_id;
         };
     };
 }

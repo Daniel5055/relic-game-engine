@@ -1,7 +1,7 @@
 #include "TextGraphicsComponent.h"
 
 relic::TextGraphicsComponent::TextGraphicsComponent(framework::Shape shape, const std::string& text, const std::string&
-                                                    font_name, framework::Color font_colour, const std::string& font_path, int font_size)
+                                                    font_name, framework::Colour font_colour, const std::string& font_path, int font_size)
 {
     // Create Graphic
     setGraphic(new framework::Graphic(shape));

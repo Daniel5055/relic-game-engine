@@ -8,45 +8,20 @@
 
 namespace framework
 {
-    Shape::Shape(int x, int y, int w, int h)
+    Shape::Shape(const int x, const int y, const int w, const int h) : x(x), y(y), h(h), w(w)
     {
-        this->x = x;
-        this->y = y;
-        this->w = w;
-        this->h = h;
-
-        is_screen_bound = false;
     }
 
-    Shape::Shape(Point position)
+    Shape::Shape(const Point position) : x(position.x), y(position.y), h(0), w(0)
     {
-        x = position.x;
-        y = position.y;
-
-        w = 0;
-        h = 0;
-
-        is_screen_bound = false;
     }
 
-    Shape::Shape(Point position, Point size)
+    Shape::Shape(const Point position, const Point size) : x(position.x), y(position.y), h(size.y), w(size.x)
     {
-        x = position.x;
-        y = position.y;
-        w = size.x;
-        h = size.y;
-
-        is_screen_bound = false;
     }
 
-    Shape::Shape(SDL_Rect rect)
+    Shape::Shape(SDL_Rect rect) : x(rect.x), y(rect.y), h(rect.h), w(rect.w)
     {
-        x = rect.x;
-        y = rect.y;
-        w = rect.w;
-        h = rect.h;
-
-        is_screen_bound = false;
     }
 
     Shape::operator SDL_Rect() const

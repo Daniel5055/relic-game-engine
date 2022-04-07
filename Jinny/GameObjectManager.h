@@ -101,9 +101,9 @@ namespace relic
     void GameObjectManager::GameObject::pushExternalMessage(M msg)
     {
         // Cast to message to get data
-        static_assert(std::is_base_of_v<InputMessage, M>);
+        static_assert(std::is_base_of_v<Message, M>);
         // TODO: work around only works inputmessages
-        const auto base_msg = static_cast<InputMessage>(msg);
+        auto base_msg = static_cast<Message>(msg);
 
         for (const auto& component : m_components)
         {
@@ -115,9 +115,11 @@ namespace relic
                     break;
                 case Message::Type::input: 
                     // So fat only input component accepts messages but I might change this
-                    static_cast<InputComponent*>(component.get())->receiveMessage(msg);
+                    static_cast<InputComponent*>(component.get())->receiveMessage(dynamic_cast<InputMessage&>(msg));
                     break;
-                case Message::Type::physics: break;
+                case Message::Type::physics: 
+                    static_cast<PhysicsComponent*>(component.get())->receiveMessage(dynamic_cast<PhysicsMessage&>(msg));
+                    break;
                 case Message::Type::core: break;
                 default: ;
                 }

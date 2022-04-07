@@ -22,7 +22,7 @@ namespace framework
         // Logged creation of textures and font
         Font* createFont(std::string path, int font_size) const override;
         Texture* createTexture(std::string path) const override;
-        Texture* createTextTexture(std::string text, Font* font, Color color) const override;
+        Texture* createTextTexture(std::string text, Font* font, Colour color) const override;
 
     private:
 

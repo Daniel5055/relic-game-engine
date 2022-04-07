@@ -58,3 +58,8 @@ void relic::Scene::createCamera(const framework::Shape camera) const
     o.addComponent(new CameraCoreComponent(new framework::Shape(camera)));
     m_object_manager->deleteObject(o.getId());
 }
+
+relic::GameObjectManager::GameObject& relic::Scene::createObject(const std::string& name, const bool is_global)
+{
+    return m_object_manager->createObject(name, is_global);
+}

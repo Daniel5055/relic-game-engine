@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "Color.h"
+#include "Colour.h"
 
 #include "Message.h"
 
@@ -38,6 +38,6 @@ namespace relic
         std::string string_1;
         std::string string_2;
         int num{};
-        framework::Color color;
+        framework::Colour color;
     };
 }

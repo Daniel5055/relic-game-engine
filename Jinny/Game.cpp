@@ -27,6 +27,7 @@ relic::Game::Game(Scene* starting_scene)
 
     // Setting game as receiver of messages from the systems that send messages
     m_input.addReceiver(this);
+    m_physics.addReceiver(this);
 
     // Scene Configuration
     Scene::setObjectManager(&m_object_manager);
@@ -68,8 +69,8 @@ void relic::Game::handleMessage(const PhysicsMessage msg)
     if (msg.is_sent_by_system)
     {
         // Directed to object, physics messages do not need to communicate with system for now
-        assert(msg.object_id >= 1);
-        //passMessageToObject(msg);
+        assert(msg.object_id >= 0);
+        m_object_manager.getObject(msg.object_id).pushExternalMessage(msg);
     }
     else
     {
@@ -84,7 +85,7 @@ void relic::Game::handleMessage(const InputMessage msg)
         // Directed to object, else to game
         if (msg.object_id >= 0)
         {
-            passMessageToObject(msg);
+            m_object_manager.getObject(msg.object_id).pushExternalMessage(msg);
         }
         else if (msg.type == IMessageType::exit_button_pressed)
         {
@@ -102,8 +103,8 @@ void relic::Game::handleMessage(const GraphicsMessage msg)
     if (msg.is_sent_by_system)
     {
         // Directed to object, graphics messages do not need to communicate with system for now
-        assert(msg.object_id >= 1);
-        //passMessageToObject(msg);
+        assert(msg.object_id >= 0);
+        m_object_manager.getObject(msg.object_id).pushExternalMessage(msg);
     }
     else
     {

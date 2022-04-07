@@ -1,6 +1,6 @@
 #pragma once
 
-// Encapsulation of SDL concepts for better strucutre
+// Encapsulation of SDL concepts for better structure
 
 // SDL Dependencies
 struct SDL_Rect;
@@ -13,11 +13,11 @@ namespace framework
 
         // Constructor
         Shape(int x = 0, int y = 0, int w = 0, int h = 0);
-        Shape(Point position);
-        Shape(Point position, Point size);
-        Shape(SDL_Rect rect);
+        explicit Shape(Point position);
+        explicit Shape(Point position, Point size);
+        explicit Shape(SDL_Rect rect);
 
-        operator SDL_Rect() const;
+        explicit operator SDL_Rect() const;
 
         // Values
         int x;
@@ -26,6 +26,6 @@ namespace framework
         int w;
 
         // Refers to if coordinates are screen coordinates, else are world coordinates
-        bool is_screen_bound;
+        bool is_screen_bound{false};
     };
 }

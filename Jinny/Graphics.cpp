@@ -12,7 +12,7 @@
 
 #include "Window.h"
 #include "Font.h"
-#include "Color.h"
+#include "Colour.h"
 
 #include <cassert>
 
@@ -29,7 +29,7 @@ framework::Graphics::~Graphics()
 }
 
 
-void framework::Graphics::clear(const framework::Color clear_colour) const
+void framework::Graphics::clear(const Colour clear_colour) const
 {
     // Clear screen
     SDL_SetRenderDrawColor(m_renderer_ptr, clear_colour.r, clear_colour.g, clear_colour.b, clear_colour.a);
@@ -38,19 +38,7 @@ void framework::Graphics::clear(const framework::Color clear_colour) const
 
 void framework::Graphics::draw(Graphic* graphic) const
 {
-    // May slow down
-    const auto shape = static_cast<SDL_Rect>(graphic->getShape());
-    const auto clip = static_cast<SDL_Rect>(graphic->getClip());
-    if (clip.h == 0 && clip.w == 0)
-    {
-        SDL_RenderCopy(m_renderer_ptr, graphic->getTexture()->getTexture(), nullptr, &shape);
-        
-    }
-    else
-    {
-        SDL_RenderCopy(m_renderer_ptr, graphic->getTexture()->getTexture(), &clip, &shape);
-        
-    }
+    draw(graphic, 0, 0);
 }
 
 void framework::Graphics::draw(Graphic* graphic, const int x_shift, const int y_shift) const
@@ -61,15 +49,21 @@ void framework::Graphics::draw(Graphic* graphic, const int x_shift, const int y_
     shape.y -= y_shift;
 
     const auto clip = static_cast<SDL_Rect>(graphic->getClip());
-    if (clip.h == 0 && clip.w == 0)
+
+    if (graphic->getTexture() == nullptr)
+    {
+        // Then draw with colour
+        SDL_SetRenderDrawColor(m_renderer_ptr, graphic->getColour().r, graphic->getColour().g, graphic->getColour().b, graphic->getColour().a);
+        SDL_RenderFillRect(m_renderer_ptr, &shape);
+        SDL_SetRenderDrawColor(m_renderer_ptr, 255, 255, 255, 255);
+    }
+    else if (clip.h == 0 && clip.w == 0)
     {
         SDL_RenderCopy(m_renderer_ptr, graphic->getTexture()->getTexture(), nullptr, &shape);
-        
     }
     else
     {
         SDL_RenderCopy(m_renderer_ptr, graphic->getTexture()->getTexture(), &clip, &shape);
-        
     }
 }
 
@@ -99,10 +93,10 @@ framework::Texture* framework::Graphics::createTexture(std::string path) const
 }
 
 
-framework::Texture* framework::Graphics::createTextTexture(std::string text, framework::Font* font, framework::Color color) const
+framework::Texture* framework::Graphics::createTextTexture(const std::string text, framework::Font* font, const framework::Colour colour) const
 {
     const auto texture = new Texture();
-    SDL_Surface* surface_ptr = TTF_RenderText_Blended(font->m_font_ptr, text.c_str(), color);
+    SDL_Surface* surface_ptr = TTF_RenderText_Blended(font->m_font_ptr, text.c_str(), static_cast<SDL_Color>(colour));
     texture->setTexture(SDL_CreateTextureFromSurface(m_renderer_ptr, surface_ptr));
 
     assert(texture->getTexture() != nullptr);
@@ -110,10 +104,10 @@ framework::Texture* framework::Graphics::createTextTexture(std::string text, fra
     return texture;
 }
 
-framework::Texture* framework::Graphics::createWrappedTextTexture(std::string text, Font* font, Color color, Shape* shape) const
+framework::Texture* framework::Graphics::createWrappedTextTexture(const std::string text, Font* font, const Colour colour, Shape* shape) const
 {
     const auto texture = new Texture();
-    SDL_Surface* surface_ptr = TTF_RenderText_Blended_Wrapped(font->m_font_ptr, text.c_str(), color, shape->w);
+    SDL_Surface* surface_ptr = TTF_RenderText_Blended_Wrapped(font->m_font_ptr, text.c_str(), static_cast<SDL_Color>(colour), shape->w);
     texture->setTexture(SDL_CreateTextureFromSurface(m_renderer_ptr, surface_ptr));
 
     assert(texture->getTexture() != nullptr);

@@ -4,9 +4,8 @@
 
 namespace relic
 {
-    class StartScene : public Scene
+    class StartScene final : public Scene
     {
-    private:
         void doInitialisation() override;
     };
 }
