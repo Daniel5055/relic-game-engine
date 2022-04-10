@@ -9,7 +9,7 @@ relic::GraphicsComponent::GraphicsComponent()
 
 relic::GraphicsComponent::~GraphicsComponent()
 {
-    sendMessage({ GraphicsSystemType::hide_graphic, std::make_any<framework::Graphic*>(&getGraphic()) });
+    sendImmediateMessage({ GraphicsSystemType::hide_graphic, std::make_any<framework::Graphic*>(&getGraphic()) });
 }
 
 void relic::GraphicsComponent::setClipPtr(const framework::Shape* clip)
@@ -28,7 +28,7 @@ void relic::GraphicsComponent::doUpdates()
     handleMessages();
 }
 
-void relic::GraphicsComponent::handleMessage(Message<ObjectType> msg)
+void relic::GraphicsComponent::handleMessage(const relic::Message<ObjectType>& msg)
 {
     switch (msg.type)
     {

@@ -10,7 +10,7 @@ relic::PlayerPhysicsComponent::PlayerPhysicsComponent(const double mass, const d
 {
 }
 
-void relic::PlayerPhysicsComponent::handleMessage(const Message<ObjectType> msg)
+void relic::PlayerPhysicsComponent::handleMessage(const Message<ObjectType>& msg)
 {
     if (msg.type == ObjectType::input_triggered)
     {

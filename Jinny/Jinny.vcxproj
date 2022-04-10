@@ -217,10 +217,7 @@
     <ClInclude Include="GraphicsType.h" />
     <ClInclude Include="Identifier.h" />
     <ClInclude Include="InputType.h" />
-    <ClInclude Include="LazyMessageSender.h" />
-    <ClInclude Include="MessageBus.decl.h" />
     <ClInclude Include="MessageBus.h" />
-    <ClInclude Include="MessageExchanger.decl.h" />
     <ClInclude Include="MessageExchanger.h" />
     <ClInclude Include="MessageType.h" />
     <ClInclude Include="ExtendMessageType.h" />
@@ -282,8 +279,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
-    <None Include="MessageBus.impl.h" />
-    <None Include="MessageExchanger.impl.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

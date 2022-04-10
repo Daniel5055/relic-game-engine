@@ -14,7 +14,7 @@ void relic::pong::PongPaddlePhysicsComponent::doUpdates()
     handleMessages();
 }
 
-void relic::pong::PongPaddlePhysicsComponent::handleMessage(const Message<ObjectType> msg)
+void relic::pong::PongPaddlePhysicsComponent::handleMessage(const Message<ObjectType>& msg)
 {
     switch (msg.type)
     {

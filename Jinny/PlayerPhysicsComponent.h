@@ -16,7 +16,7 @@ namespace relic
         // Constructor
         PlayerPhysicsComponent(double mass, double max_x_speed, double max_y_speed, framework::Shape shape);
     private:
-        void handleMessage(Message<ObjectType> msg) override;
+        void handleMessage(const Message<ObjectType>& msg) override;
 
         void doUpdates() override;
     };

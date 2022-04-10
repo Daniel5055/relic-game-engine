@@ -37,7 +37,7 @@ namespace relic
 
     private:
         // Handling game messages
-        void handleMessage(Message<GameSystemType> msg) override;
+        void handleMessage(const Message<GameSystemType>& msg) override;
 
         // Framework References
         const framework::Core f_core;

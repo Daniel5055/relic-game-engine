@@ -7,7 +7,7 @@
 #include "PhysicsSystem.h"
 
 relic::Game::Game(Scene* starting_scene)
-    : MessageReceiver<GameSystemType>(Identifier::null_identifier)
+    : MessageReceiver<GameSystemType>(Identifier::null)
     , f_window("Relic", 640, 480, true)
     , f_graphics(f_window)
     , f_input()
@@ -48,7 +48,7 @@ bool relic::Game::isGameOver() const
     return m_game_over;
 }
 
-void relic::Game::handleMessage(const Message<GameSystemType> msg)
+void relic::Game::handleMessage(const Message<GameSystemType>& msg)
 {
     switch (msg.type)
     {

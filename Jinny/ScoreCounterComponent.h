@@ -17,7 +17,7 @@ namespace relic::pong
         void doUpdates() override;
 
     private:
-        void handleMessage(Message<PongType> msg) override;
+        void handleMessage(const Message<PongType>& msg) override;
 
         int m_left_score{ 0 };
         int m_right_score{ 0 };

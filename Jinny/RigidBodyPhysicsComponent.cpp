@@ -13,7 +13,7 @@ relic::RigidBodyPhysicsComponent::RigidBodyPhysicsComponent(const double mass, c
 
 relic::RigidBodyPhysicsComponent::~RigidBodyPhysicsComponent()
 {
-    MessageSender<PhysicsSystemType>::sendMessage({ PhysicsSystemType::remove_rigid_body });
+    MessageSender<PhysicsSystemType>::sendImmediateMessage({ PhysicsSystemType::remove_rigid_body });
 }
 
 framework::RigidBody& relic::RigidBodyPhysicsComponent::getRigidBody()

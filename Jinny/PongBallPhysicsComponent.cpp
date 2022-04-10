@@ -3,7 +3,7 @@
 relic::pong::PongBallPhysicsComponent::PongBallPhysicsComponent(const framework::Shape shape, Identifier
     left_wall_id,
     Identifier right_wall_id)
-    :RigidBodyPhysicsComponent(10, 0, shape, framework::Material::pong_ball, 10, 10, { 1000, 0 })
+    :RigidBodyPhysicsComponent(10, 0, shape, framework::Material::pong_ball, 10, 10, { 1150, -1000 })
     , MessageReceiver<PhysicsObjectType>(getObjectId()), MessageSender<PongType>(getObjectId())
     , m_left_wall_id(std::move(left_wall_id))
     , m_right_wall_id(std::move(right_wall_id))
@@ -19,7 +19,7 @@ void relic::pong::PongBallPhysicsComponent::doUpdates()
     handleMessages();
 }
 
-void relic::pong::PongBallPhysicsComponent::handleMessage(const Message<PhysicsObjectType> msg)
+void relic::pong::PongBallPhysicsComponent::handleMessage(const Message<PhysicsObjectType>& msg)
 {
     switch (msg.type)
     {

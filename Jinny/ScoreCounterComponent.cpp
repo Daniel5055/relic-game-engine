@@ -12,7 +12,7 @@ void relic::pong::ScoreCounterComponent::doUpdates()
     MessageReceiver<PongType>::handleMessages();
 }
 
-void relic::pong::ScoreCounterComponent::handleMessage(const Message<PongType> msg)
+void relic::pong::ScoreCounterComponent::handleMessage(const relic::Message<PongType>& msg)
 {
     if (msg.type == PongType::left_win || msg.type == PongType::right_win)
     {

@@ -15,7 +15,7 @@ namespace relic
     public:
         PlayerInputComponent();
     private:
-        void handleMessage(Message<InputObjectType> msg) override;
+        void handleMessage(const Message<InputObjectType>& msg) override;
 
         std::map<char, bool> m_keys_down;
     };

@@ -9,7 +9,7 @@ namespace relic
     class Identifier
     {
     public:
-        static const Identifier null_identifier;
+        static const Identifier null;
 
 
         // Constructor

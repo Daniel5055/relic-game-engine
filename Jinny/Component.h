@@ -30,7 +30,7 @@ namespace relic
     private:
 
         // Copy of the object id so messageExchangers can store a reference 
-        Identifier m_id{ Identifier::null_identifier };
+        Identifier m_id{ Identifier::null };
 
     };
 }

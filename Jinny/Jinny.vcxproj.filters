@@ -497,7 +497,7 @@
     <ClInclude Include="PongPaddleInputComponent.h">
       <Filter>Games\Pong\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MessageExchanger.decl.h">
+    <ClInclude Include="MessageExchanger.h">
       <Filter>System Aids\Messaging\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MessageBus.h">
@@ -533,9 +533,6 @@
     <ClInclude Include="PongBallPhysicsComponent.h">
       <Filter>Games\Pong\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MessageExchanger.h">
-      <Filter>System Aids\Messaging\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PongType.h">
       <Filter>Games\Pong\Header Files</Filter>
     </ClInclude>
@@ -548,20 +545,8 @@
     <ClInclude Include="AssetLoaderGraphicsComponent.h">
       <Filter>Object and Components\Components\Other Components\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MessageBus.decl.h">
-      <Filter>System Aids\Messaging\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LazyMessageSender.h">
-      <Filter>System Aids\Messaging\Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
-    <None Include="MessageExchanger.impl.h">
-      <Filter>System Aids\Messaging\Header Files</Filter>
-    </None>
-    <None Include="MessageBus.impl.h">
-      <Filter>System Aids\Messaging\Header Files</Filter>
-    </None>
   </ItemGroup>
 </Project>

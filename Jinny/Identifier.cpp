@@ -1,6 +1,6 @@
 #include "Identifier.h"
 
-const relic::Identifier relic::Identifier::null_identifier = Identifier(0, "", "");
+const relic::Identifier relic::Identifier::null = Identifier(0, "", "");
 
 relic::Identifier::Identifier(const int id, std::string name, std::string type)
     : m_id(id), m_name(std::move(name)), m_type(std::move(type))

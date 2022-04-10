@@ -6,7 +6,7 @@ relic::SceneChangeCoreComponent::SceneChangeCoreComponent(const ObjectInput trig
 {
 }
 
-void relic::SceneChangeCoreComponent::handleMessage(Message<ObjectType> msg)
+void relic::SceneChangeCoreComponent::handleMessage(const relic::Message<ObjectType>& msg)
 {
     switch (msg.type)
     {

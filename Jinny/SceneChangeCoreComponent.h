@@ -24,7 +24,7 @@ namespace relic
         // Constructor
         SceneChangeCoreComponent(ObjectInput trigger_input, Scene* new_scene);
     private:
-        void handleMessage(Message<ObjectType> msg) override;
+        void handleMessage(const Message<ObjectType>& msg) override;
 
         // --- Data ---
 

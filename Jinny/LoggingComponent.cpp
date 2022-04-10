@@ -21,7 +21,7 @@ void relic::LoggingComponent::doUpdates()
 }
 
 
-void relic::LoggingComponent::handleMessage(const Message<ObjectType> msg)
+void relic::LoggingComponent::handleMessage(const Message<ObjectType>& msg)
 {
     // Todo: Room for improvement
     switch (msg.type)

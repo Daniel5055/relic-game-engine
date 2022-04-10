@@ -20,7 +20,7 @@ namespace relic::pong
         void doUpdates() override;
 
     private:
-        void handleMessage(Message<PhysicsObjectType> msg) override;
+        void handleMessage(const Message<PhysicsObjectType>& msg) override;
 
 
         const Identifier m_left_wall_id;

@@ -14,7 +14,7 @@ namespace relic
         protected:
             void doUpdates() override;
         private:
-            void handleMessage(Message<ObjectType> msg) override;
+            void handleMessage(const Message<ObjectType>& msg) override;
 
             const char m_up_key;
             const char m_down_key;

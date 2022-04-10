@@ -21,17 +21,15 @@ namespace relic
         Message(T t)
             :type(t)
         {
-            
+
         }
 
-        Message()
-        = default;
+        Message() = default;
 
         T type;
         std::any value{};
 
-        const Identifier* from{nullptr };
-        const Identifier* to{nullptr};
-
+        Identifier from{ Identifier::null };
+        Identifier to{ Identifier::null };
     };
 }

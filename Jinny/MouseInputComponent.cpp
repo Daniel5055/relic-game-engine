@@ -10,7 +10,7 @@ relic::MouseInputComponent::MouseInputComponent(const framework::Shape mouse_are
     subscribeInput(ObjectInputType::mouse_over, &m_mouse_area);
 }
 
-void relic::MouseInputComponent::handleMessage(const Message<InputObjectType> msg)
+void relic::MouseInputComponent::handleMessage(const Message<InputObjectType>& msg)
 {
     switch (msg.type)
     {
@@ -47,7 +47,7 @@ void relic::MouseInputComponent::handleMessage(const Message<InputObjectType> ms
     }
 }
 
-void relic::MouseInputComponent::handleMessage(const Message<ObjectType> msg)
+void relic::MouseInputComponent::handleMessage(const Message<ObjectType>& msg)
 {
     switch (msg.type)
     {

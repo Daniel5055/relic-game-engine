@@ -33,7 +33,7 @@ namespace relic
     private:
         // --- Internal Functions ---
         void doUpdates() override;
-        void handleMessage(Message<GraphicsSystemType> msg) override;
+        void handleMessage(const Message<GraphicsSystemType>& msg) override;
 
         // --- Framework ---
         const framework::Graphics& f_graphics;

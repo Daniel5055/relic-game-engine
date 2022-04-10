@@ -1,7 +1,5 @@
 #pragma once
 
-#include <queue>
-
 #include "Message.h"
 #include "MessageExchanger.h"
 
@@ -14,57 +12,48 @@ namespace relic
     template <typename T>
     class MessageReceiver : public MessageExchanger<T>
     {
-    public:
-        // Receiving messages
-        void receiveMessage(Message<T> msg);
-
     protected:
         // Constructor
         explicit MessageReceiver(const Identifier& identifier, bool is_local = false);
-
-        // Destructor
         ~MessageReceiver();
 
         // Message Handling
         void handleMessages();
-
     private:
         // Private virtual methods
-        virtual void handleMessage(Message<T> msg) = 0;
-
-        // Message queue
-        std::queue<Message<T>> m_message_queue;
+        virtual void handleMessage(const Message<T>& msg) = 0;
     };
-
-    template <typename T>
-    void MessageReceiver<T>::receiveMessage(Message<T> msg)
-    {
-        m_message_queue.push(msg);
-    }
 
     template <typename T>
     MessageReceiver<T>::MessageReceiver(const Identifier& identifier, bool is_local)
         :MessageExchanger<T>(identifier, is_local)
     {
-        MessageExchanger<T>::addReceiver(this);
+        MessageExchanger<T>::registerReceiver();
     }
 
     template <typename T>
     MessageReceiver<T>::~MessageReceiver()
     {
-        MessageExchanger<T>::removeReceiver(this);
+        MessageExchanger<T>::removeReceiver();
     }
 
     template <typename T>
     void MessageReceiver<T>::handleMessages()
     {
-        while (!m_message_queue.empty())
+        for (size_t i = 0; i < MessageExchanger<T>::getQueueSize(); ++i)
         {
-            Message<T> msg = m_message_queue.front();
-            m_message_queue.pop();
-
-            handleMessage(msg);
+            const Message<T>& msg = MessageExchanger<T>::retrieveMessage(i);
+            if (msg.to == Identifier::null || msg.to == MessageExchanger<T>::getIdentifier())
+            {
+                if (MessageExchanger<T>::isLocal() && msg.from == MessageExchanger<T>::getIdentifier() || !MessageExchanger<T>::isLocal())
+                {
+                    // Only handle message under correct conditions
+                    handleMessage(msg);
+                }
+            }
         }
+
+        MessageExchanger<T>::confirmRetrieval();
     }
 }
 

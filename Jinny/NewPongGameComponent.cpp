@@ -11,7 +11,7 @@ void relic::pong::NewPongGameComponent::doUpdates()
     handleMessages();
 }
 
-void relic::pong::NewPongGameComponent::handleMessage(const Message<PongType> msg)
+void relic::pong::NewPongGameComponent::handleMessage(const Message<PongType>& msg)
 {
     if (msg.type == PongType::left_win || msg.type == PongType::right_win)
     {

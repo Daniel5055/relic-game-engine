@@ -42,6 +42,6 @@ namespace relic
         // Graphic Data
         std::unique_ptr<framework::Graphic> m_graphic_ptr;
 
-        void handleMessage(Message<ObjectType> msg) override;
+        void handleMessage(const Message<ObjectType>& msg) override;
     };
 }

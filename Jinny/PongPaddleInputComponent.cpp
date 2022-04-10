@@ -8,7 +8,7 @@ relic::pong::PongPaddleInputComponent::PongPaddleInputComponent(const char up_ke
     m_keys_down[down_key] = false;
 }
 
-void relic::pong::PongPaddleInputComponent::handleMessage(const Message<InputObjectType> msg)
+void relic::pong::PongPaddleInputComponent::handleMessage(const Message<InputObjectType>& msg)
 {
     switch (msg.type)
     {
@@ -26,9 +26,12 @@ void relic::pong::PongPaddleInputComponent::handleMessage(const Message<InputObj
         }
         else
         {
-            m_keys_down[o_i.key] = false;
-            const Message e{ ObjectType::input_triggered, std::make_any<ObjectInput>(o_i) };
-            MessageSender<ObjectType>::sendMessage(e);
+            if (m_keys_down[o_i.key])
+            {
+                m_keys_down[o_i.key] = false;
+                const Message e{ ObjectType::input_triggered, std::make_any<ObjectInput>(o_i) };
+                MessageSender<ObjectType>::sendMessage(e);
+            }
         }
     }
 }

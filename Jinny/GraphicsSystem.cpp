@@ -9,7 +9,7 @@
 #include "Window.h"
 
 relic::GraphicsSystem::GraphicsSystem(const framework::Window& window, const framework::Graphics& graphics)
-    : MessageReceiver<GraphicsSystemType>(Identifier::null_identifier), f_graphics(graphics), f_window(window)
+    : MessageReceiver<GraphicsSystemType>(Identifier::null), f_graphics(graphics), f_window(window)
 {
 }
 
@@ -39,7 +39,7 @@ void relic::GraphicsSystem::doUpdates()
     f_graphics.display();
 }
 
-void relic::GraphicsSystem::handleMessage(Message<GraphicsSystemType> msg)
+void relic::GraphicsSystem::handleMessage(const Message<GraphicsSystemType>& msg)
 {
     switch (msg.type)
     {

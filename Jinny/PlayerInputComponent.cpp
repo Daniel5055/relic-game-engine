@@ -9,7 +9,7 @@ relic::PlayerInputComponent::PlayerInputComponent()
     subscribeInput(ObjectInputType::key_press, 'd');
 }
 
-void relic::PlayerInputComponent::handleMessage(const Message<InputObjectType> msg)
+void relic::PlayerInputComponent::handleMessage(const Message<InputObjectType>& msg)
 {
     switch (msg.type)
     {

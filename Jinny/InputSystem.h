@@ -40,7 +40,7 @@ namespace relic
     private:
 
         void doUpdates() override;
-        void handleMessage(Message<InputSystemType> msg) override;
+        void handleMessage(const Message<InputSystemType>& msg) override;
 
         // --- Framework ---
         const framework::Input& f_input;

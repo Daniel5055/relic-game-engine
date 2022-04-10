@@ -22,7 +22,7 @@ namespace relic
         void doUpdates() override;
 
     private:
-        void handleMessage(Message<ObjectType> msg) override;
+        void handleMessage(const Message<ObjectType>& msg) override;
 
         // --- Data ---
         framework::Logger m_logger;

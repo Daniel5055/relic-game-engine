@@ -32,7 +32,7 @@ namespace relic
         // --- Internal Functions ---
 
         void doUpdates() override;
-        void handleMessage(Message<PhysicsSystemType> msg) override;
+        void handleMessage(const Message<PhysicsSystemType>& msg) override;
 
         // --- Data ---
 

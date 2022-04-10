@@ -19,6 +19,7 @@ namespace relic
 
         // Method to be used by child classes to send message
         void sendMessage(Message<T> msg);
+        void sendImmediateMessage(Message<T> msg);
     };
 
     template <typename T>
@@ -34,7 +35,23 @@ namespace relic
     void MessageSender<T>::sendMessage(Message<T> msg)
     {
         // Set from for message if not already done so (also prevents lying by message sender)
-        msg.from = &MessageExchanger<T>::getIdentifier();
-        MessageExchanger<T>::forwardMessage(msg, MessageExchanger<T>::isLocal());
+        msg.from = MessageExchanger<T>::getIdentifier();
+        if (MessageExchanger<T>::isLocal())
+        {
+            msg.to = MessageExchanger<T>::getIdentifier();
+        }
+        MessageExchanger<T>::forwardMessage(msg, false);
+    }
+
+    template <typename T>
+    void MessageSender<T>::sendImmediateMessage(Message<T> msg)
+    {
+        // Set from for message if not already done so (also prevents lying by message sender)
+        msg.from = MessageExchanger<T>::getIdentifier();
+        if (MessageExchanger<T>::isLocal())
+        {
+            msg.to = MessageExchanger<T>::getIdentifier();
+        }
+        MessageExchanger<T>::forwardMessage(msg, true);
     }
 }

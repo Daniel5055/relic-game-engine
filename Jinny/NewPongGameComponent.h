@@ -21,7 +21,7 @@ namespace relic::pong
         void doUpdates() override;
 
     private:
-        void handleMessage(Message<PongType> msg) override;
+        void handleMessage(const Message<PongType>& msg) override;
         
         Scene* m_new_scene{nullptr};
     };

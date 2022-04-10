@@ -22,8 +22,8 @@ namespace relic
         void doUpdates() override;
     private:
         // Handling messages
-        void handleMessage(Message<InputObjectType> msg) override;
-        void handleMessage(Message<ObjectType> msg) override;
+        void handleMessage(const Message<ObjectType>& msg) override;
+        void handleMessage(const Message<InputObjectType>& msg) override;
 
         // Members
         bool m_mouse_button_down{ false };

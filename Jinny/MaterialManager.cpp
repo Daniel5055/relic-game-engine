@@ -16,7 +16,7 @@ framework::MaterialManager::MaterialManager()
                            0.5, 0.4, 0.9, 0.2, 0, // Wood = 3
                                 0.3, 0.8, 0.1, 0, // Ice = 4
                                      1.0, 0.7, 0, // Trampoline = 5
-                                          0.1, 1.1,// Entity = 6
+                                          0.1, 1.05,// Entity = 6
                                                0,// Pong ball  
                                     
 
@@ -44,7 +44,7 @@ framework::MaterialManager::MaterialManager()
                            0.5, 0.3, 0.5, 0.9, 0.0, // Wood = 3
                                 0.1, 0.2, 0.3, 0.0, // Ice = 4
                                      0.4, 0.5, 0.0, // Trampoline = 5
-                                          0.9, 0.4, // Entity = 6
+                                          0.9, 0.2, // Entity = 6
                                                0.0,  // Pong ball = 7
     };
 
@@ -70,7 +70,7 @@ framework::MaterialManager::MaterialManager()
                            0.4, 0.2, 0.4, 0.8, 0.0,// Wood = 3
                                0.05, 0.1, 0.1, 0.0,// Ice = 4
                                      0.3, 0.4, 0.0,// Trampoline = 5
-                                          0.9, 0.4,// Entity = 6
+                                          0.9, 0.3,// Entity = 6
                                                0.0,
     };
 
