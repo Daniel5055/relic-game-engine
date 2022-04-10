@@ -1,25 +1,24 @@
 #include "SceneChangeCoreComponent.h"
 
 relic::SceneChangeCoreComponent::SceneChangeCoreComponent(const ObjectInput trigger_input, Scene* new_scene)
-    :m_next_scene(new_scene), m_trigger_input(trigger_input)
+    : MessageReceiver(getObjectId(), true), MessageSender(getObjectId()), m_next_scene(new_scene),
+      m_trigger_input(trigger_input)
 {
 }
 
-void relic::SceneChangeCoreComponent::handleEvent(const ObjectEvent e)
+void relic::SceneChangeCoreComponent::handleMessage(Message<ObjectType> msg)
 {
-    switch (e.type)
+    switch (msg.type)
     {
-    case ObjectEvent::Type::input_triggered:
+    case ObjectType::input_triggered:
 
         // Check if required input
-        if (e.input.type == m_trigger_input.type && e.input.key == m_trigger_input.key)
+        const auto o_i = std::any_cast<ObjectInput>(msg.value);
+        if (o_i.type == m_trigger_input.type && o_i.key == m_trigger_input.key)
         {
             // Send message to game to change scene
-            GameMessage game_msg;
-            game_msg.type = GameMessageType::change_scene;
-            game_msg.scene_ptr = m_next_scene;
-
-            sendMessage(game_msg);
+            const Message m{ GameSystemType::change_scene, std::make_any<Scene*>(m_next_scene) };
+            sendMessage(m);
         }
         break;
     }

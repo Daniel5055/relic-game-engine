@@ -2,13 +2,10 @@
 
 #include "Scene.h"
 
-namespace relic
+namespace relic::pong
 {
-    namespace pong
+    class PongGameScene final : public Scene
     {
-        class PongGameScene final : public Scene
-        {
-            void doInitialisation() override;
-        };
-    }
+        void doInitialisation() override;
+    };
 }

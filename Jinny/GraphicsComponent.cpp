@@ -1,5 +1,17 @@
 #include "GraphicsComponent.h"
 
+#include "Point.h"
+
+relic::GraphicsComponent::GraphicsComponent()
+    :MessageSender(getObjectId()), MessageReceiver<ObjectType>(getObjectId(), true)
+{
+}
+
+relic::GraphicsComponent::~GraphicsComponent()
+{
+    sendMessage({ GraphicsSystemType::hide_graphic, std::make_any<framework::Graphic*>(&getGraphic()) });
+}
+
 void relic::GraphicsComponent::setClipPtr(const framework::Shape* clip)
 {
     m_graphic_ptr->setClip(*clip);
@@ -10,15 +22,24 @@ void relic::GraphicsComponent::setGraphic(framework::Graphic* graphic_ptr)
     m_graphic_ptr = std::unique_ptr<framework::Graphic>(graphic_ptr);
 }
 
-void relic::GraphicsComponent::prepareMessage(GraphicsMessage& msg)
+void relic::GraphicsComponent::doUpdates()
 {
-    if (msg.object_id == k_unset_id)
+    Component::doUpdates();
+    handleMessages();
+}
+
+void relic::GraphicsComponent::handleMessage(Message<ObjectType> msg)
+{
+    switch (msg.type)
     {
-        msg.object_id = getObjectId();
+    case ObjectType::move:
+        const auto movement = std::any_cast<framework::Point>(msg.value);
+        getGraphic().getShape().x += movement.x;
+        getGraphic().getShape().y += movement.y;
     }
 }
 
-framework::Graphic& relic::GraphicsComponent::getGraphic()
+framework::Graphic& relic::GraphicsComponent::getGraphic() const
 {
     return *m_graphic_ptr;
 }

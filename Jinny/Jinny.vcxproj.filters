@@ -19,9 +19,6 @@
     <Filter Include="Game Systems\Header Files">
       <UniqueIdentifier>{9ba6c2c3-13b8-43d6-920f-557646540641}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Systems\Source Files">
-      <UniqueIdentifier>{28b2f8d0-1c0f-4e25-ab17-3ead62360d0d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="System Aids">
       <UniqueIdentifier>{0fe9c16e-e7b4-430a-9d9e-334651199b98}</UniqueIdentifier>
     </Filter>
@@ -160,6 +157,9 @@
     <Filter Include="Games\Pong\Source Files">
       <UniqueIdentifier>{927d7d90-a779-485e-8b8b-6091e48af42b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Systems\Source Files">
+      <UniqueIdentifier>{28b2f8d0-1c0f-4e25-ab17-3ead62360d0d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Program.cpp">
@@ -288,9 +288,6 @@
     <ClCompile Include="GameObjectManager.cpp">
       <Filter>Object and Components\Object\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AssetLoaderGraphicsComponent.cpp">
-      <Filter>Object and Components\Components\Graphics Components\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SolidColourGraphicsComponent.cpp">
       <Filter>Object and Components\Components\Graphics Components\Source Files</Filter>
     </ClCompile>
@@ -300,14 +297,35 @@
     <ClCompile Include="PongPaddlePhysicsComponent.cpp">
       <Filter>Games\Pong\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PongPaddleInputComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="InputComponent.cpp">
       <Filter>Object and Components\Components\Input Components\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Identifier.cpp">
+      <Filter>System Aids\Messaging\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Object and Components\Object\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Object and Components\Object\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsComponent.cpp">
+      <Filter>Object and Components\Components\Physics Components\Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="PongBallPhysicsComponent.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Games\Pong\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PongPaddleInputComponent.cpp">
+      <Filter>Games\Pong\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreCounterComponent.cpp">
+      <Filter>Games\Pong\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewPongGameComponent.cpp">
+      <Filter>Games\Pong\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetLoaderGraphicsComponent.cpp">
+      <Filter>Object and Components\Components\Other Components\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -318,9 +336,6 @@
       <Filter>System Aids\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ObjectInput.h">
-      <Filter>Object and Components\Object\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectEvent.h">
       <Filter>Object and Components\Object\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsSystem.h">
@@ -374,29 +389,11 @@
     <ClInclude Include="InputEvent.h">
       <Filter>Framework\Input\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="InputMessage.h">
-      <Filter>System Aids\Messaging\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GraphicsMessage.h">
-      <Filter>System Aids\Messaging\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsMessage.h">
-      <Filter>System Aids\Messaging\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CoreComponent.h">
-      <Filter>Object and Components\Components\Core Components\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ImageGraphicsComponent.h">
       <Filter>Object and Components\Components\Graphics Components\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsComponent.h">
       <Filter>Object and Components\Components\Graphics Components\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="NullGraphicsComponent.h">
-      <Filter>Object and Components\Components\Graphics Components\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="NullInputComponent.h">
-      <Filter>Object and Components\Components\Input Components\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="InputComponent.h">
       <Filter>Object and Components\Components\Input Components\Header Files</Filter>
@@ -406,12 +403,6 @@
     </ClInclude>
     <ClInclude Include="Component.h">
       <Filter>Object and Components\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="NullPhysicsComponent.h">
-      <Filter>Object and Components\Components\Physics Components\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="NullCoreComponent.h">
-      <Filter>Object and Components\Components\Core Components\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AnimationComponent.h">
       <Filter>Object and Components\Components\Other Components\Header Files</Filter>
@@ -458,9 +449,6 @@
     <ClInclude Include="Logger.h">
       <Filter>Framework\Core\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AssetLoaderGraphicsComponent.h">
-      <Filter>Object and Components\Components\Graphics Components\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Material.h">
       <Filter>Framework\Physics\Header Files</Filter>
     </ClInclude>
@@ -473,7 +461,7 @@
     <ClInclude Include="Game.h">
       <Filter>Game Systems\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameMessage.h">
+    <ClInclude Include="GameType.h">
       <Filter>System Aids\Messaging\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RigidBody.h">
@@ -497,15 +485,6 @@
     <ClInclude Include="GameObjectManager.h">
       <Filter>Object and Components\Object\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Deliverable.h">
-      <Filter>System Aids\Messaging\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MultiMessageReceiver.h">
-      <Filter>System Aids\Messaging\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LazyMessageSender.h">
-      <Filter>System Aids\Messaging\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SolidColourGraphicsComponent.h">
       <Filter>Object and Components\Components\Graphics Components\Header Files</Filter>
     </ClInclude>
@@ -518,11 +497,71 @@
     <ClInclude Include="PongPaddleInputComponent.h">
       <Filter>Games\Pong\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MessageExchanger.decl.h">
+      <Filter>System Aids\Messaging\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageBus.h">
+      <Filter>System Aids\Messaging\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageType.h">
+      <Filter>System Aids\Messaging\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Identifier.h">
+      <Filter>System Aids\Messaging\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExtendMessageType.h">
+      <Filter>System Aids\Messaging\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Object and Components\Object\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Object and Components\Object\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsType.h">
+      <Filter>System Aids\Messaging\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsType.h">
+      <Filter>System Aids\Messaging\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputType.h">
+      <Filter>System Aids\Messaging\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectType.h">
+      <Filter>System Aids\Messaging\Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="PongBallPhysicsComponent.h">
-      <Filter>Header Files</Filter>
+      <Filter>Games\Pong\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageExchanger.h">
+      <Filter>System Aids\Messaging\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PongType.h">
+      <Filter>Games\Pong\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreCounterComponent.h">
+      <Filter>Games\Pong\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewPongGameComponent.h">
+      <Filter>Games\Pong\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetLoaderGraphicsComponent.h">
+      <Filter>Object and Components\Components\Other Components\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageBus.decl.h">
+      <Filter>System Aids\Messaging\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LazyMessageSender.h">
+      <Filter>System Aids\Messaging\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
+    <None Include="MessageExchanger.impl.h">
+      <Filter>System Aids\Messaging\Header Files</Filter>
+    </None>
+    <None Include="MessageBus.impl.h">
+      <Filter>System Aids\Messaging\Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

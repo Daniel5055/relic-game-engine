@@ -13,6 +13,7 @@ namespace framework
 namespace relic
 {
 
+   /*
     class GraphicsComponent;
 
     //TODO: will repair later
@@ -56,4 +57,6 @@ namespace relic
         int m_texture_height;
 
     };
+    */
 }
+

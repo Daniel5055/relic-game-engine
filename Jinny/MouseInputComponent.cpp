@@ -1,64 +1,72 @@
 #include "MouseInputComponent.h"
 
+#include "Point.h"
+
 relic::MouseInputComponent::MouseInputComponent(const framework::Shape mouse_area)
-    :m_mouse_area(mouse_area)
+    : MessageReceiver<ObjectType>(getObjectId(), true), m_mouse_area(mouse_area)
 {
     // subscribe to mouse hovering and pressing in mouse area
-    InputMessage msg;
-    msg.type = IMessageType::subscribe_input;
-    msg.object_id = getObjectId();
-    msg.object_shape = &m_mouse_area;
-    msg.object_input.type = ObjectInputType::left_mouse_press;
-    sendMessage(msg);
-
-    // Object Input 2
-    msg.object_input.type = ObjectInputType::mouse_over;
-    sendMessage(msg);
+    subscribeInput(ObjectInputType::left_mouse_press, &m_mouse_area);
+    subscribeInput(ObjectInputType::mouse_over, &m_mouse_area);
 }
 
-void relic::MouseInputComponent::handleMessage(const InputMessage msg)
+void relic::MouseInputComponent::handleMessage(const Message<InputObjectType> msg)
 {
     switch (msg.type)
     {
-    case IMessageType::input_triggered:
+    case InputObjectType::input_triggered:
 
-        const ObjectEvent e{ObjectEvent::Type::input_triggered, {ObjectInput(msg.object_input.type)}};
+        Message e{ ObjectType::input_triggered, msg.value };
 
         // Mouse Clicking
-        switch(msg.object_input.type)
+        switch (std::any_cast<ObjectInput>(msg.value).type)
         {
         case ObjectInputType::left_mouse_down:
             m_mouse_button_down = false;
+            MessageSender<ObjectType>::sendMessage(e);
             break;
+
         case ObjectInputType::left_mouse_up:
-            m_mouse_button_down = false;
+            if (m_mouse_button_down)
+            {
+                m_mouse_button_down = false;
+
+                MessageSender<ObjectType>::sendMessage(e);
+            }
             break;
-        case ObjectInputType::mouse_off: 
+        case ObjectInputType::mouse_off:
             m_mouse_button_down = false;
+            MessageSender<ObjectType>::sendMessage(e);
+            break;
+        case ObjectInputType::mouse_over:
+            MessageSender<ObjectType>::sendMessage(e);
             break;
         }
-        // Send the event
-        sendEvent(e);
 
         break;
     }
 }
 
-void relic::MouseInputComponent::handleEvent(ObjectEvent e)
+void relic::MouseInputComponent::handleMessage(const Message<ObjectType> msg)
 {
-    switch (e.type)
+    switch (msg.type)
     {
-    case ObjectEvent::Type::move:
-        m_mouse_area.x += e.movement.x;
-        m_mouse_area.y += e.movement.y;
+    case ObjectType::move:
+    {
+        const framework::Point movement = std::any_cast<framework::Point>(msg.value);
+        m_mouse_area.x += movement.x;
+        m_mouse_area.y += movement.y;
         break;
+    }
     default:;
     }
 }
 
 void relic::MouseInputComponent::doUpdates()
 {
-    // Have to manually call to handleMessages
-    MessageReceiver<InputMessage>::handleMessages();
+    InputComponent::doUpdates();
+
+    // Have to handles the new receivers messages
+    MessageReceiver<ObjectType>::handleMessages();
 }
 

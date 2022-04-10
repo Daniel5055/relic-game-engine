@@ -4,6 +4,7 @@
 
 namespace relic
 {
+    /*
     class ButtonAnimationComponent : public AnimationComponent
     {
 
@@ -11,4 +12,5 @@ namespace relic
         // Constructor
         ButtonAnimationComponent(GraphicsComponent* graphics_component, int texture_width, int texture_height);
     };
+    */
 }

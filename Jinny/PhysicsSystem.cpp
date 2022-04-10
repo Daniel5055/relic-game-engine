@@ -2,7 +2,8 @@
 #include "GridPhysicsEngine.h"
 
 relic::PhysicsSystem::PhysicsSystem(PhysicsEngine* engine)
-    :m_engine_ptr(engine)
+    : MessageReceiver<PhysicsSystemType>(Identifier::null_identifier),
+      MessageSender<PhysicsObjectType>(Identifier::null_identifier), m_engine_ptr(engine)
 {
 }
 
@@ -17,44 +18,40 @@ void relic::PhysicsSystem::doUpdates()
     {
         if (m_subscribed_collision_checking[ids.first])
         {
-            PhysicsMessage msg;
-
-            msg.type = PMessageType::collision_occurred;
-            msg.object_id = ids.first;
-            msg.colliding_object_id = ids.second;
-            msg.is_sent_by_system = true;
+            Message msg{ PhysicsObjectType::collision_occurred, std::make_any<Identifier>(ids.second)};
+            msg.to = &ids.first;
 
             sendMessage(msg);
         }
         if (m_subscribed_collision_checking[ids.second])
         {
-            PhysicsMessage msg;
-
-            msg.type = PMessageType::collision_occurred;
-            msg.object_id = ids.second;
-            msg.colliding_object_id = ids.first;
-            msg.is_sent_by_system = true;
+            Message msg{ PhysicsObjectType::collision_occurred, std::make_any<Identifier>(ids.first)};
+            msg.to = &ids.second;
 
             sendMessage(msg);
         }
     }
 }
 
-void relic::PhysicsSystem::handleMessage(const PhysicsMessage msg)
+void relic::PhysicsSystem::handleMessage(const Message<PhysicsSystemType> msg)
 {
     // NOTE: for simplicity, physics based objects cannot be gui objects 
 
     switch (msg.type)
     {
-    case PMessageType::set_rigid_body:
-        m_engine_ptr->addRigidBody(msg.object_id, msg.rigid_body);
-        if (m_subscribed_collision_checking.find(msg.object_id) == m_subscribed_collision_checking.end())
+    case PhysicsSystemType::set_rigid_body:
+        m_engine_ptr->addRigidBody(*msg.from, std::any_cast<framework::RigidBody*>(msg.value));
+        if (m_subscribed_collision_checking.find(*msg.from) == m_subscribed_collision_checking.end())
         {
-            m_subscribed_collision_checking[msg.object_id] = false;
+            m_subscribed_collision_checking[*msg.from] = false;
         }
         break;
-    case PMessageType::register_collision_checking:
-        m_subscribed_collision_checking[msg.object_id] = true;
+    case PhysicsSystemType::remove_rigid_body:
+        m_engine_ptr->removeRigidBody(*msg.from);
+        break;
+    case PhysicsSystemType::register_collision_checking:
+        m_subscribed_collision_checking[*msg.from] = true;
+        break;
     }
 }
 

@@ -8,25 +8,27 @@ relic::pong::PongPaddleInputComponent::PongPaddleInputComponent(const char up_ke
     m_keys_down[down_key] = false;
 }
 
-void relic::pong::PongPaddleInputComponent::handleMessage(const InputMessage msg)
+void relic::pong::PongPaddleInputComponent::handleMessage(const Message<InputObjectType> msg)
 {
     switch (msg.type)
     {
-    case IMessageType::input_triggered:
-        if (msg.object_input.type == ObjectInputType::key_down)
+    case InputObjectType::input_triggered:
+        const auto o_i = std::any_cast<ObjectInput>(msg.value);
+
+        if (o_i.type == ObjectInputType::key_down)
         {
-            if (!m_keys_down[msg.object_input.key])
+            if (!m_keys_down[o_i.key])
             {
-                m_keys_down[msg.object_input.key] = true;
-                const ObjectEvent e{ ObjectEvent::Type::input_triggered, {msg.object_input} };
-                sendEvent(e);
+                m_keys_down[o_i.key] = true;
+                const Message e{ ObjectType::input_triggered, std::make_any<ObjectInput>(o_i) };
+                MessageSender<ObjectType>::sendMessage(e);
             }
         }
         else
         {
-            m_keys_down[msg.object_input.key] = false;
-            const ObjectEvent e{ ObjectEvent::Type::input_triggered, {msg.object_input} };
-            sendEvent(e);
+            m_keys_down[o_i.key] = false;
+            const Message e{ ObjectType::input_triggered, std::make_any<ObjectInput>(o_i) };
+            MessageSender<ObjectType>::sendMessage(e);
         }
     }
 }

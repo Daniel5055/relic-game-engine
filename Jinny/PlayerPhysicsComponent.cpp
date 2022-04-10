@@ -1,55 +1,48 @@
 #include "PlayerPhysicsComponent.h"
 
 # include "Material.h"
+#include "ObjectInput.h"
 #include "RigidBody.h"
 
-relic::PlayerPhysicsComponent::PlayerPhysicsComponent(const double mass, double max_x_speed, double max_y_speed, const framework::Shape shape)
-    :m_rigid_body(mass, 0, { max_x_speed, max_y_speed }, shape, framework::Material::entity), m_last_position(shape.x, shape.y)
+relic::PlayerPhysicsComponent::PlayerPhysicsComponent(const double mass, const double max_x_speed, const double max_y_speed, const framework::Shape shape)
+    : RigidBodyPhysicsComponent(mass, 0, shape, framework::Material::entity, max_x_speed, max_y_speed)
+    , MessageReceiver<ObjectType>(getObjectId(), true)
 {
-    // Set rigid body
-    PhysicsMessage msg;
-    msg.type = PMessageType::set_rigid_body;
-    msg.object_id = getObjectId();
-    msg.rigid_body = &m_rigid_body;
-    sendMessage(msg);
 }
 
-void relic::PlayerPhysicsComponent::handleEvent(const ObjectEvent e)
+void relic::PlayerPhysicsComponent::handleMessage(const Message<ObjectType> msg)
 {
-    if (e.type == ObjectEvent::Type::input_triggered)
+    if (msg.type == ObjectType::input_triggered)
     {
+        const auto o_i = std::any_cast<ObjectInput>(msg.value);
         double is_down = 0;
-        if (e.input.type == ObjectInputType::key_down)
+        if (o_i.type == ObjectInputType::key_down)
         {
             is_down = 1;
 
         }
-        else if (e.input.type == ObjectInputType::key_up)
+        else if (o_i.type == ObjectInputType::key_up)
         {
             is_down = -1;
         }
 
         // TODO: Change this so that Player physics does not have to care about the key, but rather care on the idea, (Like move north south etc)
-        switch (e.input.key)
+        switch (o_i.key)
         {
         case 'a':
-            m_rigid_body.applyMFForce({ is_down * -100, 0 });
-
+            getRigidBody().applyMFForce({ is_down * -100, 0 });
             break;
 
         case 'd':
-            m_rigid_body.applyMFForce({ is_down * 100, 0 });
-
+            getRigidBody().applyMFForce({ is_down * 100, 0 });
             break;
 
         case 'w':
-            m_rigid_body.applyMFForce({ 0, is_down * -100 });
-
+            getRigidBody().applyMFForce({ 0, is_down * -100 });
             break;
 
         case 's':
-            m_rigid_body.applyMFForce({ 0, is_down * 100 });
-
+            getRigidBody().applyMFForce({ 0, is_down * 100 });
             break;
         }
     }
@@ -57,17 +50,6 @@ void relic::PlayerPhysicsComponent::handleEvent(const ObjectEvent e)
 
 void relic::PlayerPhysicsComponent::doUpdates()
 {
-    // If moved
-    const int x_diff = m_rigid_body.getRoundedX() - m_last_position.x;
-    const int y_diff = m_rigid_body.getRoundedY() - m_last_position.y;
-    if (x_diff != 0 || y_diff != 0)
-    {
-        // Send move message
-        ObjectEvent e{ ObjectEvent::Type::move };
-        e.movement = { x_diff, y_diff };
-        sendEvent(e);
-
-        m_last_position.x = m_rigid_body.getRoundedX();
-        m_last_position.y = m_rigid_body.getRoundedY();
-    }
+    handleMessages();
+    RigidBodyPhysicsComponent::doUpdates();
 }

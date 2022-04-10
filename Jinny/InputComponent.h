@@ -3,8 +3,11 @@
 
 #include "Component.h"
 #include "MessageReceiver.h"
-#include "LazyMessageSender.h"
-#include "InputMessage.h"
+#include "MessageSender.h"
+#include "InputType.h"
+#include "ObjectInput.h"
+#include "ObjectType.h"
+#include "Shape.h"
 
 namespace relic
 {
@@ -13,34 +16,21 @@ namespace relic
      */
     class InputComponent
         : public Component
-        , public MessageReceiver<InputMessage>
-        , public LazyMessageSender<InputMessage>
+        , public MessageReceiver<InputObjectType>
+        , public MessageSender<InputSystemType>
+        , public MessageSender<ObjectType>
     {
-    public:
-        // Prevent ambiguity 
-        using LazyMessageSender<InputMessage>::addReceiver;
-        using LazyMessageSender<InputMessage>::deployMessages;
-        using MessageReceiver<InputMessage>::receiveMessage;
-
-        ~InputComponent() override = default;
-
     protected:
-        using LazyMessageSender<InputMessage>::sendMessage;
+        InputComponent();
 
         // Useful methods that can be used by derived classes
         void subscribeInput(ObjectInputType type, char key = ' ');
 
-    private:
+        void subscribeInput(ObjectInputType type, framework::Shape* mouse_area);
 
+        // Virtual methods
         void doUpdates() override;
 
-        void handleMessage(InputMessage msg) override {}
-
-        // Define as input component
-        Message::Type defineMessageType() final { return Message::Type::input; }
-
-        // Prep initial messages within queue
-        void prepareMessage(InputMessage& msg) final;
     };
 }
 

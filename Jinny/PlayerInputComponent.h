@@ -9,13 +9,13 @@ namespace relic
     /**
      * \brief Component that subscribes to wasd keys
      */
-    class PlayerInputComponent : public InputComponent
+    class PlayerInputComponent
+        : public InputComponent
     {
     public:
         PlayerInputComponent();
     private:
-        void doUpdates() override;
-        void handleMessage(InputMessage msg) override;
+        void handleMessage(Message<InputObjectType> msg) override;
 
         std::map<char, bool> m_keys_down;
     };

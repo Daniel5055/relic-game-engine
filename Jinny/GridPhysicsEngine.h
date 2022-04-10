@@ -25,7 +25,7 @@ namespace relic
         // Updating
         void update() override;
 
-        void  addRigidBody(int object_id, framework::RigidBody* rigid_body) override;
+        void  addRigidBody(const Identifier& object_id, framework::RigidBody* rigid_body) override;
 
     private:
 
@@ -46,10 +46,10 @@ namespace relic
         };
 
         // For calculating the influence rects of each rigidbody
-        std::map<int, InfluenceRectangle> calculateInfluenceRects(double time_passed);
+        std::map<Identifier, InfluenceRectangle> calculateInfluenceRects(double time_passed);
 
         // For making corrections from clipping
-        bool correctClippings(int id1, int id2);
+        bool correctClippings(Identifier id1, Identifier id2);
 
         // For checking if influence rects intersect
         bool doesIntersect(const InfluenceRectangle& r1, const InfluenceRectangle& r2);
@@ -60,18 +60,18 @@ namespace relic
             double time;
             int axis;
 
-            int body_ids[2];
+            Identifier body_ids[2];
             framework::Vector applying_forces;
         };
 
         // For finding collisions using influence rects
-        std::queue<Collision> findCollisions(const std::map<int, InfluenceRectangle>& influence_rects, double time_passed);
+        std::queue<Collision> findCollisions(const std::map<Identifier, InfluenceRectangle>& influence_rects, double time_passed);
 
         // For calculating and applying forces in a collision
         void calculateCollision(Collision& collision, double time_passed);
 
         // For calculating friction caused by a collision
-        void calculateFriction(Collision& collision, std::map<int, framework::Vector>& friction_applied, double time_passed);
+        void calculateFriction(Collision& collision, std::map<Identifier, framework::Vector>& friction_applied, double time_passed);
     };
 }
 

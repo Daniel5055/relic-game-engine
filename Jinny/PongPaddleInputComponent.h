@@ -14,7 +14,7 @@ namespace relic
             PongPaddleInputComponent(char up_key, char down_key);
 
         private:
-            void handleMessage(InputMessage msg) override;
+            void handleMessage(Message<InputObjectType> msg) override;
 
             
             std::map<char, bool> m_keys_down;

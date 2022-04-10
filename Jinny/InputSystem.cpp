@@ -2,12 +2,15 @@
 
 #include "Input.h"
 #include "InputEvent.h"
+#include "ObjectInput.h"
 
 #include "Point.h"
 #include "Window.h"
 
 relic::InputSystem::InputSystem(const framework::Window& window, const framework::Input& input)
-    :f_input(input), f_window(window)
+    :MessageReceiver<InputSystemType>(Identifier::null_identifier),
+    MessageSender<InputObjectType>(Identifier::null_identifier),
+    MessageSender<GameSystemType>(Identifier::null_identifier), f_input(input), f_window(window)
 {
 }
 
@@ -30,11 +33,10 @@ void relic::InputSystem::doUpdates()
         {
         case framework::InputEventType::exit_button_pressed:
         {
-            InputMessage msg;
-            msg.type = IMessageType::exit_button_pressed;
-            msg.is_sent_by_system = true;
+            Message<GameSystemType> msg;
+            msg.type = GameSystemType::exit_pressed;
 
-            sendMessage(msg);
+            MessageSender<GameSystemType>::sendMessage(msg);
 
             break;
         }
@@ -57,12 +59,9 @@ void relic::InputSystem::doUpdates()
                             it->second = true;
 
                             // Send message to object
-                            InputMessage msg;
-                            msg.object_id = it->first.first;
-                            msg.type = IMessageType::input_triggered;
-                            msg.object_input = ObjectInput(ObjectInputType::mouse_over);
-                    msg.is_sent_by_system = true;
-                            sendMessage(msg);
+                            Message msg{ InputObjectType::input_triggered, ObjectInput(ObjectInputType::mouse_over) };
+                            msg.to = &it->first.first;
+                            MessageSender<InputObjectType>::sendMessage(msg);
                         }
                         else
                         {
@@ -71,13 +70,9 @@ void relic::InputSystem::doUpdates()
                             {
                                 it->second = false;
 
-                                // Send message to object
-                                InputMessage msg;
-                                msg.object_id = it->first.first;
-                                msg.type = IMessageType::input_triggered;
-                                msg.object_input = ObjectInput(ObjectInputType::mouse_off);
-                    msg.is_sent_by_system = true;
-                                sendMessage(msg);
+                                Message msg{ InputObjectType::input_triggered, ObjectInput(ObjectInputType::mouse_off) };
+                                msg.to = &it->first.first;
+                                MessageSender<InputObjectType>::sendMessage(msg);
                             }
 
                         }
@@ -89,12 +84,9 @@ void relic::InputSystem::doUpdates()
                             it->second = true;
 
                             // Send message to object
-                            InputMessage msg;
-                            msg.object_id = it->first.first;
-                            msg.type = IMessageType::input_triggered;
-                            msg.object_input = ObjectInput(ObjectInputType::mouse_over);
-                    msg.is_sent_by_system = true;
-                            sendMessage(msg);
+                            Message msg{ InputObjectType::input_triggered, ObjectInput(ObjectInputType::mouse_over) };
+                            msg.to = &it->first.first;
+                            MessageSender<InputObjectType>::sendMessage(msg);
                         }
                         else
                         {
@@ -103,13 +95,9 @@ void relic::InputSystem::doUpdates()
                             {
                                 it->second = false;
 
-                                // Send message to object
-                                InputMessage msg;
-                                msg.object_id = it->first.first;
-                                msg.type = IMessageType::input_triggered;
-                                msg.object_input = ObjectInput(ObjectInputType::mouse_off);
-                    msg.is_sent_by_system = true;
-                                sendMessage(msg);
+                                Message msg{ InputObjectType::input_triggered, ObjectInput(ObjectInputType::mouse_off) };
+                                msg.to = &it->first.first;
+                                MessageSender<InputObjectType>::sendMessage(msg);
                             }
 
                         }
@@ -129,12 +117,9 @@ void relic::InputSystem::doUpdates()
                         if (f_input.isInBoundary(static_mouse_pos, *it->second))
                         {
                             // Send message to object
-                            InputMessage msg;
-                            msg.object_id = it->first;
-                            msg.type = IMessageType::input_triggered;
-                            msg.object_input = ObjectInput(static_cast<ObjectInputType>(e.mouse_event));
-                            msg.is_sent_by_system = true;
-                            sendMessage(msg);
+                            Message msg{ InputObjectType::input_triggered, ObjectInput(static_cast<ObjectInputType>(e.mouse_event)) };
+                            msg.to = &it->first;
+                            MessageSender<InputObjectType>::sendMessage(msg);
                         }
                     }
                     else
@@ -142,12 +127,9 @@ void relic::InputSystem::doUpdates()
                         if (f_input.isInBoundary(camera_mouse_pos, *it->second))
                         {
                             // Send message to object
-                            InputMessage msg;
-                            msg.object_id = it->first;
-                            msg.type = IMessageType::input_triggered;
-                            msg.object_input = ObjectInput(static_cast<ObjectInputType>(e.mouse_event));
-                            msg.is_sent_by_system = true;
-                            sendMessage(msg);
+                            Message msg{ InputObjectType::input_triggered, ObjectInput(static_cast<ObjectInputType>(e.mouse_event)) };
+                            msg.to = &it->first;
+                            MessageSender<InputObjectType>::sendMessage(msg);
                         }
                     }
                 }
@@ -159,12 +141,9 @@ void relic::InputSystem::doUpdates()
         {
             for (auto it = m_key_subscription[e.key].begin(); it != m_key_subscription[e.key].end(); ++it)
             {
-                InputMessage msg;
-                msg.object_id = *it;
-                msg.type = IMessageType::input_triggered;
-                msg.object_input = ObjectInput(ObjectInputType::key_down, e.key);
-                    msg.is_sent_by_system = true;
-                sendMessage(msg);
+                Message msg{ InputObjectType::input_triggered, ObjectInput(ObjectInputType::key_down, e.key) };
+                msg.to = &*it;
+                MessageSender<InputObjectType>::sendMessage(msg);
             }
 
             break;
@@ -173,12 +152,9 @@ void relic::InputSystem::doUpdates()
         {
             for (auto it = m_key_subscription[e.key].begin(); it != m_key_subscription[e.key].end(); ++it)
             {
-                InputMessage msg;
-                msg.object_id = *it;
-                msg.type = IMessageType::input_triggered;
-                msg.object_input = ObjectInput(ObjectInputType::key_up, e.key);
-                    msg.is_sent_by_system = true;
-                sendMessage(msg);
+                Message msg{ InputObjectType::input_triggered, ObjectInput(ObjectInputType::key_up, e.key) };
+                msg.to = &*it;
+                MessageSender<InputObjectType>::sendMessage(msg);
             }
 
             break;
@@ -188,33 +164,36 @@ void relic::InputSystem::doUpdates()
     }
 }
 
-void relic::InputSystem::handleMessage(const InputMessage msg)
+void relic::InputSystem::handleMessage(Message<InputSystemType> msg)
 {
     switch (msg.type)
     {
-    case IMessageType::subscribe_input:
-        switch (msg.object_input.type)
+    case InputSystemType::subscribe_input:
+    {
+
+        const auto o_i = std::any_cast<ObjectInput>(msg.value);
+        switch (o_i.type)
         {
         case ObjectInputType::mouse_over:
-            m_mouse_over_subscriptions[{msg.object_id, msg.object_shape}] = false;
+            m_mouse_over_subscriptions[{*msg.from, o_i.mouse_shape}] = false;
             break;
         case ObjectInputType::left_mouse_press:
             if (m_mouse_button_subscriptions.find(framework::MouseEvent::left_down) != m_mouse_button_subscriptions.end())
             {
-                m_mouse_button_subscriptions[framework::MouseEvent::left_down].push_back({ msg.object_id, msg.object_shape });
+                m_mouse_button_subscriptions[framework::MouseEvent::left_down].push_back({ *msg.from, o_i.mouse_shape });
             }
             else
             {
-                m_mouse_button_subscriptions[framework::MouseEvent::left_down] = { { msg.object_id, msg.object_shape } };
+                m_mouse_button_subscriptions[framework::MouseEvent::left_down] = { {*msg.from, o_i.mouse_shape} };
             }
 
             if (m_mouse_button_subscriptions.find(framework::MouseEvent::left_up) != m_mouse_button_subscriptions.end())
             {
-                m_mouse_button_subscriptions[framework::MouseEvent::left_up].push_back({ msg.object_id, msg.object_shape });
+                m_mouse_button_subscriptions[framework::MouseEvent::left_up].push_back({ *msg.from, o_i.mouse_shape });
             }
             else
             {
-                m_mouse_button_subscriptions[framework::MouseEvent::left_up] = { { msg.object_id, msg.object_shape } };
+                m_mouse_button_subscriptions[framework::MouseEvent::left_up] = { {*msg.from, o_i.mouse_shape} };
             }
 
             break;
@@ -222,37 +201,38 @@ void relic::InputSystem::handleMessage(const InputMessage msg)
 
             if (m_mouse_button_subscriptions.find(framework::MouseEvent::right_down) != m_mouse_button_subscriptions.end())
             {
-                m_mouse_button_subscriptions[framework::MouseEvent::right_down].push_back({ msg.object_id, msg.object_shape });
+                m_mouse_button_subscriptions[framework::MouseEvent::right_down].push_back({ *msg.from, o_i.mouse_shape });
             }
             else
             {
-                m_mouse_button_subscriptions[framework::MouseEvent::right_down] = { { msg.object_id, msg.object_shape } };
+                m_mouse_button_subscriptions[framework::MouseEvent::right_down] = { {*msg.from, o_i.mouse_shape} };
             }
 
             if (m_mouse_button_subscriptions.find(framework::MouseEvent::right_up) != m_mouse_button_subscriptions.end())
             {
-                m_mouse_button_subscriptions[framework::MouseEvent::right_up].push_back({ msg.object_id, msg.object_shape });
+                m_mouse_button_subscriptions[framework::MouseEvent::right_up].push_back({ *msg.from, o_i.mouse_shape });
             }
             else
             {
-                m_mouse_button_subscriptions[framework::MouseEvent::right_up] = { { msg.object_id, msg.object_shape } };
+                m_mouse_button_subscriptions[framework::MouseEvent::right_up] = { {*msg.from, o_i.mouse_shape} };
             }
             break;
         case ObjectInputType::key_press:
 
-            if (m_key_subscription.find(msg.object_input.key) != m_key_subscription.end())
+            if (m_key_subscription.find(o_i.key) != m_key_subscription.end())
             {
-                m_key_subscription[msg.object_input.key].push_back(msg.object_id);
+                m_key_subscription[o_i.key].push_back(*msg.from);
             }
             else
             {
-                m_key_subscription[msg.object_input.key] = { msg.object_id };
+                m_key_subscription[o_i.key] = { *msg.from };
             }
             break;
-        default: ;
+        default:;
         }
 
         break;
+    }
     default:;
     }
 }

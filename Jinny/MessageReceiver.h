@@ -3,50 +3,68 @@
 #include <queue>
 
 #include "Message.h"
-#include "ObjectEvent.h"
+#include "MessageExchanger.h"
 
 namespace relic
 {
     /**
-     * Abstract class to be inherited by classes that receive and handle messages.
+     * \brief A message used to receive messages forwarded through the message bus
+     * \tparam T A message type
      */
-    template <typename M>
-    class MessageReceiver
+    template <typename T>
+    class MessageReceiver : public MessageExchanger<T>
     {
-        // Ensuring M is a message
-        static_assert(std::is_base_of_v<Message, M> || std::is_base_of_v<ObjectEvent, M>, "MessageReceiver not assigned deliverable type");
-
     public:
         // Receiving messages
-        void receiveMessage(M msg)
-        {
-            m_message_queue.push(msg);
-        }
-
-        void receiveImmediateMessage(M msg)
-        {
-            handleMessage(msg);
-        }
+        void receiveMessage(Message<T> msg);
 
     protected:
-        // Protected destructor because should never be deleted by base pointer to this class
-        ~MessageReceiver() = default;
+        // Constructor
+        explicit MessageReceiver(const Identifier& identifier, bool is_local = false);
 
-        void handleMessages()
-        {
-            while (!m_message_queue.empty())
-            {
-                M msg = m_message_queue.front();
-                m_message_queue.pop();
+        // Destructor
+        ~MessageReceiver();
 
-                handleMessage(msg);
-            }
-        }
+        // Message Handling
+        void handleMessages();
+
     private:
         // Private virtual methods
-        virtual void handleMessage(M msg) = 0;
+        virtual void handleMessage(Message<T> msg) = 0;
 
         // Message queue
-        std::queue<M> m_message_queue;
+        std::queue<Message<T>> m_message_queue;
     };
+
+    template <typename T>
+    void MessageReceiver<T>::receiveMessage(Message<T> msg)
+    {
+        m_message_queue.push(msg);
+    }
+
+    template <typename T>
+    MessageReceiver<T>::MessageReceiver(const Identifier& identifier, bool is_local)
+        :MessageExchanger<T>(identifier, is_local)
+    {
+        MessageExchanger<T>::addReceiver(this);
+    }
+
+    template <typename T>
+    MessageReceiver<T>::~MessageReceiver()
+    {
+        MessageExchanger<T>::removeReceiver(this);
+    }
+
+    template <typename T>
+    void MessageReceiver<T>::handleMessages()
+    {
+        while (!m_message_queue.empty())
+        {
+            Message<T> msg = m_message_queue.front();
+            m_message_queue.pop();
+
+            handleMessage(msg);
+        }
+    }
 }
+

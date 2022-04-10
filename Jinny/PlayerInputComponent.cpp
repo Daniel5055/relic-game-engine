@@ -2,54 +2,36 @@
 
 relic::PlayerInputComponent::PlayerInputComponent()
 {
-    // Subscribe to player movement keys
-    InputMessage msg;
-    msg.type = IMessageType::subscribe_input;
-    msg.object_id = getObjectId();
-    msg.object_input = {ObjectInputType::key_press, 'a'};
-
-    m_keys_down['a'] = false;
-    sendMessage(msg);
-
-    msg.object_input.key = 'd';
-    m_keys_down['d'] = false;
-    sendMessage(msg);
-
-    msg.object_input.key = 'w';
-    m_keys_down['w'] = false;
-    sendMessage(msg);
-
-    msg.object_input.key = 's';
-    m_keys_down['s'] = false;
-    sendMessage(msg);
+    // Subscribe to input
+    subscribeInput(ObjectInputType::key_press, 'w');
+    subscribeInput(ObjectInputType::key_press, 'a');
+    subscribeInput(ObjectInputType::key_press, 's');
+    subscribeInput(ObjectInputType::key_press, 'd');
 }
 
-void relic::PlayerInputComponent::doUpdates()
-{
-    MessageReceiver<InputMessage>::handleMessages();
-}
-
-void relic::PlayerInputComponent::handleMessage(const InputMessage msg)
+void relic::PlayerInputComponent::handleMessage(const Message<InputObjectType> msg)
 {
     switch (msg.type)
     {
-    case IMessageType::input_triggered:
-        if (msg.object_input.type == ObjectInputType::key_down)
-        {
-            if (m_keys_down[msg.object_input.key] == false)
-            {
-                m_keys_down[msg.object_input.key] = true;
+    case InputObjectType::input_triggered:
+        auto o_i = std::any_cast<ObjectInput>(msg.value);
 
-                const ObjectEvent e = {ObjectEvent::Type::input_triggered, {msg.object_input}};
-                sendEvent(e);
+        if (o_i.type == ObjectInputType::key_down)
+        {
+            if (m_keys_down[o_i.key] == false)
+            {
+                m_keys_down[o_i.key] = true;
+
+                const Message e{ ObjectType::input_triggered, std::make_any<ObjectInput>(o_i) };
+                MessageSender<ObjectType>::sendMessage(e);
             }
         }
         else
         {
-            m_keys_down[msg.object_input.key] = false;
+            m_keys_down[o_i.key] = false;
 
-            const ObjectEvent e = {ObjectEvent::Type::input_triggered, {msg.object_input}};
-            sendEvent(e);
+            const Message e{ ObjectType::input_triggered, std::make_any<ObjectInput>(o_i) };
+            MessageSender<ObjectType>::sendMessage(e);
         }
         break;
     }

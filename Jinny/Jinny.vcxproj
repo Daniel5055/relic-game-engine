@@ -90,7 +90,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\dbrat\Documents\Coding\Libraries\SDL2\SDL2-2.0.12\include;C:\Users\dbrat\Documents\Coding\Libraries\SDL2\SDL2_image-2.0.5\include;C:\Users\dbrat\Documents\Coding\Libraries\SDL2\SDL2_ttf-2.0.15\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp14</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -156,7 +156,11 @@
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="Identifier.cpp" />
     <ClCompile Include="InputComponent.cpp" />
+    <ClCompile Include="NewPongGameComponent.cpp" />
+    <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="PongBallPhysicsComponent.cpp" />
     <ClCompile Include="PongPaddleInputComponent.cpp" />
     <ClCompile Include="PongPaddlePhysicsComponent.cpp" />
@@ -187,6 +191,7 @@
     <ClCompile Include="PongGameScene.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="ScoreCounterComponent.cpp" />
     <ClCompile Include="Shape.cpp" />
     <ClCompile Include="Graphic.cpp" />
     <ClCompile Include="SolidColourGraphicsComponent.cpp" />
@@ -196,6 +201,7 @@
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Vector.cpp" />
     <ClCompile Include="Window.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationComponent.h" />
@@ -205,26 +211,36 @@
     <ClInclude Include="Colour.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Core.h" />
-    <ClInclude Include="CoreComponent.h" />
-    <ClInclude Include="Deliverable.h" />
-    <ClInclude Include="GameMessage.h" />
+    <ClInclude Include="GameType.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GraphicsType.h" />
+    <ClInclude Include="Identifier.h" />
+    <ClInclude Include="InputType.h" />
+    <ClInclude Include="LazyMessageSender.h" />
+    <ClInclude Include="MessageBus.decl.h" />
+    <ClInclude Include="MessageBus.h" />
+    <ClInclude Include="MessageExchanger.decl.h" />
+    <ClInclude Include="MessageExchanger.h" />
+    <ClInclude Include="MessageType.h" />
+    <ClInclude Include="ExtendMessageType.h" />
+    <ClInclude Include="NewPongGameComponent.h" />
+    <ClInclude Include="ObjectType.h" />
+    <ClInclude Include="PhysicsType.h" />
     <ClInclude Include="PongBallPhysicsComponent.h" />
     <ClInclude Include="PongPaddleInputComponent.h" />
     <ClInclude Include="PongPaddlePhysicsComponent.h" />
+    <ClInclude Include="PongType.h" />
     <ClInclude Include="RigidBodyPhysicsComponent.h" />
-    <ClInclude Include="LazyMessageSender.h" />
     <ClInclude Include="SceneChangeCoreComponent.h" />
     <ClInclude Include="FileLoader.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="GraphicsComponent.h" />
-    <ClInclude Include="GraphicsMessage.h" />
     <ClInclude Include="GridPhysicsEngine.h" />
     <ClInclude Include="ImageGraphicsComponent.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InputEvent.h" />
-    <ClInclude Include="InputMessage.h" />
     <ClInclude Include="LoggingComponent.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MaterialManager.h" />
@@ -238,26 +254,20 @@
     <ClInclude Include="MessageReceiver.h" />
     <ClInclude Include="MessageSender.h" />
     <ClInclude Include="MouseInputComponent.h" />
-    <ClInclude Include="MultiMessageReceiver.h" />
-    <ClInclude Include="NullCoreComponent.h" />
     <ClInclude Include="NullGraphics.h" />
-    <ClInclude Include="NullGraphicsComponent.h" />
-    <ClInclude Include="NullInputComponent.h" />
-    <ClInclude Include="NullPhysicsComponent.h" />
-    <ClInclude Include="ObjectEvent.h" />
     <ClInclude Include="ObjectInput.h" />
     <ClInclude Include="GameObjectManager.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="PhysicsComponent.h" />
     <ClInclude Include="PhysicsEngine.h" />
     <ClInclude Include="RigidBody.h" />
-    <ClInclude Include="PhysicsMessage.h" />
     <ClInclude Include="PhysicsSystem.h" />
     <ClInclude Include="PlayerInputComponent.h" />
     <ClInclude Include="PlayerPhysicsComponent.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="PongGameScene.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="ScoreCounterComponent.h" />
     <ClInclude Include="Shape.h" />
     <ClInclude Include="Graphic.h" />
     <ClInclude Include="SolidColourGraphicsComponent.h" />
@@ -268,9 +278,12 @@
     <ClInclude Include="AssetLoaderGraphicsComponent.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="Window.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
+    <None Include="MessageBus.impl.h" />
+    <None Include="MessageExchanger.impl.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

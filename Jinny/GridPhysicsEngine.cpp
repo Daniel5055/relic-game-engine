@@ -19,10 +19,10 @@ void relic::GridPhysicsEngine::update()
     while (true)
     {
         // Define map containing force applied in friction
-        std::map<int, framework::Vector> friction_applied;
+        std::map<Identifier, framework::Vector> friction_applied;
 
         // Find influence rects
-        std::map<int, InfluenceRectangle> influence_rects = calculateInfluenceRects(time_passed);
+        std::map<Identifier, InfluenceRectangle> influence_rects = calculateInfluenceRects(time_passed);
 
         // Calculate collisions from influence rects
         std::queue<Collision> collisions = findCollisions(influence_rects, time_passed);
@@ -70,7 +70,7 @@ void relic::GridPhysicsEngine::update()
     }
 }
 
-void relic::GridPhysicsEngine::addRigidBody(int object_id, framework::RigidBody* rigid_body)
+void relic::GridPhysicsEngine::addRigidBody(const Identifier& object_id, framework::RigidBody* rigid_body)
 {
     // Apply gravity
     if (!rigid_body->isStatic())
@@ -131,7 +131,7 @@ void relic::GridPhysicsEngine::moveBodies(double time)
     }
 }
 
-bool relic::GridPhysicsEngine::correctClippings(const int id1, const int id2)
+bool relic::GridPhysicsEngine::correctClippings(const Identifier id1, const Identifier id2)
 {
     // Check if bodies are clipping
 
@@ -165,7 +165,7 @@ bool relic::GridPhysicsEngine::correctClippings(const int id1, const int id2)
         }
 
         // Lambda functions for what type of clipping correction occurs
-        auto moveOne = [&](int moved_body_id, int still_body_id, int moved_rel_id)
+        auto moveOne = [&](Identifier moved_body_id, Identifier still_body_id, int moved_rel_id)
         {
             framework::Vector new_position = m_rigid_bodies[moved_body_id]->getPosition();
 
@@ -183,7 +183,7 @@ bool relic::GridPhysicsEngine::correctClippings(const int id1, const int id2)
             m_rigid_bodies[moved_body_id]->setPosition(new_position);
         };
 
-        auto moveBoth = [&](int body_id_1, int body_id_2)
+        auto moveBoth = [&](Identifier body_id_1, Identifier body_id_2)
         {
             // Calculate the movement of the bodies
             framework::Vector movement = { 0, 0 };
@@ -246,10 +246,10 @@ bool relic::GridPhysicsEngine::correctClippings(const int id1, const int id2)
     return true;
 }
 
-std::map<int, relic::GridPhysicsEngine::InfluenceRectangle> relic::GridPhysicsEngine::calculateInfluenceRects(double time_passed)
+std::map<relic::Identifier, relic::GridPhysicsEngine::InfluenceRectangle> relic::GridPhysicsEngine::calculateInfluenceRects(double time_passed)
 {
     // Create output map
-    std::map<int, InfluenceRectangle> influence_rects = std::map<int, InfluenceRectangle>();
+    std::map<Identifier, InfluenceRectangle> influence_rects = std::map<Identifier, InfluenceRectangle>();
 
     // Iterate through bodies
     for (const auto body : m_rigid_bodies)
@@ -295,7 +295,7 @@ bool relic::GridPhysicsEngine::doesIntersect(const InfluenceRectangle& r1, const
     return true;
 }
 
-std::queue<relic::GridPhysicsEngine::Collision> relic::GridPhysicsEngine::findCollisions(const std::map<int, InfluenceRectangle>& influence_rects, double time_passed)
+std::queue<relic::GridPhysicsEngine::Collision> relic::GridPhysicsEngine::findCollisions(const std::map<Identifier, InfluenceRectangle>& influence_rects, double time_passed)
 {
     // Create output queue of collisions
     std::queue<Collision> collisions;
@@ -321,7 +321,7 @@ std::queue<relic::GridPhysicsEngine::Collision> relic::GridPhysicsEngine::findCo
                 {
                     // Create fake collision to signify influence rects must be calculated
                     auto problem = std::queue<Collision>();
-                    problem.push({ -1 });
+                    problem.push({-1, 0, {{0, "",""},{0, "", ""}}, {0, 0}});
 
                     return problem;
                 }
@@ -470,7 +470,7 @@ void relic::GridPhysicsEngine::calculateCollision(Collision& collision, const do
     m_rigid_bodies[collision.body_ids[1]]->increaseVelocity(collision_force2 / m_rigid_bodies[collision.body_ids[1]]->getMass() * (f_physics.getTimeStep() - time_passed));
 }
 
-void relic::GridPhysicsEngine::calculateFriction(Collision& collision, std::map<int, framework::Vector>& friction_applied, const double time_passed)
+void relic::GridPhysicsEngine::calculateFriction(Collision& collision, std::map<Identifier, framework::Vector>& friction_applied, const double time_passed)
 {
 
     // Calculate friction

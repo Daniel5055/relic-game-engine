@@ -1,22 +1,19 @@
 #pragma once
 
-// Include messaging
-#include "MultiMessageReceiver.h"
-
 // Including framework
 #include "Window.h"
 #include "Input.h"
 #include "Core.h"
 #include "Physics.h"
-#include "Graphics.h"
 #include "LoggedGraphics.h"
 
+#include "MessageReceiver.h"
+#include "GameType.h"
+
 // Including systems
-#include "GraphicsSystem.h"
-#include "InputSystem.h"
-#include "PhysicsSystem.h"
 
 #include "GameObjectManager.h"
+#include "GameSystem.h"
 
 namespace relic
 {
@@ -27,7 +24,7 @@ namespace relic
      * This class calls all the game loop related methods to the systems
      */
     class Game final
-        : public MultiMessageReceiver
+        : public MessageReceiver<GameSystemType>
     {
     public:
         // Constructor
@@ -39,13 +36,8 @@ namespace relic
         bool isGameOver() const;
 
     private:
-        // Handling messages sent between systems and components
-        void handleMessage(PhysicsMessage msg) override;
-        void handleMessage(InputMessage msg) override;
-        void handleMessage(GraphicsMessage msg) override;
-
-        // Handling messages sent by components to the game 
-        void handleMessage(GameMessage msg) override;
+        // Handling game messages
+        void handleMessage(Message<GameSystemType> msg) override;
 
         // Framework References
         const framework::Core f_core;
@@ -54,10 +46,8 @@ namespace relic
         const framework::Input f_input;
         const framework::Physics f_physics;
 
-        // Game System
-        InputSystem m_input;
-        GraphicsSystem m_graphics;
-        PhysicsSystem m_physics;
+        // Game Systems
+        std::vector<std::unique_ptr<GameSystem>> m_systems{};
 
         // Object Manager
         GameObjectManager m_object_manager;
@@ -65,6 +55,6 @@ namespace relic
         // --- data ---
         bool m_game_over{false};
 
-        std::unique_ptr<Scene> m_current_scene;
+        std::unique_ptr<Scene> m_current_scene{};
     };
 }

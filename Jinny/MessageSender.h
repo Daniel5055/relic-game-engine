@@ -1,55 +1,40 @@
 #pragma once
 
-#include <vector>
-#include <memory>
-#include <type_traits>
-
-#include "MessageReceiver.h"
+#include "MessageExchanger.h"
 #include "Message.h"
 
 namespace relic
 {
     /**
-     * \brief A class used to send messages to designated receivers
-     * \tparam M A deliverable, either a message or event
+     * \brief A class used to send messages to the MessageBus
+     * \tparam T A message type
      */
-    template<typename M>
-    class MessageSender
+    template<typename T>
+    class MessageSender : public MessageExchanger<T>
     {
-        // Ensuring M is a message
-        static_assert(std::is_base_of_v<Message, M> || std::is_base_of_v<ObjectEvent, M>, "MessageSend not assigned deliverable type");
-
-    public:
-        void addReceiver(MessageReceiver<M>* receiver);
-
     protected:
+        explicit MessageSender(const Identifier& identifier, bool is_local = false);
         // Protected destructor because should never be deleted by base pointer to this class
         ~MessageSender();
 
         // Method to be used by child classes to send message
-        virtual void sendMessage(M msg);
-    private:
-
-        // Message receivers to send messages to
-        std::vector<MessageReceiver<M>*> m_message_receivers{};
+        void sendMessage(Message<T> msg);
     };
 
-    template <typename M>
-    void MessageSender<M>::addReceiver(MessageReceiver<M>* receiver)
+    template <typename T>
+    MessageSender<T>::MessageSender(const Identifier& identifier, bool is_local)
+        :MessageExchanger<T>(identifier, is_local)
     {
-        m_message_receivers.push_back(receiver);
     }
 
-    template <typename M>
-    MessageSender<M>::~MessageSender() = default;
+    template <typename T>
+    MessageSender<T>::~MessageSender() = default;
 
-    template <typename M>
-    void MessageSender<M>::sendMessage(M msg)
+    template <typename T>
+    void MessageSender<T>::sendMessage(Message<T> msg)
     {
-        // Iterate through message receivers and push back
-        for (const auto& message_receiver : m_message_receivers)
-        {
-            message_receiver->receiveMessage(msg);
-        }
+        // Set from for message if not already done so (also prevents lying by message sender)
+        msg.from = &MessageExchanger<T>::getIdentifier();
+        MessageExchanger<T>::forwardMessage(msg, MessageExchanger<T>::isLocal());
     }
 }

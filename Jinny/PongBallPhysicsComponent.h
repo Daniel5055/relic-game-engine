@@ -2,23 +2,29 @@
 
 #include "RigidBodyPhysicsComponent.h"
 
-namespace relic
+#include "MessageReceiver.h"
+#include "MessageSender.h"
+#include "PongType.h"
+
+namespace relic::pong
 {
-    namespace pong
+    class PongBallPhysicsComponent final
+        : public RigidBodyPhysicsComponent
+        , public MessageReceiver<PhysicsObjectType>
+        , public MessageSender<PongType>
     {
-        class PongBallPhysicsComponent : public RigidBodyPhysicsComponent
-        {
 
-        public:
-            PongBallPhysicsComponent(framework::Shape shape, int left_wall_id, int right_wall_id);
+    public:
+        PongBallPhysicsComponent(framework::Shape shape, Identifier left_wall_id, Identifier right_wall_id);
 
-        private:
-            void handleMessage(PhysicsMessage msg) override;
+        void doUpdates() override;
 
-            const int m_left_wall_id;
-            const int m_right_wall_id;
-        };
-    }
+    private:
+        void handleMessage(Message<PhysicsObjectType> msg) override;
 
+
+        const Identifier m_left_wall_id;
+        const Identifier m_right_wall_id;
+    };
 }
 

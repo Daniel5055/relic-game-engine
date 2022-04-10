@@ -1,62 +1,46 @@
 #include "Game.h"
 
-#include <cassert>
-
-#include "GraphicsComponent.h"
-#include "InputComponent.h"
-#include "PhysicsComponent.h"
-#include "CoreComponent.h"
-
+#include "GraphicsSystem.h"
 #include "Scene.h"
-
-#include "LoggedGraphics.h"
-
 #include "GridPhysicsEngine.h"
+#include "InputSystem.h"
+#include "PhysicsSystem.h"
 
 relic::Game::Game(Scene* starting_scene)
-    : f_window("Relic", 640, 480, true)
+    : MessageReceiver<GameSystemType>(Identifier::null_identifier)
+    , f_window("Relic", 640, 480, true)
     , f_graphics(f_window)
     , f_input()
     , f_physics(0.016, 128.0)
-    , m_input(f_window, f_input)
-    , m_graphics(f_window, f_graphics)
-    , m_physics(new GridPhysicsEngine(f_physics))
-    , m_object_manager(*this)
     , m_current_scene(starting_scene)
 {
 
-    // Setting game as receiver of messages from the systems that send messages
-    m_input.addReceiver(this);
-    m_physics.addReceiver(this);
+    // Add systems
+    m_systems.push_back(std::make_unique<InputSystem>(f_window, f_input));
+    m_systems.push_back(std::make_unique<GraphicsSystem>(f_window, f_graphics));
+    m_systems.push_back(std::make_unique<PhysicsSystem>(new GridPhysicsEngine(f_physics)));
 
     // Scene Configuration
-    Scene::setObjectManager(&m_object_manager);
     Scene::setWindowSize(f_window.getWindowWidth(), f_window.getWindowHeight());
+
+    Scene::setObjectManager(&m_object_manager);
 
     starting_scene->initialise();
 }
 
 void relic::Game::update()
 {
-    MessageReceiver<GameMessage>::handleMessages();
-    MessageReceiver<GraphicsMessage>::handleMessages();
-    MessageReceiver<PhysicsMessage>::handleMessages();
-    MessageReceiver<InputMessage>::handleMessages();
-
     // Update Systems
-    m_graphics.update();
-    m_physics.update();
-    m_input.update();
+    for (const auto& game_system : m_systems)
+    {
+        game_system->update();
+    }
 
-
-    MessageReceiver<GameMessage>::handleMessages();
-    MessageReceiver<GraphicsMessage>::handleMessages();
-    MessageReceiver<PhysicsMessage>::handleMessages();
-    MessageReceiver<InputMessage>::handleMessages();
+    // Handling messages sent to game
+    handleMessages();
 
     // Update Objects
     m_object_manager.updateObjects();
-
 }
 
 bool relic::Game::isGameOver() const
@@ -64,82 +48,21 @@ bool relic::Game::isGameOver() const
     return m_game_over;
 }
 
-void relic::Game::handleMessage(const PhysicsMessage msg)
+void relic::Game::handleMessage(const Message<GameSystemType> msg)
 {
-    if (msg.is_sent_by_system)
+    switch (msg.type)
     {
-        // Directed to object, physics messages do not need to communicate with system for now
-        assert(msg.object_id >= 0);
-        m_object_manager.getObject(msg.object_id).pushExternalMessage(msg);
-    }
-    else
-    {
-        m_physics.receiveMessage(msg);
+    case GameSystemType::exit_pressed:
+
+        m_game_over = true;
+        break;
+    case GameSystemType::change_scene: 
+        m_object_manager.clearSceneObjects();
+        m_current_scene = std::unique_ptr<Scene>(std::any_cast<Scene*>(msg.value));
+        m_current_scene->initialise();
+        break;
+    case GameSystemType::set_camera: break;
+    case GameSystemType::delete_object: break;
+    default: ;
     }
 }
-
-void relic::Game::handleMessage(const InputMessage msg)
-{
-    if (msg.is_sent_by_system)
-    {
-        // Directed to object, else to game
-        if (msg.object_id >= 0)
-        {
-            m_object_manager.getObject(msg.object_id).pushExternalMessage(msg);
-        }
-        else if (msg.type == IMessageType::exit_button_pressed)
-        {
-            m_game_over = true;
-        }
-    }
-    else
-    {
-        m_input.receiveMessage(msg);
-    }
-}
-
-void relic::Game::handleMessage(const GraphicsMessage msg)
-{
-    if (msg.is_sent_by_system)
-    {
-        // Directed to object, graphics messages do not need to communicate with system for now
-        assert(msg.object_id >= 0);
-        m_object_manager.getObject(msg.object_id).pushExternalMessage(msg);
-    }
-    else
-    {
-        m_graphics.receiveMessage(msg);
-    }
-}
-
-void relic::Game::handleMessage(const GameMessage msg)
-{
-    // Game handles game messages
-    if (!msg.is_sent_by_system)
-    {
-        switch (msg.type)
-        {
-        case GameMessageType::change_scene:
-            // Clear all objects
-            m_object_manager.clearSceneObjects();
-
-            // Initialize new scene
-            m_current_scene = std::unique_ptr<Scene>(msg.scene_ptr);
-            m_current_scene->initialise();
-
-            break;
-
-        case GameMessageType::set_camera:
-            f_window.setCamera(*msg.shape_ptr);
-
-            break;
-
-        case GameMessageType::delete_object:
-            m_object_manager.deleteObject(msg.object_id);
-
-            break;
-        default:;
-        }
-    }
-}
-

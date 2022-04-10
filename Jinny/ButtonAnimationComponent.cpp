@@ -1,12 +1,12 @@
 #include "ButtonAnimationComponent.h"
 
+/*
 relic::ButtonAnimationComponent::ButtonAnimationComponent(GraphicsComponent* graphics_component, int texture_width, int texture_height)
     :AnimationComponent(graphics_component, texture_width, texture_height)
 {
 
 }
 
-/*
 void relic::ButtonAnimationComponent::initialize(GameObject& object)
 {
     AnimationComponent::initialize(object);

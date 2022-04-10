@@ -13,8 +13,6 @@ namespace relic
     public:
         // Constructor
         explicit ImageGraphicsComponent(framework::Shape shape, const std::string& texture_name, const std::string& texture_path = "");
-    private:
-        void handleEvent(ObjectEvent e) override;
     };
 }
 

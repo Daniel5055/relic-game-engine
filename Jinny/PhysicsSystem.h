@@ -5,7 +5,7 @@
 #include "GameSystem.h"
 #include "MessageReceiver.h"
 #include "MessageSender.h"
-#include "PhysicsMessage.h"
+#include "PhysicsType.h"
 
 #include "PhysicsEngine.h"
 
@@ -21,8 +21,8 @@ namespace relic
      */
     class PhysicsSystem final : 
         public GameSystem,
-        public MessageReceiver<PhysicsMessage>,
-        public MessageSender<PhysicsMessage>
+        public MessageReceiver<PhysicsSystemType>,
+        public MessageSender<PhysicsObjectType>
     {
     public:
         // Constructor
@@ -32,12 +32,12 @@ namespace relic
         // --- Internal Functions ---
 
         void doUpdates() override;
-        void handleMessage(PhysicsMessage msg) override;
+        void handleMessage(Message<PhysicsSystemType> msg) override;
 
         // --- Data ---
 
         // Physics Engine
         std::unique_ptr<PhysicsEngine> m_engine_ptr;
-        std::map<int, bool> m_subscribed_collision_checking;
+        std::map<Identifier, bool> m_subscribed_collision_checking;
     };
 }

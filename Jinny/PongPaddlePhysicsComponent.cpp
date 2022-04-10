@@ -1,32 +1,41 @@
 #include "PongPaddlePhysicsComponent.h"
 
+#include "ObjectInput.h"
+
 relic::pong::PongPaddlePhysicsComponent::PongPaddlePhysicsComponent(const framework::Shape shape, const char up_key, const char down_key)
-    :RigidBodyPhysicsComponent(10, 2000, shape, framework::Material::entity), m_up_key(up_key), m_down_key(down_key)
+    :RigidBodyPhysicsComponent(10, 2000, shape, framework::Material::entity), MessageReceiver<ObjectType>(getObjectId(), true), m_up_key(up_key), m_down_key(down_key)
 {
     getRigidBody().setStatic(true);
 }
 
-void relic::pong::PongPaddlePhysicsComponent::handleEvent(const ObjectEvent e)
+void relic::pong::PongPaddlePhysicsComponent::doUpdates()
 {
-    switch (e.type)
-    {
-    case ObjectEvent::Type::input_triggered:
-        double is_down = 0;
+    RigidBodyPhysicsComponent::doUpdates();
+    handleMessages();
+}
 
-        if (e.input.type == ObjectInputType::key_down)
+void relic::pong::PongPaddlePhysicsComponent::handleMessage(const Message<ObjectType> msg)
+{
+    switch (msg.type)
+    {
+    case ObjectType::input_triggered:
+        double is_down = 0;
+        const auto o_i = std::any_cast<ObjectInput>(msg.value);
+
+        if (o_i.type == ObjectInputType::key_down)
         {
             is_down = 1;
         }
-        else if (e.input.type == ObjectInputType::key_up)
+        else if (o_i.type == ObjectInputType::key_up)
         {
             is_down = -1;
         }
 
-        if (e.input.key == m_up_key)
+        if (o_i.key == m_up_key)
         {
             getRigidBody().applyMFForce({ 0, is_down * -1000 });
         }
-        else if (e.input.key == m_down_key)
+        else if (o_i.key == m_down_key)
         {
             getRigidBody().applyMFForce({ 0, is_down * 1000 });
         }

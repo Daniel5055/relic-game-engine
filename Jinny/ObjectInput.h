@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Shape.h"
 
 namespace relic
 {
@@ -35,6 +36,7 @@ namespace relic
         }
         ObjectInputType type;
         char key;
+        framework::Shape* mouse_shape{nullptr};
 
     };
 

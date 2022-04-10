@@ -12,8 +12,7 @@ namespace relic
         void update()
         {
             doUpdates();
-        };
-
+        }
     private:
         // Encapsulating virtual methods
         virtual void doUpdates() = 0;

@@ -11,9 +11,5 @@ namespace relic
     {
     public:
         SolidColourGraphicsComponent(framework::Shape shape, framework::Colour colour);
-
-    private:
-        void handleEvent(ObjectEvent e) override;
-
     };
 }

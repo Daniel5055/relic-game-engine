@@ -4,7 +4,7 @@
 #include <map>
 #include <utility>
 
-#include "GameObjectManager.h"
+#include "GameObject.h"
 
 namespace framework
 {
@@ -23,8 +23,9 @@ namespace relic
         void initialise();
 
         // For establishing ability to create objects
-        static void setObjectManager(GameObjectManager* object_manager);
         static void setWindowSize(unsigned int width, unsigned int height);
+
+        static void setObjectManager(GameObjectManager* object_manager);
 
     protected:
 
@@ -35,12 +36,13 @@ namespace relic
         static unsigned int getWindowWidth();
         static unsigned int getWindowHeight();
 
+
         // Functions for initialisation stuff
         void loadAssets(const std::map<std::string, std::pair<std::string, unsigned int>>& assets) const;
 
         void createCamera(framework::Shape camera) const;
 
-        static GameObjectManager::GameObject& createObject(const std::string& name, bool is_global = false);
+        GameObject& createObject(std::string name, bool is_global = false) const;
 
     private:
         static unsigned m_window_width;

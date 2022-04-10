@@ -4,8 +4,7 @@
 
 #include "GameSystem.h"
 #include "MessageReceiver.h"
-#include "GraphicsMessage.h"
-
+#include "GraphicsType.h"
 #include "AssetManager.h"
 
 // Framework Dependencies
@@ -18,8 +17,6 @@ namespace framework
 
 namespace relic
 {
-    struct GraphicsMessage;
-
     /**
      * \brief System relating to graphics.
      * Uses the asset manager and graphics framework to load and store textures, retrieve textures and assign graphics,
@@ -27,7 +24,7 @@ namespace relic
      */
     class GraphicsSystem final :
         public GameSystem, 
-        public MessageReceiver<GraphicsMessage>
+        public MessageReceiver<GraphicsSystemType>
     {
     public:
         // constructor
@@ -36,7 +33,7 @@ namespace relic
     private:
         // --- Internal Functions ---
         void doUpdates() override;
-        void handleMessage(GraphicsMessage msg) override;
+        void handleMessage(Message<GraphicsSystemType> msg) override;
 
         // --- Framework ---
         const framework::Graphics& f_graphics;

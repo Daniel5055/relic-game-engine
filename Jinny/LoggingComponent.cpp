@@ -1,9 +1,10 @@
 #include "LoggingComponent.h"
 
 #include "Logger.h"
+#include "ObjectInput.h"
 
 relic::LoggingComponent::LoggingComponent()
-    :m_logger("Object")
+    :MessageReceiver<ObjectType>(getObjectId(), true), m_logger("Object")
 {
     m_logger.log("Initialised");
 }
@@ -13,13 +14,22 @@ relic::LoggingComponent::~LoggingComponent()
     m_logger.log("Destructed");
 }
 
-void relic::LoggingComponent::handleEvent(const ObjectEvent msg)
+void relic::LoggingComponent::doUpdates()
+{
+    Component::doUpdates();
+    handleMessages();
+}
+
+
+void relic::LoggingComponent::handleMessage(const Message<ObjectType> msg)
 {
     // Todo: Room for improvement
     switch (msg.type)
     {
-    case ObjectEvent::Type::input_triggered:
-        switch (msg.input.type)
+    case ObjectType::input_triggered:
+    {
+        const auto o_e = std::any_cast<ObjectInput>(msg.value);
+        switch (o_e.type)
         {
         case ObjectInputType::left_mouse_down:
             m_logger.log("Left Mouse Button Down Input");
@@ -29,14 +39,16 @@ void relic::LoggingComponent::handleEvent(const ObjectEvent msg)
             m_logger.log("Left Mouse Button UP Input");
             break;
         case ObjectInputType::key_down:
-            m_logger.log(std::string(1, msg.input.key) + " pressed down");
+            m_logger.log(std::string(1, o_e.key) + " pressed down");
             break;
         case ObjectInputType::key_up:
-            m_logger.log(std::string(1, msg.input.key) + " pressed up");
+            m_logger.log(std::string(1, o_e.key) + " pressed up");
             break;
         }
-    case ObjectEvent::Type::component_incorporated:
-        m_logger.setLocation(getObjectName());
+        break;
+    }
+    case ObjectType::component_incorporated:
+        m_logger.setLocation(getObjectId().getName());
         break;
     }
 }

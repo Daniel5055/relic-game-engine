@@ -7,10 +7,9 @@
 #include "Shape.h"
 #include "Texture.h"
 #include "Window.h"
-#include "Point.h"
 
 relic::GraphicsSystem::GraphicsSystem(const framework::Window& window, const framework::Graphics& graphics)
-    : f_graphics(graphics), f_window(window)
+    : MessageReceiver<GraphicsSystemType>(Identifier::null_identifier), f_graphics(graphics), f_window(window)
 {
 }
 
@@ -40,59 +39,100 @@ void relic::GraphicsSystem::doUpdates()
     f_graphics.display();
 }
 
-void relic::GraphicsSystem::handleMessage(const GraphicsMessage msg)
+void relic::GraphicsSystem::handleMessage(Message<GraphicsSystemType> msg)
 {
     switch (msg.type)
     {
-    case GMessageType::load_texture:
+    case GraphicsSystemType::load_texture:
     {
-        m_asset_manager.addTexture(msg.string_1, f_graphics.createTexture(msg.string_2));
+        const auto v = std::any_cast<std::pair<std::string, std::string>>(msg.value);
+        m_asset_manager.addTexture(v.first, f_graphics.createTexture(v.second));
         break;
     }
-    case GMessageType::load_font:
+    case GraphicsSystemType::load_font:
     {
-        m_asset_manager.addFont(msg.string_1, f_graphics.createFont(msg.string_2, msg.num));
+        const auto v = std::any_cast<std::pair<std::string, std::pair<std::string, unsigned int>>>(msg.value);
+        m_asset_manager.addFont(v.first, f_graphics.createFont(v.second.first, v.second.second));
         break;
     }
-    case GMessageType::assign_texture:
+    case GraphicsSystemType::assign_texture:
     {
-        f_graphics.assignTexture(msg.graphic, m_asset_manager.getTexture(msg.string_1));
+        const auto v = std::any_cast<std::pair<std::string, framework::Graphic*>>(msg.value);
+        f_graphics.assignTexture(v.second, m_asset_manager.getTexture(v.first));
         break;
     }
-    case GMessageType::assign_text:
+    case GraphicsSystemType::assign_text:
     {
         framework::Texture* texture_ptr = nullptr;
 
+        const auto v = std::any_cast<std::pair<std::pair<std::string, std::string>, std::pair<framework::Colour, framework::Graphic*>>>(msg.value);
+
         // Check for wrapped text
-        if (msg.graphic->getShape().w == 0 && msg.graphic->getShape().h == 0)
+        if (v.second.second->getShape().w == 0 && v.second.second->getShape().h == 0)
         {
-            texture_ptr = f_graphics.createTextTexture(msg.string_1, m_asset_manager.getFont(msg.string_2), msg.color);
+            texture_ptr = f_graphics.createTextTexture(v.first.first, m_asset_manager.getFont(v.first.second), v.second.first);
 
-            msg.graphic->setSize(texture_ptr->getWidth(), texture_ptr->getHeight());
+            v.second.second->setSize(texture_ptr->getWidth(), texture_ptr->getHeight());
         }
         else
         {
-            texture_ptr = f_graphics.createWrappedTextTexture(msg.string_1, m_asset_manager.getFont(msg.string_2), msg.color, &msg.graphic->getShape());
+            texture_ptr = f_graphics.createWrappedTextTexture(v.first.first, m_asset_manager.getFont(v.first.second), v.second.first, &v.second.second->getShape());
         }
 
-        f_graphics.assignTexture(msg.graphic, texture_ptr);
+        f_graphics.assignTexture(v.second.second, texture_ptr);
 
         break;
     }
-    case GMessageType::show_graphic:
+    case GraphicsSystemType::show_graphic:
     {
-        if (msg.graphic->getShape().is_screen_bound)
+        const auto v = std::any_cast<framework::Graphic*>(msg.value);
+        if (v->getShape().is_screen_bound)
         {
-            m_gui_graphic_ptrs.push_back(msg.graphic);
+            m_gui_graphic_ptrs.push_back(v);
         }
         else
         {
-            m_graphic_ptrs.push_back(msg.graphic);
+            m_graphic_ptrs.push_back(v);
         }
 
         break;
     }
-    default: ;
+    case GraphicsSystemType::hide_graphic:
+    {
+        const auto v = std::any_cast<framework::Graphic*>(msg.value);
+
+        bool erased = false;
+        for (auto it = m_gui_graphic_ptrs.begin(); it != m_gui_graphic_ptrs.end(); ++it)
+        {
+            if (*it == v)
+            {
+                m_gui_graphic_ptrs.erase(it);
+                erased = true;
+                break;
+            }
+        }
+
+        if (!erased)
+        {
+            for (auto it = m_graphic_ptrs.begin(); it != m_graphic_ptrs.end(); ++it)
+            {
+                if (*it == v)
+                {
+                    m_graphic_ptrs.erase(it);
+                    erased = true;
+                    break;
+                }
+            }
+
+            if (!erased)
+            {
+                // TODO: ??
+            }
+        }
+
+        break;
+    }
+    default:;
     }
 }
 

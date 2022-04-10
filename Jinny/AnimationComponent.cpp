@@ -5,6 +5,7 @@
 #include "Point.h"
 #include "Texture.h"
 
+/*
 relic::AnimationComponent::AnimationComponent(GraphicsComponent* graphics_component, int texture_width, int texture_height)
     :m_graphics_component(graphics_component), m_texture_width(texture_width), m_texture_height(texture_height)
 {
@@ -17,7 +18,6 @@ relic::AnimationComponent::AnimationComponent(GraphicsComponent* graphics_compon
     m_tick = 0;
 }
 
-/*
 void relic::AnimationComponent::initialize(GameObject& object)
 {
     // Initialize Objects

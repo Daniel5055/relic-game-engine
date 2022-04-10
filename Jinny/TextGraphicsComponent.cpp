@@ -1,43 +1,26 @@
 #include "TextGraphicsComponent.h"
 
-relic::TextGraphicsComponent::TextGraphicsComponent(framework::Shape shape, const std::string& text, const std::string&
-                                                    font_name, framework::Colour font_colour, const std::string& font_path, int font_size)
+relic::TextGraphicsComponent::TextGraphicsComponent(const framework::Shape shape, const std::string& text, const std::string&
+    font_name, framework::Colour font_colour, const std::string& font_path, unsigned int font_size)
 {
     // Create Graphic
     setGraphic(new framework::Graphic(shape));
 
-    GraphicsMessage msg;
+    Message<GraphicsSystemType> msg;
 
     if (!font_path.empty())
     {
-        msg.type = GMessageType::load_font;
-        msg.string_1 = font_name;
-        msg.string_2 = font_path;
-        msg.num = font_size;
+        msg.type = GraphicsSystemType::load_font;
+        msg.value = std::make_any<std::pair<std::string, std::pair<std::string, unsigned int>>>(font_name, std::pair<std::string, unsigned int>(font_path, font_size));
         sendMessage(msg);
     }
 
-    msg = GraphicsMessage();
-    msg.type = GMessageType::assign_text;
-    msg.string_1 = text;
-    msg.string_2 = font_name;
-    msg.color = font_colour;
-    msg.graphic = &getGraphic();
+    msg.type = GraphicsSystemType::assign_text;
+    msg.value = std::make_any<std::pair<std::pair<std::string, std::string>, std::pair<framework::Colour, framework::Graphic*>>>
+        (std::pair<std::string, std::string>(text, font_name), std::pair<framework::Colour, framework::Graphic*>(font_colour, &getGraphic()));
     sendMessage(msg);
 
-    msg = GraphicsMessage();
-    msg.type = GMessageType::show_graphic;
-    msg.object_id = getObjectId();
-    msg.graphic = &getGraphic();
+    msg.type = GraphicsSystemType::show_graphic;
+    msg.value = std::make_any<framework::Graphic*>(&getGraphic());
     sendMessage(msg);
-}
-
-void relic::TextGraphicsComponent::handleEvent(ObjectEvent e)
-{
-    switch (e.type)
-    {
-    case ObjectEvent::Type::move:
-        getGraphic().getShape().x += e.movement.x;
-        getGraphic().getShape().y += e.movement.y;
-    }
 }
