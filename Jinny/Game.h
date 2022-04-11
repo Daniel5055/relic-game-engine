@@ -5,8 +5,7 @@
 #include "Input.h"
 #include "Core.h"
 #include "Physics.h"
-#include "LoggedGraphics.h"
-
+#include "Graphics.h"
 #include "MessageReceiver.h"
 #include "GameType.h"
 
@@ -42,7 +41,7 @@ namespace relic
         // Framework References
         const framework::Core f_core;
         framework::Window f_window;
-        const framework::LoggedGraphics f_graphics;
+        const framework::Graphics f_graphics;
         const framework::Input f_input;
         const framework::Physics f_physics;
 

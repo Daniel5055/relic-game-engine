@@ -70,7 +70,7 @@ framework::MaterialManager::MaterialManager()
                            0.4, 0.2, 0.4, 0.8, 0.0,// Wood = 3
                                0.05, 0.1, 0.1, 0.0,// Ice = 4
                                      0.3, 0.4, 0.0,// Trampoline = 5
-                                          0.9, 0.3,// Entity = 6
+                                          0.9, 0.2,// Entity = 6
                                                0.0,
     };
 

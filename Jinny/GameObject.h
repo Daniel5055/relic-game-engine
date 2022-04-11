@@ -2,15 +2,18 @@
 #include <memory>
 #include <vector>
 
+#include "MessageSender.h"
 #include "Component.h"
 #include "Identifier.h"
 #include "GameObject.h"
+#include "ObjectType.h"
 
 namespace relic
 {
     class GameObjectManager;
 
     class GameObject final
+        : MessageSender<ObjectType>
     {
         // So that Manager can access constructor and important data
         friend GameObjectManager;

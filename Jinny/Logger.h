@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include "Identifier.h"
 
 namespace framework
 {
@@ -11,16 +12,13 @@ namespace framework
     {
     public:
         // Constructor
-        explicit Logger(std::string location);
+        explicit Logger(const relic::Identifier& id);
 
         // Logging functions
-        void log(std::string text) const;
-        void logError(std::string text) const;
-
-        void setLocation(std::string location);
-
+        void log(const std::string& text) const;
+        void logError(const std::string& text) const;
     private:
-        std::string m_location;
+        const relic::Identifier& m_id;
     };
 }
 

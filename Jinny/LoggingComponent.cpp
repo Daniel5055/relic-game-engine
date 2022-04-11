@@ -4,9 +4,8 @@
 #include "ObjectInput.h"
 
 relic::LoggingComponent::LoggingComponent()
-    :MessageReceiver<ObjectType>(getObjectId(), true), m_logger("Object")
+    :MessageReceiver<ObjectType>(getObjectId(), true), m_logger(getObjectId())
 {
-    m_logger.log("Initialised");
 }
 
 relic::LoggingComponent::~LoggingComponent()
@@ -48,7 +47,11 @@ void relic::LoggingComponent::handleMessage(const Message<ObjectType>& msg)
         break;
     }
     case ObjectType::component_incorporated:
-        m_logger.setLocation(getObjectId().getName());
-        break;
+    {
+        if (std::any_cast<Component*>(msg.value) == this)
+        {
+            m_logger.log("Initialised");
+        }
+    }
     }
 }

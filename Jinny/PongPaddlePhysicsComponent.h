@@ -10,7 +10,7 @@ namespace relic
             , public MessageReceiver<ObjectType>
         {
         public:
-            explicit PongPaddlePhysicsComponent(framework::Shape shape, char up_key, char down_key);
+            explicit PongPaddlePhysicsComponent(framework::Shape shape, framework::Direction facing, char up_key, char down_key);
         protected:
             void doUpdates() override;
         private:

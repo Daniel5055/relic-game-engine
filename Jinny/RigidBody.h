@@ -3,6 +3,7 @@
 #include "Material.h"
 #include "Vector.h"
 #include "Shape.h"
+#include "Direction.h"
 
 namespace framework
 {
@@ -50,6 +51,10 @@ namespace framework
 
         // Material 
         Material getMaterial() const;
+
+        // Side accessors
+        void setSideSolidity(Direction direction, bool is_solid);
+        bool getSideSolidity(Direction direction) const;
     private:
 
         // Mass in kg
@@ -78,5 +83,7 @@ namespace framework
         Material m_material{ Material::nullium };
 
         Vector m_max_speed{ 0, 0 };
+
+        bool m_solid_sides[4];
     };
 }

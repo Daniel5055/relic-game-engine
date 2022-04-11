@@ -5,7 +5,7 @@
 #include <cmath>
 
 framework::RigidBody::RigidBody(const double mass, const double damping_force, const framework::Vector max_speed, const framework::Shape shape, const framework::Material material)
-    : m_mass(mass), m_damping(damping_force), m_shape(shape), m_position(shape.x, shape.y), m_material(material), m_max_speed(max_speed)
+    : m_mass(mass), m_damping(damping_force), m_shape(shape), m_position(shape.x, shape.y), m_material(material), m_max_speed(max_speed), m_solid_sides{ true, true, true, true }
 {
 }
 
@@ -153,4 +153,14 @@ void framework::RigidBody::setStatic(const bool is_static)
 framework::Material framework::RigidBody::getMaterial() const
 {
     return m_material;
+}
+
+void framework::RigidBody::setSideSolidity(const Direction direction, const bool is_solid)
+{
+    m_solid_sides[static_cast<int>(direction)] = is_solid;
+}
+
+bool framework::RigidBody::getSideSolidity(const Direction direction) const
+{
+    return m_solid_sides[static_cast<int>(direction)];
 }

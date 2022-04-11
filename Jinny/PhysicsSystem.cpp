@@ -2,8 +2,10 @@
 #include "GridPhysicsEngine.h"
 
 relic::PhysicsSystem::PhysicsSystem(PhysicsEngine* engine)
-    : MessageReceiver<PhysicsSystemType>(Identifier::null),
-      MessageSender<PhysicsObjectType>(Identifier::null), m_engine_ptr(engine)
+    : GameSystem("Physics System")
+    , MessageReceiver<PhysicsSystemType>(getId())
+    , MessageSender<PhysicsObjectType>(getId())
+    , m_engine_ptr(engine)
 {
 }
 
@@ -18,14 +20,14 @@ void relic::PhysicsSystem::doUpdates()
     {
         if (m_subscribed_collision_checking[ids.first])
         {
-            Message msg{ PhysicsObjectType::collision_occurred, std::make_any<Identifier>(ids.second)};
+            Message msg{ PhysicsObjectType::collision_occurred, std::make_any<Identifier>(ids.second) };
             msg.to = ids.first;
 
             sendMessage(msg);
         }
         if (m_subscribed_collision_checking[ids.second])
         {
-            Message msg{ PhysicsObjectType::collision_occurred, std::make_any<Identifier>(ids.first)};
+            Message msg{ PhysicsObjectType::collision_occurred, std::make_any<Identifier>(ids.first) };
             msg.to = ids.second;
 
             sendMessage(msg);

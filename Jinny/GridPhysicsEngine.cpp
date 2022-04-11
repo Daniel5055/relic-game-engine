@@ -131,7 +131,7 @@ void relic::GridPhysicsEngine::moveBodies(double time)
     }
 }
 
-bool relic::GridPhysicsEngine::correctClippings(const Identifier id1, const Identifier id2)
+bool relic::GridPhysicsEngine::correctClippings(const Identifier& id1, const Identifier& id2)
 {
     // Check if bodies are clipping
 
@@ -143,6 +143,17 @@ bool relic::GridPhysicsEngine::correctClippings(const Identifier id1, const Iden
     // Check if they clip
     if (doesIntersect(r[0], r[1]))
     {
+        // If they clip, check that it is legal, else do anti clipping
+        // id1 is assumed to be the smaller and so is the key
+        for (auto it = m_legal_clippings.begin(); it != m_legal_clippings.end(); ++it)
+        {
+            if (it->first.first == id1 && it->first.second == id2 || it->first.first == id2 && it->first.second == id1)
+            {
+                it->second = true;
+                return false;
+            }
+        }
+
         double smallest_distance = 1000000;
         int closest_axis = -1;
         int left_most = -1;
@@ -297,11 +308,17 @@ bool relic::GridPhysicsEngine::doesIntersect(const InfluenceRectangle& r1, const
 
 std::queue<relic::GridPhysicsEngine::Collision> relic::GridPhysicsEngine::findCollisions(const std::map<Identifier, InfluenceRectangle>& influence_rects, double time_passed)
 {
+    // Reset legal clippings to all occurances false (will find them now again)
+    for (auto it = m_legal_clippings.begin(); it != m_legal_clippings.end(); ++it)
+    {
+        it->second = false;
+    }
+
     // Create output queue of collisions
     std::queue<Collision> collisions;
 
     // Iterate between all objects to find collisions
-    for (auto it1 = influence_rects.begin(); it1 != influence_rects.end(); it1++)
+    for (auto it1 = influence_rects.begin(); it1 != influence_rects.end(); ++it1)
     {
         // TODO: A bit janky 
         auto it2 = influence_rects.begin();
@@ -321,7 +338,7 @@ std::queue<relic::GridPhysicsEngine::Collision> relic::GridPhysicsEngine::findCo
                 {
                     // Create fake collision to signify influence rects must be calculated
                     auto problem = std::queue<Collision>();
-                    problem.push({-1, 0, {{0, "",""},{0, "", ""}}, {0, 0}});
+                    problem.push({ -1, 0, {{0, "",""},{0, "", ""}}, {0, 0} });
 
                     return problem;
                 }
@@ -384,30 +401,64 @@ std::queue<relic::GridPhysicsEngine::Collision> relic::GridPhysicsEngine::findCo
                 {
                     if (collision_times[axis] >= 0)
                     {
+                        // Calculating displacement across perpendicular axis in time
                         const double displacement1 = f_physics.getDisplacementAtTime(collision_times[axis], m_rigid_bodies[it1->first]->getVelocity()[1 - axis],
-                                                                                     m_rigid_bodies[it1->first]->getAppliedForce()[1 - axis] / m_rigid_bodies[it1->first]->getMass());
+                            m_rigid_bodies[it1->first]->getAppliedForce()[1 - axis] / m_rigid_bodies[it1->first]->getMass());
                         const double displacement2 = f_physics.getDisplacementAtTime(collision_times[axis], m_rigid_bodies[it2->first]->getVelocity()[1 - axis],
-                                                                                     m_rigid_bodies[it2->first]->getAppliedForce()[1 - axis] / m_rigid_bodies[it2->first]->getMass());
+                            m_rigid_bodies[it2->first]->getAppliedForce()[1 - axis] / m_rigid_bodies[it2->first]->getMass());
 
                         // Check if on same level (pretty sure this math is correct)
                         // +1 to stop corner problems
                         if (displacement1 + it1->second.position[1 - axis] <= displacement2 + it2->second.position[1 - axis] + it2->second.size[1 - axis] + 1 ||
                             displacement2 + it2->second.position[1 - axis] <= displacement1 + it1->second.position[1 - axis] + it1->second.size[1 - axis] + 1)
                         {
+
+                            bool collision_added = false;
+
+                            // Adding to the collisions
                             if (!collisions.empty())
                             {
                                 if (collisions.front().time > collision_times[axis])
                                 {
                                     collisions = std::queue<Collision>();
-                                    collisions.push({ collision_times[axis], axis, {it1->first, it2->first} });
+                                    collision_added = true;
                                 }
                                 else if (collisions.front().time == collision_times[axis])
                                 {
-                                    collisions.push({ collision_times[axis], axis, {it1->first, it2->first} });
+                                    collision_added = true;
                                 }
                             }
                             else
                             {
+                                collision_added = true;
+                            }
+
+                            if (collision_added)
+                            {
+                                // Checking that rigid bodies are colliding on solid sides (only where there is at least one dynamic body
+                                if (!m_rigid_bodies[it1->first]->isStatic() || !m_rigid_bodies[it2->first]->isStatic())
+                                {
+                                    if (m_rigid_bodies[it1->first]->getPosition()[axis] < m_rigid_bodies[it2->first]->getPosition()[axis])
+                                    {
+                                        // Assigned the direction values so I can easily use the axis value
+                                        if (!m_rigid_bodies[it1->first]->getSideSolidity(static_cast<framework::Direction>(2 * axis)) || !m_rigid_bodies[it2->first]->getSideSolidity(static_cast<framework::Direction>(2 * axis + 1)))
+                                        {
+                                            // We know they will be clipping
+                                            m_legal_clippings.insert({ { it1->first, it2->first}, true });
+                                            break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // Assigned the direction values so I can easily use the axis value
+                                        if (!m_rigid_bodies[it2->first]->getSideSolidity(static_cast<framework::Direction>(2 * axis)) || !m_rigid_bodies[it1->first]->getSideSolidity(static_cast<framework::Direction>(2 * axis + 1)))
+                                        {
+                                            m_legal_clippings.insert({ { it1->first, it2->first}, true });
+                                            break;
+                                        }
+                                    }
+                                }
+
                                 collisions.push({ collision_times[axis], axis, {it1->first, it2->first} });
                             }
 
@@ -419,6 +470,24 @@ std::queue<relic::GridPhysicsEngine::Collision> relic::GridPhysicsEngine::findCo
             }
         }
     }
+
+    // Was quite difficult to do (removing)
+    std::vector<std::pair<Identifier, Identifier>> to_be_removed;
+
+    // Remove legal clippings no longer clipping
+    for (auto it = m_legal_clippings.begin(); it != m_legal_clippings.end(); ++it)
+    {
+        if (!it->second)
+        {
+            to_be_removed.push_back(it->first);
+        }
+    }
+
+    for (auto it = to_be_removed.begin(); it != to_be_removed.end(); ++it)
+    {
+        m_legal_clippings.erase(*it);
+    }
+
     return collisions;
 }
 

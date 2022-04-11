@@ -204,9 +204,6 @@
     <ClCompile Include="Graphics.cpp">
       <Filter>Framework\Graphics\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LoggedGraphics.cpp">
-      <Filter>Framework\Graphics\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="NullGraphics.cpp">
       <Filter>Framework\Graphics\Source Files</Filter>
     </ClCompile>
@@ -327,6 +324,9 @@
     <ClCompile Include="AssetLoaderGraphicsComponent.cpp">
       <Filter>Object and Components\Components\Other Components\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GameSystem.cpp">
+      <Filter>Game Systems\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameSystem.h">
@@ -363,9 +363,6 @@
       <Filter>Framework\Core\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NullGraphics.h">
-      <Filter>Framework\Graphics\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LoggedGraphics.h">
       <Filter>Framework\Graphics\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
@@ -544,6 +541,9 @@
     </ClInclude>
     <ClInclude Include="AssetLoaderGraphicsComponent.h">
       <Filter>Object and Components\Components\Other Components\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Direction.h">
+      <Filter>Framework\Physics\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

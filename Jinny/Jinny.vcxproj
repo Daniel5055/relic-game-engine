@@ -157,6 +157,7 @@
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GameSystem.cpp" />
     <ClCompile Include="Identifier.cpp" />
     <ClCompile Include="InputComponent.cpp" />
     <ClCompile Include="NewPongGameComponent.cpp" />
@@ -173,7 +174,6 @@
     <ClCompile Include="GridPhysicsEngine.cpp" />
     <ClCompile Include="ImageGraphicsComponent.cpp" />
     <ClCompile Include="Input.cpp" />
-    <ClCompile Include="LoggedGraphics.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="GraphicsSystem.cpp" />
     <ClCompile Include="InputSystem.cpp" />
@@ -211,6 +211,7 @@
     <ClInclude Include="Colour.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Core.h" />
+    <ClInclude Include="Direction.h" />
     <ClInclude Include="GameType.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
@@ -243,7 +244,6 @@
     <ClInclude Include="MaterialManager.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="InputComponent.h" />
-    <ClInclude Include="LoggedGraphics.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="GameSystem.h" />
     <ClInclude Include="GraphicsSystem.h" />

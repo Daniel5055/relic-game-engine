@@ -9,7 +9,9 @@
 #include "Window.h"
 
 relic::GraphicsSystem::GraphicsSystem(const framework::Window& window, const framework::Graphics& graphics)
-    : MessageReceiver<GraphicsSystemType>(Identifier::null), f_graphics(graphics), f_window(window)
+    : GameSystem("Graphics System")
+    , MessageReceiver<GraphicsSystemType>(getId())
+    , f_graphics(graphics), f_window(window)
 {
 }
 

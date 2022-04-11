@@ -8,9 +8,11 @@
 #include "Window.h"
 
 relic::InputSystem::InputSystem(const framework::Window& window, const framework::Input& input)
-    :MessageReceiver<InputSystemType>(Identifier::null),
-    MessageSender<InputObjectType>(Identifier::null),
-    MessageSender<GameSystemType>(Identifier::null), f_input(input), f_window(window)
+    :GameSystem("Input System")
+    , MessageReceiver<InputSystemType>(getId())
+    , MessageSender<InputObjectType>(getId())
+    , MessageSender<GameSystemType>(getId())
+    , f_input(input), f_window(window)
 {
 }
 

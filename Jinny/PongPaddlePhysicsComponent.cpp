@@ -2,10 +2,16 @@
 
 #include "ObjectInput.h"
 
-relic::pong::PongPaddlePhysicsComponent::PongPaddlePhysicsComponent(const framework::Shape shape, const char up_key, const char down_key)
+relic::pong::PongPaddlePhysicsComponent::PongPaddlePhysicsComponent(const framework::Shape shape, const framework::Direction facing,
+                                                                    const char up_key, const char down_key)
     :RigidBodyPhysicsComponent(10, 2000, shape, framework::Material::entity), MessageReceiver<ObjectType>(getObjectId(), true), m_up_key(up_key), m_down_key(down_key)
 {
     getRigidBody().setStatic(true);
+    getRigidBody().setSideSolidity(framework::Direction::north, false);
+    getRigidBody().setSideSolidity(framework::Direction::south, false);
+    getRigidBody().setSideSolidity(framework::Direction::west, false);
+    getRigidBody().setSideSolidity(framework::Direction::east, false);
+    getRigidBody().setSideSolidity(facing, true);
 }
 
 void relic::pong::PongPaddlePhysicsComponent::doUpdates()

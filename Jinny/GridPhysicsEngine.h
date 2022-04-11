@@ -25,11 +25,13 @@ namespace relic
         // Updating
         void update() override;
 
-        void  addRigidBody(const Identifier& object_id, framework::RigidBody* rigid_body) override;
+        void addRigidBody(const Identifier& object_id, framework::RigidBody* rigid_body) override;
 
     private:
 
         const double m_acceleration_due_to_gravity;
+
+        std::map<std::pair<Identifier, Identifier>, bool> m_legal_clippings;
 
         // For applying damping on objects with damping
         void applyDamping();
@@ -49,7 +51,7 @@ namespace relic
         std::map<Identifier, InfluenceRectangle> calculateInfluenceRects(double time_passed);
 
         // For making corrections from clipping
-        bool correctClippings(Identifier id1, Identifier id2);
+        bool correctClippings(const Identifier& id1, const Identifier& id2);
 
         // For checking if influence rects intersect
         bool doesIntersect(const InfluenceRectangle& r1, const InfluenceRectangle& r2);
