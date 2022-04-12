@@ -47,7 +47,7 @@ namespace relic
     template <typename T>
     void MessageExchanger<T>::forwardMessage(Message<T> msg, const bool immediate)
     {
-        m_message_bus.forwardMessage(msg, m_identifier, immediate);
+        m_message_bus.forwardMessage(msg, m_identifier, immediate, m_is_local);
     }
 
     template <typename T>

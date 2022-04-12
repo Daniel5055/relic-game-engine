@@ -15,7 +15,7 @@ namespace relic
     class MessageBus
     {
     public:
-        void forwardMessage(Message<T> msg, const Identifier& id, bool immediate);
+        void forwardMessage(Message<T> msg, const Identifier& id, bool immediate, bool local);
         void registerReceiver();
         void removeReceiver();
         void confirmRetrieval();
@@ -27,24 +27,24 @@ namespace relic
     private:
         // Messages queued with a reference to their message sender identifier
         // (In case the identifier was not set when message was forwarded)
-        std::vector<std::pair<Message<T>, const Identifier*>> m_queued_messages;
-        std::vector<std::pair<Message<T>, const Identifier*>> m_next_messages;
+        std::vector<std::pair<Message<T>, std::pair<const Identifier*, bool>>> m_queued_messages;
+        std::vector<std::pair<Message<T>, std::pair<const Identifier*, bool>>> m_next_messages;
 
         int m_receiver_count{ 0 };
         int m_current_retrieval_count{ 0 };
     };
 
     template <typename T>
-    void MessageBus<T>::forwardMessage(Message<T> msg, const Identifier& id, const bool immediate)
+    void MessageBus<T>::forwardMessage(Message<T> msg, const Identifier& id, const bool immediate, const bool local)
     {
         if (immediate)
         {
-            m_queued_messages.push_back(std::make_pair(msg, &id));
+            m_queued_messages.push_back(std::make_pair(msg, std::make_pair(&id, local)));
 
         }
         else
         {
-            m_next_messages.push_back(std::make_pair(msg, &id));
+            m_next_messages.push_back(std::make_pair(msg, std::make_pair(&id, local)));
         }
     }
 
@@ -81,9 +81,20 @@ namespace relic
             // Setting the identifier if not done properly yet
             if (m_queued_messages[position].first.from == Identifier::null)
             {
-                m_queued_messages[position].first.from = *m_queued_messages[position].second;
+                m_queued_messages[position].first.from = *m_queued_messages[position].second.first;
             }
-            //else if (m_queued_messages[position].first.from.getSubId() == 0 && m_queued_messages[position].second > 0)
+
+            // If sent locally
+            if (m_queued_messages[position].second.second)
+            {
+                // If a destination not already set then must be set to local with no sub type
+                if (m_queued_messages[position].first.to != *m_queued_messages[position].second.first)
+                {
+                    // Setting the sub id to 0 to specify any subId
+                    m_queued_messages[position].first.to = *m_queued_messages[position].second.first;
+                    m_queued_messages[position].first.to.setSubId(0); 
+                }
+            }
 
             // Returning the message
             return m_queued_messages[position].first;

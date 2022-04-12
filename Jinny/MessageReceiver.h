@@ -43,7 +43,7 @@ namespace relic
         for (size_t i = 0; i < MessageExchanger<T>::getQueueSize(); ++i)
         {
             const Message<T>& msg = MessageExchanger<T>::retrieveMessage(i);
-            if (msg.to == Identifier::null || msg.to == MessageExchanger<T>::getIdentifier())
+            if (msg.to == Identifier::any || msg.to == MessageExchanger<T>::getIdentifier())
             {
                 if (MessageExchanger<T>::isLocal() && msg.from == MessageExchanger<T>::getIdentifier() || !MessageExchanger<T>::isLocal())
                 {

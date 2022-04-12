@@ -47,6 +47,14 @@ namespace relic
 
             // Else leave it (in case sub id is to somewhere specific)
         }
+        else
+        {
+            // If null then change to any because identifier in message should never be null
+            if (msg.to == Identifier::null)
+            {
+                msg.to = Identifier::any;
+            }
+        }
         MessageExchanger<T>::forwardMessage(msg, false);
     }
 
@@ -65,6 +73,14 @@ namespace relic
             }
 
             // Else leave it (in case sub id is to somewhere specific)
+        }
+        else
+        {
+            // If null then change to any because identifier in message should never be null
+            if (msg.to == Identifier::null)
+            {
+                msg.to = Identifier::any;
+            }
         }
         MessageExchanger<T>::forwardMessage(msg, true);
     }

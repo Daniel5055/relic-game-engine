@@ -10,6 +10,7 @@ namespace relic
     {
     public:
         static const Identifier null;
+        static const Identifier any;
 
 
         // Constructor

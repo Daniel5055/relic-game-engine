@@ -1,9 +1,8 @@
 #include "AnimationComponent.h"
 
-#include "GraphicsComponent.h"
+#include <cassert>
 
-#include "Point.h"
-#include "Texture.h"
+#include "GraphicsComponent.h"
 
 relic::AnimationComponent::AnimationComponent(int texture_width, int texture_height, int tpf, int start, int end,
     const Identifier& graphics_component_id)
@@ -11,6 +10,9 @@ relic::AnimationComponent::AnimationComponent(int texture_width, int texture_hei
       m_tick_per_frame(tpf), m_clip_start(start), m_clip_end(end), m_texture_width(texture_width),
       m_texture_height(texture_height)
 {
+    // If null then used a component that hadn't been added to the object
+    assert(graphics_component_id != Identifier::null);
+
     Message msg{ GraphicsObjectType::query_graphic };
     msg.to = graphics_component_id;
 

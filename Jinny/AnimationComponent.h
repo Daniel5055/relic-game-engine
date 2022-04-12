@@ -32,7 +32,7 @@ namespace relic
 
     public:
         // Constructor
-        AnimationComponent(int texture_width, int texture_height, int tpf, int start, int end, const Identifier& graphics_component_id = Identifier::null);
+        AnimationComponent(int texture_width, int texture_height, int tpf, int start, int end, const Identifier& graphics_component_id = Identifier::any);
 
     protected:
         // --- Inherited functions ---
