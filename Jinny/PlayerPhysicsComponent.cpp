@@ -6,7 +6,7 @@
 
 relic::PlayerPhysicsComponent::PlayerPhysicsComponent(const double mass, const double max_x_speed, const double max_y_speed, const framework::Shape shape)
     : RigidBodyPhysicsComponent(mass, 0, shape, framework::Material::entity, max_x_speed, max_y_speed)
-    , MessageReceiver<ObjectType>(getObjectId(), true)
+    , MessageReceiver<ObjectType>(getId(), true)
 {
 }
 

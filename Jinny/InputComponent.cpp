@@ -1,9 +1,9 @@
 #include "InputComponent.h"
 
 relic::InputComponent::InputComponent()
-    : MessageReceiver<InputObjectType>(getObjectId())
-    , MessageSender<InputSystemType>(getObjectId())
-    , MessageSender<ObjectType>(getObjectId(), true)
+    : MessageReceiver<InputObjectType>(getId())
+    , MessageSender<InputSystemType>(getId())
+    , MessageSender<ObjectType>(getId(), true)
 {
 }
 

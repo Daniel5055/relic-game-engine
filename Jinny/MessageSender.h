@@ -38,7 +38,14 @@ namespace relic
         msg.from = MessageExchanger<T>::getIdentifier();
         if (MessageExchanger<T>::isLocal())
         {
-            msg.to = MessageExchanger<T>::getIdentifier();
+            // If the to id is not the identifier, then set the to identifier with a 0 subId
+            if (msg.to != MessageExchanger<T>::getIdentifier())
+            {
+                msg.to = MessageExchanger<T>::getIdentifier();
+                msg.to.setSubId(0);
+            }
+
+            // Else leave it (in case sub id is to somewhere specific)
         }
         MessageExchanger<T>::forwardMessage(msg, false);
     }
@@ -50,7 +57,14 @@ namespace relic
         msg.from = MessageExchanger<T>::getIdentifier();
         if (MessageExchanger<T>::isLocal())
         {
-            msg.to = MessageExchanger<T>::getIdentifier();
+            // If the to id is not the identifier, then set the to identifier with a 0 subId
+            if (msg.to != MessageExchanger<T>::getIdentifier())
+            {
+                msg.to = MessageExchanger<T>::getIdentifier();
+                msg.to.setSubId(0);
+            }
+
+            // Else leave it (in case sub id is to somewhere specific)
         }
         MessageExchanger<T>::forwardMessage(msg, true);
     }

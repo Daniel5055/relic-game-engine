@@ -12,13 +12,21 @@ namespace relic
 {
     class GameObjectManager;
 
+    /**
+     * \brief The object class, basically a wrapper class for a collection of components
+     */
     class GameObject final
         : MessageSender<ObjectType>
     {
-        // So that Manager can access constructor and important data
+        // So that the manager can access constructor
         friend GameObjectManager;
 
     public:
+        // To stop the copying and creation of game objects in any other manner besides the GameObjectManager
+        GameObject(const GameObject& object) = delete;
+        GameObject(const GameObject&& object) = delete;
+        GameObject& operator=(const GameObject& object) = delete;
+        GameObject& operator=(const GameObject&& object) = delete;
 
         // Add Components
         void addComponent(Component* component);
@@ -32,12 +40,6 @@ namespace relic
     private:
         // Private constructor so that only manager can create objects, using rvalue reference for string as we know manager will perform std::move on passing string
         explicit GameObject(std::string&& name);
-
-        GameObject(const GameObject& object) = delete;
-        GameObject(const GameObject&& object) = delete;
-        GameObject& operator=(const GameObject& object) = delete;
-        GameObject& operator=(const GameObject&& object) = delete;
-        
 
         // Identification
         const Identifier m_id;

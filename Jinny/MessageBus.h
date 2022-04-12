@@ -83,7 +83,7 @@ namespace relic
             {
                 m_queued_messages[position].first.from = *m_queued_messages[position].second;
             }
-
+            //else if (m_queued_messages[position].first.from.getSubId() == 0 && m_queued_messages[position].second > 0)
 
             // Returning the message
             return m_queued_messages[position].first;

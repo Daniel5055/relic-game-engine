@@ -2,7 +2,7 @@
 
 relic::AssetLoaderGraphicsComponent::AssetLoaderGraphicsComponent(
 	std::map<std::string, std::pair<std::string, unsigned int>> asset_paths)
-	:MessageSender<GraphicsSystemType>(getObjectId()), m_asset_paths(std::move(asset_paths))
+	:MessageSender<GraphicsSystemType>(getId()), m_asset_paths(std::move(asset_paths))
 {
 	// Send Messages to graphics system to load assets
 	for (auto it = m_asset_paths.begin(); it != m_asset_paths.end(); ++it)

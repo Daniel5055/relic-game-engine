@@ -28,8 +28,8 @@ namespace framework
         void setColour(Colour colour);
         Colour getColour() const;
 
-        const Shape& getClip() const;
-        void setClip(Shape clip);
+        const Shape* getClip() const;
+        void setClip(Shape* clip);
 
         Texture* getTexture() const;
 
@@ -42,7 +42,9 @@ namespace framework
 
         // --- Data --- 
         Shape m_shape;
-        Shape m_clip;
+
+        // The clip does not need to exist, and if it does, it will likely be pointing to elsewhere (like an animation component)
+        Shape* m_clip;
 
         // Either a texture of a colour
         Texture* m_texture_ptr{nullptr};

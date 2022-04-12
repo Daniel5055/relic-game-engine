@@ -1,7 +1,7 @@
 #include "SceneChangeCoreComponent.h"
 
 relic::SceneChangeCoreComponent::SceneChangeCoreComponent(const ObjectInput trigger_input, Scene* new_scene)
-    : MessageReceiver(getObjectId(), true), MessageSender(getObjectId()), m_next_scene(new_scene),
+    : MessageReceiver(getId(), true), MessageSender(getId()), m_next_scene(new_scene),
       m_trigger_input(trigger_input)
 {
 }

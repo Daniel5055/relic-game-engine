@@ -48,7 +48,6 @@ void framework::Graphics::draw(Graphic* graphic, const int x_shift, const int y_
     shape.x -= x_shift;
     shape.y -= y_shift;
 
-    const auto clip = static_cast<SDL_Rect>(graphic->getClip());
 
     if (graphic->getTexture() == nullptr)
     {
@@ -57,12 +56,13 @@ void framework::Graphics::draw(Graphic* graphic, const int x_shift, const int y_
         SDL_RenderFillRect(m_renderer_ptr, &shape);
         SDL_SetRenderDrawColor(m_renderer_ptr, 255, 255, 255, 255);
     }
-    else if (clip.h == 0 && clip.w == 0)
+    else if (graphic->getClip() == nullptr)
     {
         SDL_RenderCopy(m_renderer_ptr, graphic->getTexture()->getTexture(), nullptr, &shape);
     }
     else
     {
+        const auto clip = static_cast<SDL_Rect>(*graphic->getClip());
         SDL_RenderCopy(m_renderer_ptr, graphic->getTexture()->getTexture(), &clip, &shape);
     }
 }

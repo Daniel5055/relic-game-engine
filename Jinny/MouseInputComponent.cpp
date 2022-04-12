@@ -3,7 +3,7 @@
 #include "Point.h"
 
 relic::MouseInputComponent::MouseInputComponent(const framework::Shape mouse_area)
-    : MessageReceiver<ObjectType>(getObjectId(), true), m_mouse_area(mouse_area)
+    : MessageReceiver<ObjectType>(getId(), true), m_mouse_area(mouse_area)
 {
     // subscribe to mouse hovering and pressing in mouse area
     subscribeInput(ObjectInputType::left_mouse_press, &m_mouse_area);

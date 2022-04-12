@@ -17,12 +17,11 @@ namespace relic
         // Updating
         void update();
 
-        // id setter
-        void setObjectId(const Identifier& id);
+        // id setter and getter
+        void setId(const Identifier& id, int component_count);
+        const Identifier& getId() const;
 
     protected:
-        // id getter
-        const Identifier& getObjectId() const;
 
         // Protected virtual method (allowing and usually recommending derived classes to call overrided super method)
         virtual void doUpdates() {}

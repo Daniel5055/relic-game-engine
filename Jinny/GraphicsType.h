@@ -12,4 +12,11 @@ namespace relic
         show_graphic,
         hide_graphic,
     };
+
+    enum class GraphicsObjectType
+    {
+        query_graphic,
+        sent_graphic,
+        
+    };
 }

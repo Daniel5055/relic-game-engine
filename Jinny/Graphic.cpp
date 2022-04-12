@@ -34,12 +34,13 @@ framework::Colour framework::Graphic::getColour() const
     return m_colour;
 }
 
-const framework::Shape& framework::Graphic::getClip() const
+const framework::Shape* framework::Graphic::getClip() const
 {
     return m_clip;
 }
 
-void framework::Graphic::setClip(const Shape clip)
+
+void framework::Graphic::setClip(Shape* clip)
 {
     m_clip = clip;
 }

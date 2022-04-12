@@ -12,16 +12,16 @@ relic::ImageGraphicsComponent::ImageGraphicsComponent(const framework::Shape sha
     {
         msg.type = GraphicsSystemType::load_texture;
         msg.value = std::make_any<std::pair<std::string, std::string>>(texture_name, texture_path);
-        sendMessage(msg);
+        MessageSender<GraphicsSystemType>::sendMessage(msg);
     }
 
     // Then send a message to assign the texture to the graphic
     msg.type = GraphicsSystemType::assign_texture;
     msg.value = std::make_any<std::pair<std::string, framework::Graphic*>>(texture_name, &getGraphic());
-    sendMessage(msg);
+    MessageSender<GraphicsSystemType>::sendMessage(msg);
 
     // And meanwhile, draw the graphic using the graphics system
     msg.type = GraphicsSystemType::show_graphic;
     msg.value = std::make_any<framework::Graphic*>(&getGraphic());
-    sendMessage(msg);
+    MessageSender<GraphicsSystemType>::sendMessage(msg);
 }

@@ -1,8 +1,15 @@
 #pragma once
 
+#include <vector>
+
 #include "Component.h"
 
 #include "Shape.h"
+
+#include "MessageReceiver.h"
+#include "MessageSender.h"
+
+#include "GraphicsType.h"
 
 namespace framework
 {
@@ -13,21 +20,25 @@ namespace framework
 namespace relic
 {
 
-   /*
     class GraphicsComponent;
 
     //TODO: will repair later
 
     class AnimationComponent : public Component
+        , MessageSender<GraphicsObjectType>
+        , MessageReceiver<GraphicsObjectType>
+
     {
 
     public:
         // Constructor
-        AnimationComponent(GraphicsComponent* graphics_component, int texture_width, int texture_height);
+        AnimationComponent(int texture_width, int texture_height, int tpf, int start, int end, const Identifier& graphics_component_id = Identifier::null);
 
     protected:
         // --- Inherited functions ---
         void createClipGrid();
+
+        void doUpdates() override;
 
         // Get current clip
         void changeCurrentClip(int index);
@@ -37,26 +48,22 @@ namespace relic
         int getTextureHeight() const;
 
     private:
+        // virtual overrides
+        void handleMessage(const Message<GraphicsObjectType>& msg) override;
 
-        int m_tick;
+        int m_tick{0};
         int m_tick_per_frame;
 
+        framework::Shape m_current_clip;
 
-        framework::Shape* m_current_clip{nullptr};
+        std::vector<framework::Shape> m_clips;
 
-        std::vector<framework::Shape*> m_clips;
+        int m_clip_start{0};
+        int m_clip_end{0};
+        int m_clip_index{0};
 
-        int m_clip_start;
-        int m_clip_end;
-        int m_clip_index;
-
-        // Graphics Related
-        GraphicsComponent* m_graphics_component{nullptr};
-
-        int m_texture_width;
-        int m_texture_height;
-
+        const int m_texture_width;
+        const int m_texture_height;
     };
-    */
 }
 

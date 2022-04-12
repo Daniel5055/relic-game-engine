@@ -20,8 +20,8 @@ void relic::StartScene::doInitialisation()
     loadAssets({
         {"Black", {".\\Assets\\Black.png", 0}},
         {"Red", {".\\Assets\\Red.png", 0}},
+        {"Penguin", {".\\Assets\\Global Textures\\PenguinSprite.png", 0}},
         {"Fancy Font", {".\\Assets\\Fonts\\Astloch-bold.ttf", 60}},
-        {"Hi", {"C:\\Users\\dbrat\\Documents\\Coding\\C++\\Games\\Jinny\\Jinny\\Assets\\Hi.png", 0}}
         });
 
     //GameObject button = new GameObject("Button", { 100, 300, 0, 0 }, new TextGraphicsComponent(""))
@@ -56,10 +56,16 @@ void relic::StartScene::doInitialisation()
     wall_4.addComponent(new ImageGraphicsComponent(wall_4_bounds, "Black"));
     wall_4.addComponent(new StaticRigidBodyPhysicsComponent(wall_4_bounds));
 
-    GameObject& dynamic = createObject("Dynamic");
-    const framework::Shape dynamic_bounds = { 300, 200, 20, 20 };
-    dynamic.addComponent(new ImageGraphicsComponent(dynamic_bounds, "Black"));
-    dynamic.addComponent(new RigidBodyPhysicsComponent(10, 0, dynamic_bounds, framework::Material::wood, 10, 10, {130, 100}));
+    //GameObject& dynamic = createObject("Dynamic");
+    //const framework::Shape dynamic_bounds = { 300, 200, 20, 20 };
+    //dynamic.addComponent(new ImageGraphicsComponent(dynamic_bounds, "Black"));
+    //dynamic.addComponent(new RigidBodyPhysicsComponent(10, 0, dynamic_bounds, framework::Material::wood, 10, 10, {130, 100}));
+
+    GameObject& penguin = createObject("Penguin");
+    const framework::Shape bounds = { 50, 214, 256, 256 };
+    penguin.addComponent(new ImageGraphicsComponent(bounds, "Penguin"));
+    penguin.addComponent(new AnimationComponent(2048, 2048, 10, 2, 7));
+    penguin.addComponent(new RigidBodyPhysicsComponent(10, 0, bounds, framework::Material::nullium, 0, 0, { 200, 0 }));
 
     createCamera({ 0, 0, 640, 480 });
 }

@@ -12,15 +12,15 @@ relic::TextGraphicsComponent::TextGraphicsComponent(const framework::Shape shape
     {
         msg.type = GraphicsSystemType::load_font;
         msg.value = std::make_any<std::pair<std::string, std::pair<std::string, unsigned int>>>(font_name, std::pair<std::string, unsigned int>(font_path, font_size));
-        sendMessage(msg);
+        MessageSender<GraphicsSystemType>::sendMessage(msg);
     }
 
     msg.type = GraphicsSystemType::assign_text;
     msg.value = std::make_any<std::pair<std::pair<std::string, std::string>, std::pair<framework::Colour, framework::Graphic*>>>
         (std::pair<std::string, std::string>(text, font_name), std::pair<framework::Colour, framework::Graphic*>(font_colour, &getGraphic()));
-    sendMessage(msg);
+    MessageSender<GraphicsSystemType>::sendMessage(msg);
 
     msg.type = GraphicsSystemType::show_graphic;
     msg.value = std::make_any<framework::Graphic*>(&getGraphic());
-    sendMessage(msg);
+    MessageSender<GraphicsSystemType>::sendMessage(msg);
 }

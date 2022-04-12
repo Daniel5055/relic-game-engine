@@ -1,7 +1,7 @@
 #include "NewPongGameComponent.h"
 
 relic::pong::NewPongGameComponent::NewPongGameComponent(Scene* new_pong_game_scene)
-    :MessageReceiver(getObjectId()), MessageSender<GameSystemType>(getObjectId()), m_new_scene(new_pong_game_scene)
+    :MessageReceiver(getId()), MessageSender<GameSystemType>(getId()), m_new_scene(new_pong_game_scene)
 {
 }
 
