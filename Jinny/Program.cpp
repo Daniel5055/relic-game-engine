@@ -10,7 +10,7 @@
 int main(int argc, char* args[])
 {
     // Initialisation of game
-    relic::Game game{ new relic::StartScene() };
+    relic::Game game{ new relic::pong::PongGameScene() };
 
     // Game loop
     while (!(game.isGameOver()))

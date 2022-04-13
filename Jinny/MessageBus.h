@@ -88,7 +88,7 @@ namespace relic
             if (m_queued_messages[position].second.second)
             {
                 // If a destination not already set then must be set to local with no sub type
-                if (m_queued_messages[position].first.to != *m_queued_messages[position].second.first)
+                if (m_queued_messages[position].first.to == Identifier::null)
                 {
                     // Setting the sub id to 0 to specify any subId
                     m_queued_messages[position].first.to = *m_queued_messages[position].second.first;
