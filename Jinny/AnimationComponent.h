@@ -11,17 +11,8 @@
 
 #include "GraphicsType.h"
 
-namespace framework
-{
-    class Graphic;
-    struct Point;
-}
-
 namespace relic
 {
-
-    class GraphicsComponent;
-
     //TODO: will repair later
 
     class AnimationComponent : public Component
@@ -32,38 +23,32 @@ namespace relic
 
     public:
         // Constructor
-        AnimationComponent(int texture_width, int texture_height, int tpf, int start, int end, const Identifier& graphics_component_id = Identifier::any);
+        explicit AnimationComponent(unsigned int texture_width, unsigned int texture_height, bool auto_create_clip = true, const Identifier& graphics_component_id = Identifier::any);
 
     protected:
         // --- Inherited functions ---
-        void createClipGrid();
 
+        // Automatically splits the texture into a grid
+        void createClipGrid(unsigned int texture_width, unsigned int texture_height);
+
+        // overriding virtual update method
         void doUpdates() override;
 
         // Get current clip
-        void changeCurrentClip(int index);
+        void changeCurrentClip(unsigned int index);
 
-        // Get Texture size
-        int getTextureWidth() const;
-        int getTextureHeight() const;
-
-    private:
         // virtual overrides
         void handleMessage(const Message<GraphicsObjectType>& msg) override;
 
-        int m_tick{0};
-        int m_tick_per_frame;
+    private:
 
         framework::Shape m_current_clip;
-
         std::vector<framework::Shape> m_clips;
 
-        int m_clip_start{0};
-        int m_clip_end{0};
-        int m_clip_index{0};
+        bool m_auto_clip;
 
-        const int m_texture_width;
-        const int m_texture_height;
+        const unsigned int m_texture_width;
+        const unsigned int m_texture_height;
     };
 }
 

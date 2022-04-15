@@ -47,8 +47,11 @@ namespace relic
             {
                 if (MessageExchanger<T>::isLocal() && msg.from == MessageExchanger<T>::getIdentifier() || !MessageExchanger<T>::isLocal())
                 {
-                    // Only handle message under correct conditions
-                    handleMessage(msg);
+                    if (msg.to.getSubId() == MessageExchanger<T>::getIdentifier().getSubId() || msg.to.getSubId() == 0)
+                    {
+                        // Only handle message under correct conditions
+                        handleMessage(msg);
+                    }
                 }
             }
         }

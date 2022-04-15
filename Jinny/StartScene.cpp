@@ -2,7 +2,8 @@
 
 #include "ImageGraphicsComponent.h"
 #include "TextGraphicsComponent.h"
-#include "MouseInputComponent.h"
+#include "ButtonInputComponent.h"
+#include "ButtonLogicComponent.h"
 #include "ButtonAnimationComponent.h"
 #include "SceneChangeCoreComponent.h"
 #include "LoggingComponent.h"
@@ -22,6 +23,7 @@ void relic::StartScene::doInitialisation()
         {"Red", {".\\Assets\\Red.png", 0}},
         {"Penguin", {".\\Assets\\Global Textures\\PenguinSprite.png", 0}},
         {"Fancy Font", {".\\Assets\\Fonts\\Astloch-bold.ttf", 60}},
+        {"Hi", {".\\Assets\\Hi.png", 0}},
         });
 
     //GameObject button = new GameObject("Button", { 100, 300, 0, 0 }, new TextGraphicsComponent(""))
@@ -61,11 +63,20 @@ void relic::StartScene::doInitialisation()
     //dynamic.addComponent(new ImageGraphicsComponent(dynamic_bounds, "Black"));
     //dynamic.addComponent(new RigidBodyPhysicsComponent(10, 0, dynamic_bounds, framework::Material::wood, 10, 10, {130, 100}));
 
+    /*
     GameObject& penguin = createObject("Penguin");
     const framework::Shape bounds = { 50, 214, 256, 256 };
     penguin.addComponent(new ImageGraphicsComponent(bounds, "Penguin"));
-    penguin.addComponent(new AnimationComponent(2048, 2048, 10, 2, 7));
     penguin.addComponent(new RigidBodyPhysicsComponent(10, 0, bounds, framework::Material::nullium, 0, 0, { 200, 0 }));
+    */
+
+    GameObject& button = createObject("Button");
+    const framework::Shape button_bounds = { 200, 200, 100, 50 };
+
+    button.addComponent(new ButtonInputComponent(button_bounds));
+    button.addComponent(new ButtonLogicComponent());
+    button.addComponent(new ImageGraphicsComponent(button_bounds, "Hi"));
+    button.addComponent(new AnimationComponent(100, 150, true));
 
     createCamera({ 0, 0, 640, 480 });
 }

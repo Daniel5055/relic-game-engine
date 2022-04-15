@@ -7,7 +7,7 @@
 int relic::GameObject::m_next_id_num = 1;
 const std::string relic::GameObject::k_object_id_type = "Object";
 
-void relic::GameObject::addComponent(Component* component)
+const relic::Identifier& relic::GameObject::addComponent(Component* component)
 {
     component->setId(m_id, static_cast<int>(m_components.size()));
 
@@ -15,6 +15,8 @@ void relic::GameObject::addComponent(Component* component)
 
     // Informs that the component was incorporated to whomever is listening
     sendImmediateMessage({ ObjectType::component_incorporated, component->getId().getSubId() });
+
+    return m_components.back()->getId();
 }
 
 void relic::GameObject::update() const

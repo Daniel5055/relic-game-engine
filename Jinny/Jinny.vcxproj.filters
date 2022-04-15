@@ -222,7 +222,7 @@
     <ClCompile Include="Component.cpp">
       <Filter>Object and Components\Components</Filter>
     </ClCompile>
-    <ClCompile Include="MouseInputComponent.cpp">
+    <ClCompile Include="ButtonInputComponent.cpp">
       <Filter>Object and Components\Components\Input Components\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ButtonAnimationComponent.cpp">
@@ -327,6 +327,15 @@
     <ClCompile Include="GameSystem.cpp">
       <Filter>Game Systems\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DynamicAnimationComponent.cpp">
+      <Filter>Object and Components\Components\Other Components\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LoggingSystem.cpp">
+      <Filter>Game Systems\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonLogicComponent.cpp">
+      <Filter>Object and Components\Components\Core Components\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameSystem.h">
@@ -404,7 +413,7 @@
     <ClInclude Include="AnimationComponent.h">
       <Filter>Object and Components\Components\Other Components\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MouseInputComponent.h">
+    <ClInclude Include="ButtonInputComponent.h">
       <Filter>Object and Components\Components\Input Components\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ButtonAnimationComponent.h">
@@ -544,6 +553,21 @@
     </ClInclude>
     <ClInclude Include="Direction.h">
       <Filter>Framework\Physics\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LoggingType.h">
+      <Filter>System Aids\Messaging\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicAnimationComponent.h">
+      <Filter>Object and Components\Components\Other Components\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LoggingSystem.h">
+      <Filter>Game Systems\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonType.h">
+      <Filter>System Aids\Messaging\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonLogicComponent.h">
+      <Filter>Object and Components\Components\Core Components\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

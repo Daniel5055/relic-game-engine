@@ -1,29 +1,27 @@
-#include "MouseInputComponent.h"
+#include "ButtonInputComponent.h"
 
 #include "Point.h"
 
-relic::MouseInputComponent::MouseInputComponent(const framework::Shape mouse_area)
-    : MessageReceiver<ObjectType>(getId(), true), m_mouse_area(mouse_area)
+relic::ButtonInputComponent::ButtonInputComponent(const framework::Shape mouse_area)
+    : MessageReceiver<ObjectType>(getId(), true), MessageSender<ButtonType>(getId(), true), m_mouse_area(mouse_area)
 {
     // subscribe to mouse hovering and pressing in mouse area
     subscribeInput(ObjectInputType::left_mouse_press, &m_mouse_area);
     subscribeInput(ObjectInputType::mouse_over, &m_mouse_area);
 }
 
-void relic::MouseInputComponent::handleMessage(const Message<InputObjectType>& msg)
+void relic::ButtonInputComponent::handleMessage(const Message<InputObjectType>& msg)
 {
     switch (msg.type)
     {
     case InputObjectType::input_triggered:
 
-        Message e{ ObjectType::input_triggered, msg.value };
-
         // Mouse Clicking
         switch (std::any_cast<ObjectInput>(msg.value).type)
         {
         case ObjectInputType::left_mouse_down:
-            m_mouse_button_down = false;
-            MessageSender<ObjectType>::sendMessage(e);
+            m_mouse_button_down = true;
+            MessageSender<ButtonType>::sendImmediateMessage({ ButtonType::button_down });
             break;
 
         case ObjectInputType::left_mouse_up:
@@ -31,15 +29,19 @@ void relic::MouseInputComponent::handleMessage(const Message<InputObjectType>& m
             {
                 m_mouse_button_down = false;
 
-                MessageSender<ObjectType>::sendMessage(e);
+                MessageSender<ButtonType>::sendImmediateMessage({ ButtonType::button_pressed });
             }
+            //MessageSender<ButtonType>::sendMessage({ButtonType::button_focused});
             break;
         case ObjectInputType::mouse_off:
             m_mouse_button_down = false;
-            MessageSender<ObjectType>::sendMessage(e);
+            MessageSender<ButtonType>::sendImmediateMessage({ ButtonType::button_unfocused });
             break;
         case ObjectInputType::mouse_over:
-            MessageSender<ObjectType>::sendMessage(e);
+            if (!m_mouse_button_down)
+            {
+                MessageSender<ButtonType>::sendImmediateMessage({ ButtonType::button_focused });
+            }
             break;
         }
 
@@ -47,7 +49,7 @@ void relic::MouseInputComponent::handleMessage(const Message<InputObjectType>& m
     }
 }
 
-void relic::MouseInputComponent::handleMessage(const Message<ObjectType>& msg)
+void relic::ButtonInputComponent::handleMessage(const Message<ObjectType>& msg)
 {
     switch (msg.type)
     {
@@ -62,11 +64,9 @@ void relic::MouseInputComponent::handleMessage(const Message<ObjectType>& msg)
     }
 }
 
-void relic::MouseInputComponent::doUpdates()
+void relic::ButtonInputComponent::doUpdates()
 {
     InputComponent::doUpdates();
-
-    // Have to handles the new receivers messages
     MessageReceiver<ObjectType>::handleMessages();
 }
 

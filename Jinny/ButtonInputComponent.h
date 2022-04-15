@@ -1,6 +1,10 @@
 #pragma once
 
 #include "InputComponent.h"
+#include "MessageReceiver.h"
+#include "MessageSender.h"
+#include "ObjectType.h"
+#include "ButtonType.h"
 
 #include "Shape.h"
 
@@ -9,13 +13,14 @@ namespace relic
     /**
      * \brief Component that subscribes to left mouse button pressing and hovering
      */
-    class MouseInputComponent
+    class ButtonInputComponent
         : public InputComponent
         , public MessageReceiver<ObjectType>
+        , public MessageSender<ButtonType>
     {
     public:
         // Constructor
-        explicit MouseInputComponent(framework::Shape mouse_area);
+        explicit ButtonInputComponent(framework::Shape mouse_area);
 
     protected:
         // Overriding update method

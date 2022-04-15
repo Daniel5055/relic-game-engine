@@ -1,6 +1,9 @@
 #include "Component.h"
 
-#include "Message.h"
+relic::Component::Component()
+    :MessageSender<LoggingType>(getId())
+{
+}
 
 void relic::Component::update()
 {

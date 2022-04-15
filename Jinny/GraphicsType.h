@@ -17,6 +17,10 @@ namespace relic
     {
         query_graphic,
         sent_graphic,
-        
+
+        insert_clip,
+        push_back_clip,
+        change_clip,
+        change_clip_range,
     };
 }

@@ -1,14 +1,15 @@
 #include "AnimationComponent.h"
 
 #include <cassert>
+#include <stdexcept>
 
 #include "GraphicsComponent.h"
+#include "Texture.h"
 
-relic::AnimationComponent::AnimationComponent(int texture_width, int texture_height, int tpf, int start, int end,
+relic::AnimationComponent::AnimationComponent(unsigned texture_width, unsigned texture_height, bool auto_create_clip,
     const Identifier& graphics_component_id)
-    : MessageSender<relic::GraphicsObjectType>(getId(), true), MessageReceiver<relic::GraphicsObjectType>(getId(), true),
-      m_tick_per_frame(tpf), m_clip_start(start), m_clip_end(end), m_texture_width(texture_width),
-      m_texture_height(texture_height)
+    : MessageSender<relic::GraphicsObjectType>(getId(), true), MessageReceiver<relic::GraphicsObjectType>(getId(), true)
+    , m_auto_clip(auto_create_clip), m_texture_width(texture_width), m_texture_height(texture_height)
 {
     // If null then used a component that hadn't been added to the object
     assert(graphics_component_id != Identifier::null);
@@ -17,25 +18,25 @@ relic::AnimationComponent::AnimationComponent(int texture_width, int texture_hei
     msg.to = graphics_component_id;
 
     // Query for the graphic to use, if id provided is null then will take the first query back and send a warning
-    sendImmediateMessage(msg);
+    MessageSender<GraphicsObjectType>::sendImmediateMessage(msg);
 
     // Making sure there is at least  something
     m_clips.emplace_back(0, 0, 0, 0);
 }
 
-void relic::AnimationComponent::createClipGrid()
+void relic::AnimationComponent::createClipGrid(const unsigned int texture_width, const unsigned int texture_height)
 {
     m_clips.clear();
-    int width = m_current_clip.w;
-    int height = m_current_clip.h;
+    unsigned int width = m_current_clip.w;
+    unsigned int height = m_current_clip.h;
 
-    const int w_max = m_texture_width / width;
-    const int h_max = m_texture_height / height;
+    const unsigned int w_max = texture_width / width;
+    const unsigned int h_max = texture_height / height;
 
     // Dividing the texture into clips of equal size, send warning if not equal size
-    for (int y = 0; y < h_max; y++)
+    for (unsigned int y = 0; y < h_max; y++)
     {
-        for (int x = 0; x < w_max; x++)
+        for (unsigned int x = 0; x < w_max; x++)
         {
             m_clips.emplace_back(x * width, y * height, width, height);
         }
@@ -44,40 +45,23 @@ void relic::AnimationComponent::createClipGrid()
 
 void relic::AnimationComponent::doUpdates()
 {
-    Component::doUpdates();
     MessageReceiver<GraphicsObjectType>::handleMessages();
+}
 
-    // Iterate through 
-    m_tick++;
-    if (m_tick >= m_tick_per_frame)
+void relic::AnimationComponent::changeCurrentClip(const unsigned int index)
+{
+    // Making sure that index is within bounds
+        // Changes location of current clip pointer based from clips
+    try
     {
-        m_tick = 0;
-
-        m_clip_index++;
-        if (m_clip_index >= m_clip_end)
-        {
-            m_clip_index = m_clip_start;
-        }
-
-        changeCurrentClip(m_clip_index);
+        m_current_clip.x = m_clips[index].x;
+        m_current_clip.y = m_clips[index].y;
     }
-}
-
-void relic::AnimationComponent::changeCurrentClip(const int index)
-{
-    // Changes location of current clip pointer based from clips
-    m_current_clip.x = m_clips[index].x;
-    m_current_clip.y = m_clips[index].y;
-}
-
-int relic::AnimationComponent::getTextureWidth() const
-{
-    return m_texture_width;
-}
-
-int relic::AnimationComponent::getTextureHeight() const
-{
-    return m_texture_height;
+    catch ([[maybe_unused]] std::out_of_range& e)
+    {
+        MessageSender<LoggingType>::sendMessage({ LoggingType::error_number_out_of_bounds,
+            std::make_any<std::string>("Index to change graphic clip is larger than number of clips") });
+    }
 }
 
 void relic::AnimationComponent::handleMessage(const Message<GraphicsObjectType>& msg)
@@ -85,17 +69,52 @@ void relic::AnimationComponent::handleMessage(const Message<GraphicsObjectType>&
     switch (msg.type)
     {
     case GraphicsObjectType::sent_graphic:
+    {
         // If was sent back to right the component 
-        if (msg.to.getSubId() == getId().getSubId())
-        {
             // Setting the reference of the clipper
-            const auto graphic = std::any_cast<framework::Graphic*>(msg.value);
-            m_current_clip = graphic->getShape();
-            graphic->setClip(&m_current_clip);
+        const auto graphic = std::any_cast<framework::Graphic*>(msg.value);
+        m_current_clip = graphic->getShape();
+        graphic->setClip(&m_current_clip);
 
-            createClipGrid();
-            changeCurrentClip(m_clip_start);
-            break;
+        if (m_auto_clip)
+        {
+            createClipGrid(m_texture_width, m_texture_height);
+            changeCurrentClip(0);
         }
+        break;
+
+    }
+    case GraphicsObjectType::change_clip:
+    {
+        const auto clip_id = std::any_cast<int>(msg.value);
+        changeCurrentClip(clip_id);
+        break;
+
+    }
+    case GraphicsObjectType::insert_clip:
+    {
+        const auto clip_pair = std::any_cast<std::pair<int, framework::Shape>>(msg.value);
+
+        try
+        {
+            m_clips[clip_pair.first] = clip_pair.second;
+        }
+        catch ([[maybe_unused]] std::out_of_range& e)
+        {
+            MessageSender<LoggingType>::sendMessage({ LoggingType::error_number_out_of_bounds,
+                std::make_any<std::string>("Index to change graphic clip is larger than number of clips") });
+        }
+
+        break;
+
+    }
+    case GraphicsObjectType::push_back_clip:
+    {
+        const auto clip = std::any_cast<framework::Shape>(msg.value);
+        m_clips.push_back(clip);
+
+        break;
+
+    }
     }
 }

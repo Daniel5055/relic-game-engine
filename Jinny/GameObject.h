@@ -29,7 +29,7 @@ namespace relic
         GameObject& operator=(const GameObject&& object) = delete;
 
         // Add Components
-        void addComponent(Component* component);
+        const Identifier& addComponent(Component* component);
 
         // Update
         void update() const;

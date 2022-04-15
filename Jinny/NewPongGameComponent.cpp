@@ -15,6 +15,6 @@ void relic::pong::NewPongGameComponent::handleMessage(const Message<PongType>& m
 {
     if (msg.type == PongType::left_win || msg.type == PongType::right_win)
     {
-        sendMessage({ GameSystemType::change_scene, std::make_any<Scene*>(m_new_scene) });
+        MessageSender<GameSystemType>::sendMessage({ GameSystemType::change_scene, std::make_any<Scene*>(m_new_scene) });
     }
 }

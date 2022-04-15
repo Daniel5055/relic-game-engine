@@ -5,6 +5,7 @@
 #include "GridPhysicsEngine.h"
 #include "InputSystem.h"
 #include "PhysicsSystem.h"
+#include "LoggingSystem.h"
 
 relic::Game::Game(Scene* starting_scene)
     : MessageReceiver<GameSystemType>(Identifier::null)
@@ -19,6 +20,7 @@ relic::Game::Game(Scene* starting_scene)
     m_systems.push_back(std::make_unique<InputSystem>(f_window, f_input));
     m_systems.push_back(std::make_unique<GraphicsSystem>(f_window, f_graphics));
     m_systems.push_back(std::make_unique<PhysicsSystem>(new GridPhysicsEngine(f_physics)));
+    m_systems.push_back(std::make_unique<LoggingSystem>());
 
     // Scene Configuration
     Scene::setWindowSize(f_window.getWindowWidth(), f_window.getWindowHeight());

@@ -2,7 +2,6 @@
 
 #include <utility>
 
-#include "MouseInputComponent.h"
 #include "ImageGraphicsComponent.h"
 
 #include "CameraCoreComponent.h"

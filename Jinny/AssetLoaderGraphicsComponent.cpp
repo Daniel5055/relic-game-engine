@@ -24,6 +24,6 @@ relic::AssetLoaderGraphicsComponent::AssetLoaderGraphicsComponent(
 			msg.value = std::make_any<std::pair<std::string, std::pair<std::string, unsigned int>>>(it->first, it->second);
 		}
 
-		sendMessage(msg);
+		MessageSender<GraphicsSystemType>::sendImmediateMessage(msg);
 	}
 }
