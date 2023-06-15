@@ -1,3 +1,10 @@
+Comments from the future
+========================
+
+The following code is quite old, and cool. It's basically a 2D rigidbody grid physics engine with a (perhaps overcomplicated) architecture separating the different components. I designed the architecture with help of this great [guide](https://www.gamedeveloper.com/programming/writing-a-game-engine-from-scratch---part-1-messaging). This [book](https://gameprogrammingpatterns.com/) on game programming patterns was also very useful in designing the architecture, notably the observer pattern and component pattern.
+
+Frankly, I think its been too long since I have worked on this code. I'd like to think my coding quality has improved since I've worked on this, and I would probably cringe at some of the decisions I took in this code if I were too look at this again. But it was cool. Back when all I knew was Java and C++, this was my biggest ongoing project! It still has some sentimental charm! 
+
 Game Engine
 ===========
 
